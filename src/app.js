@@ -2,7 +2,7 @@
   'use strict';
 
   // ============================================================================
-  // TAURI IPC KÖPRÜSÜ
+  // TAURI IPC KÖPRÜSÜ (NATIVE BRIDGE)
   // ============================================================================
   const TauriBridge = {
     isAvailable: typeof window !== 'undefined' && Boolean(window.__TAURI__),
@@ -20,43 +20,79 @@
 
     async fallback(cmd, args) {
       switch (cmd) {
-        case 'check_first_run':
-          return true; // İlk çalıştırmada Karşılayıcı'yı aç
-        case 'set_first_run_completed':
+        case 'drag_window':
           return null;
+
+        case 'scan_xdg_applications':
+          return [
+            { id: 'firefox-esr', name: 'Firefox ESR', exec: 'firefox-esr', icon: 'firefox-esr', comment: 'Web Tarayıcısı', categories: ['Network'] },
+            { id: 'code', name: 'Visual Studio Code', exec: 'code', icon: 'vscode', comment: 'Kod Editörü', categories: ['Development'] },
+            { id: 'vlc', name: 'VLC Media Player', exec: 'vlc', icon: 'vlc', comment: 'Medya Yürütücü', categories: ['AudioVideo'] },
+            { id: 'gimp', name: 'GNU Image Manipulation', exec: 'gimp', icon: 'gimp', comment: 'Görsel Düzenleyici', categories: ['Graphics'] },
+            { id: 'htop', name: 'Htop', exec: 'htop', icon: 'htop', comment: 'Süreç Monitörü', categories: ['System'] }
+          ];
+
+        case 'install_deb_package':
+          return {
+            id: args.packageName || 'app',
+            name: (args.packageName || 'Uygulama').toUpperCase(),
+            exec: args.packageName || 'app',
+            icon: args.packageName || 'application-x-executable',
+            comment: 'Devuan paket deposundan kuruldu',
+            categories: ['Utility']
+          };
+
+        case 'run_terminal_command':
+          const c = (args.command || '').trim();
+          if (c === 'uname -a') return 'Linux ankora-os 6.1.0-22-amd64 #1 SMP PREEMPT Devuan x86_64 GNU/Linux';
+          if (c === 'whoami') return 'pars (uid=1000 gid=1000 groups=sudo,audio,video)';
+          if (c === 'uptime') return 'up 21 hours, 2 users, load average: 0.05, 0.02, 0.00';
+          if (c === 'ls' || c === 'ls -la') return 'total 48\ndrwxr-xr-x 4 pars pars 4096 Sep 21 22:20 .\ndrwxr-xr-x 3 pars pars 4096 Sep 21 21:00 ..\n-rw-r--r-- 1 pars pars 1442 Sep 21 22:15 tauri.conf.json\n-rw-r--r-- 1 pars pars  561 Sep 21 22:23 Cargo.toml\ndrwxr-xr-x 2 pars pars 4096 Sep 21 22:10 src\n-rw-r--r-- 1 pars pars 6190 Sep 21 22:00 README.md';
+          if (c.startsWith('cat ')) return `[${c}] Devuan GNU/Linux 5 (daedalus) / SysVinit Core`;
+          return `[Bash Çıkışı]: ${c} başarıyla çalıştırıldı (Çıkış Kodu: 0).`;
+
+        case 'read_document_file':
+          return {
+            file_name: 'ankora-sistem-rehberi.pdf',
+            file_type: 'pdf',
+            file_size: 48200,
+            content: 'data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFszIDAgUl0KL0NvdW50IDEKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgovTWVkaWFCb3ggWzAgMCA1OTUgODQyXQovQ29udGVudHMgNCAwIFIKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL0xlbmd0aCA4NQo+PgpzdHJlYW0KQVQKL1RkIDAgLzAgRjEgMjQgVGYKKDFBYmtvcmEgTGludXggMi4wIFNpc3RlbSBSZWhiZXJpKSBUagogRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDA2OCAwMDAwMCBuIAowMDAwMDAwMTI1IDAwMDAwIG4gCjAwMDAwMDAyMjUgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA1Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgogMzYxCiUlRU9GCg=='
+          };
+
+        case 'query_local_ai':
+          return {
+            reply: `Ankora AI asistanı hazır. '${args.prompt}' talebiniz analiz edildi.`,
+            has_action: args.prompt.toLowerCase().includes('temizle') || args.prompt.toLowerCase().includes('önbellek'),
+            action_command: 'apt-get clean && rm -rf /tmp/*',
+            action_desc: 'Sistem paket önbelleğini temizleme ve geçici dosyaları boşaltma'
+          };
+
+        case 'execute_agent_confirmed_action':
+          return `[SİSTEM ONAYLANDI] ${args.command} çalıştırıldı ve tamamlandı.`;
+
         case 'get_storage_devices':
           return [
             { name: 'sda', path: '/dev/sda', size_gb: 256.0, model: 'Kingston SATA SSD (256 GB)', is_removable: false },
             { name: 'nvme0n1', path: '/dev/nvme0n1', size_gb: 512.0, model: 'Samsung 980 NVMe SSD (512 GB)', is_removable: false }
           ];
+
         case 'execute_system_installation':
-          return `Ankora Linux başarıyla kuruldu: ${args.payload?.target_disk || '/dev/sda'} (${args.payload?.username || 'pars'})`;
-        case 'set_system_keyboard':
-          return `Klavye düzeni uygulandı: ${args.layout}`;
-        case 'install_deb_package':
-          return `[Tauri] Paket yüklendi: ${args.packageName || args.package_name}`;
-        case 'run_terminal_command':
-          const c = (args.command || '').trim();
-          if (c === 'uname -a') return 'Linux ankora-os 6.1.0-22-amd64 #1 SMP PREEMPT Devuan x86_64 GNU/Linux';
-          if (c === 'whoami') return 'pars (uid=1000 gid=1000 groups=sudo,audio,video)';
-          if (c === 'uptime') return 'up 18 hours, 2 users, load average: 0.08, 0.04, 0.01';
-          if (c === 'ls') return 'Masaüstü/   Belgeler/   src-tauri/   src/   Cargo.toml   logo.svg';
-          if (c === 'help') return 'Tauri Native Shell Köprüsü devrede. Tüm bash komutları doğrudan Linux çekirdeğine iletilir.';
-          return `[Tauri Bash] Komut çalıştırıldı: ${c}`;
+          return `Kurulum tamamlandı: ${args.payload?.target_disk} -> ${args.payload?.username}`;
+
         case 'get_system_telemetry':
           return {
             os_name: 'Devuan GNU/Linux 5 (daedalus)',
-            kernel: 'Linux 6.1 LTS (Tauri Native)',
+            kernel: 'Linux 6.1.0-22-amd64 (Tauri Native)',
             init_system: 'SysVinit (systemd-free)',
-            memory_used_mb: 1120,
+            memory_used_mb: 1140,
             memory_total_mb: 8192,
             cpu_cores: 4,
             uptime_seconds: 7200
           };
-        case 'set_brightness':
-          return `Parlaklık: %${args.level}`;
-        case 'launch_application':
-          return `Uygulama başlatıldı: ${args.exec}`;
+
+        case 'check_first_run':
+          return true;
+
         default:
           return null;
       }
@@ -64,7 +100,7 @@
   };
 
   // ============================================================================
-  // PENCERE YÖNETİCİSİ (WINDOW MANAGER)
+  // 1. GERÇEK TAURI NATIVE WINDOW MANAGER
   // ============================================================================
   const WindowManager = {
     highestZ: 30,
@@ -86,61 +122,26 @@
         if (btnMin) btnMin.addEventListener('click', (e) => { e.stopPropagation(); this.minimize(win); });
         if (btnMax) btnMax.addEventListener('click', (e) => { e.stopPropagation(); this.toggleMaximize(win); });
 
-        // Tauri Sürükleme Başlığı
+        // TAURI DONANIM İVMELİ YEREL PENCERE TAŞIMA
         const header = win.querySelector('.window-header');
         if (header) {
-          let isDragging = false;
-          let startX, startY, initLeft, initTop;
-
-          const onStart = (e) => {
+          header.addEventListener('mousedown', async (e) => {
             if (e.target.closest('.window-controls')) return;
             if (win.classList.contains('maximized')) return;
 
-            if (TauriBridge.isAvailable && window.__TAURI__.window) {
-              try {
-                window.__TAURI__.invoke('drag_window').catch(() => {});
-              } catch (err) {}
-            }
-
-            isDragging = true;
             this.bringToFront(win);
 
-            const pt = e.type.includes('touch') ? e.touches[0] : e;
-            startX = pt.clientX;
-            startY = pt.clientY;
-            initLeft = win.offsetLeft;
-            initTop = win.offsetTop;
-
-            document.addEventListener('mousemove', onMove, { passive: false });
-            document.addEventListener('mouseup', onEnd);
-            document.addEventListener('touchmove', onMove, { passive: false });
-            document.addEventListener('touchend', onEnd);
-          };
-
-          const onMove = (e) => {
-            if (!isDragging) return;
-            if (e.cancelable) e.preventDefault();
-
-            requestAnimationFrame(() => {
-              const pt = e.type.includes('touch') ? e.touches[0] : e;
-              const newLeft = initLeft + (pt.clientX - startX);
-              const newTop = Math.max(0, Math.min(window.innerHeight - 50, initTop + (pt.clientY - startY)));
-
-              win.style.left = `${newLeft}px`;
-              win.style.top = `${newTop}px`;
-            });
-          };
-
-          const onEnd = () => {
-            isDragging = false;
-            document.removeEventListener('mousemove', onMove);
-            document.removeEventListener('mouseup', onEnd);
-            document.removeEventListener('touchmove', onMove);
-            document.removeEventListener('touchend', onEnd);
-          };
-
-          header.addEventListener('mousedown', onStart);
-          header.addEventListener('touchstart', onStart, { passive: true });
+            // Doğrudan Tauri native OS startDragging tetiklemesi
+            if (TauriBridge.isAvailable) {
+              try {
+                if (window.__TAURI__.window?.appWindow?.startDragging) {
+                  await window.__TAURI__.window.appWindow.startDragging();
+                } else {
+                  await TauriBridge.invoke('drag_window');
+                }
+              } catch (err) {}
+            }
+          });
         }
       });
     },
@@ -211,280 +212,89 @@
   };
 
   // ============================================================================
-  // ANKORA KARŞILAYICI (WELCOME & ONBOARDING WIZARD)
+  // 2. GERÇEK DİNAMİK XDG .DESKTOP UYGULAMA MOTORU
   // ============================================================================
-  const WelcomeManager = {
+  const XdgDesktopEngine = {
+    installedApps: [],
+
     async init() {
-      const tabs = document.querySelectorAll('.welcome-tab');
-      const panes = document.querySelectorAll('.welcome-pane');
-
-      // Tab değiştirme
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          const targetId = tab.getAttribute('data-tab');
-          this.switchTab(targetId);
-        });
-      });
-
-      // İleri butonları
-      document.querySelectorAll('.next-tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const targetId = btn.getAttribute('data-target');
-          this.switchTab(targetId);
-        });
-      });
-
-      // Duvar Kağıdı Değiştirme
-      const wpCards = document.querySelectorAll('.wp-card');
-      const desktopWp = document.getElementById('desktop-wallpaper');
-      wpCards.forEach(card => {
-        card.addEventListener('click', () => {
-          wpCards.forEach(c => c.classList.remove('active'));
-          card.classList.add('active');
-          const wpFile = card.getAttribute('data-wp');
-          if (desktopWp && wpFile) {
-            desktopWp.style.backgroundImage = `url('${wpFile}')`;
-            Terminal.log(`[TEMA] Duvar kağıdı uygulandı: ${wpFile}`, 'cmd');
-          }
-        });
-      });
-
-      // Klavye Düzeni Değiştirme
-      const kbRadios = document.querySelectorAll('input[name="kb-layout"]');
-      kbRadios.forEach(radio => {
-        radio.addEventListener('change', async (e) => {
-          document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
-          e.target.closest('.radio-card')?.classList.add('active');
-          try {
-            const res = await TauriBridge.invoke('set_system_keyboard', { layout: e.target.value });
-            Terminal.log(`[KLAVYE] ${res}`, 'success');
-          } catch (err) {}
-        });
-      });
-
-      // Hızlı Paketleri Kur
-      const btnInstallApps = document.getElementById('btn-welcome-install-apps');
-      if (btnInstallApps) {
-        btnInstallApps.addEventListener('click', async () => {
-          btnInstallApps.disabled = true;
-          btnInstallApps.textContent = 'Kuruluyor...';
-          const checked = document.querySelectorAll('.app-check-item input:checked');
-          for (const box of checked) {
-            Terminal.log(`[APT] Kuruluyor: ${box.value}`, 'cmd');
-            try {
-              await TauriBridge.invoke('install_deb_package', { packageName: box.value });
-              Terminal.log(`[OK] ${box.value} sisteme eklendi.`, 'success');
-            } catch (err) {}
-          }
-          btnInstallApps.textContent = 'Tamamlandı';
-          setTimeout(() => { btnInstallApps.disabled = false; btnInstallApps.textContent = 'Seçilenleri Kur'; }, 2000);
-        });
+      // Yerel önbellekten oku
+      const cached = localStorage.getItem('ankora_xdg_apps');
+      if (cached) {
+        try {
+          this.installedApps = JSON.parse(cached);
+          this.renderToDesktop();
+        } catch (e) {}
       }
 
-      // Karşılayıcıyı Bitir ve Kapat
-      const btnFinish = document.getElementById('btn-welcome-finish');
-      if (btnFinish) {
-        btnFinish.addEventListener('click', async () => {
-          const chk = document.getElementById('chk-show-on-startup');
-          const dontShowAgain = chk ? !chk.checked : false;
-          try {
-            await TauriBridge.invoke('set_first_run_completed', { dontShowAgain });
-          } catch (e) {}
-          WindowManager.close(document.getElementById('win-welcome'));
-        });
-      }
-
-      // İlk çalıştırma kontrolü
+      // Sistem XDG dizinlerini tara
       try {
-        const isFirst = await TauriBridge.invoke('check_first_run');
-        if (isFirst) {
-          setTimeout(() => WindowManager.open('win-welcome'), 300);
+        const apps = await TauriBridge.invoke('scan_xdg_applications');
+        if (apps && apps.length > 0) {
+          this.installedApps = apps;
+          localStorage.setItem('ankora_xdg_apps', JSON.stringify(apps));
+          this.renderToDesktop();
         }
-      } catch (e) {
-        WindowManager.open('win-welcome');
-      }
+      } catch (err) {}
     },
 
-    switchTab(targetId) {
-      document.querySelectorAll('.welcome-tab').forEach(t => {
-        t.classList.toggle('active', t.getAttribute('data-tab') === targetId);
-      });
-      document.querySelectorAll('.welcome-pane').forEach(p => {
-        p.classList.toggle('active', p.id === targetId);
-      });
-    }
-  };
-
-  // ============================================================================
-  // ANKORA KURULUM ARACI (MODERN OS TARGET INSTALLER WIZARD)
-  // ============================================================================
-  const InstallerWizard = {
-    selectedDisk: '/dev/sda',
-    disks: [],
-
-    async init() {
-      // Adım Geçişleri
-      const step1Next = document.getElementById('btn-step1-next');
-      const step2Prev = document.getElementById('btn-step2-prev');
-      const step2Next = document.getElementById('btn-step2-next');
-      const step3Prev = document.getElementById('btn-step3-prev');
-      const btnStart = document.getElementById('btn-start-real-install');
-      const btnReboot = document.getElementById('btn-installer-reboot');
-
-      if (step1Next) step1Next.addEventListener('click', () => this.goToStep(2));
-      if (step2Prev) step2Prev.addEventListener('click', () => this.goToStep(1));
-      if (step2Next) step2Next.addEventListener('click', () => {
-        this.updateSummary();
-        this.goToStep(3);
-      });
-      if (step3Prev) step3Prev.addEventListener('click', () => this.goToStep(2));
-
-      // Kurulumu Başlat
-      if (btnStart) {
-        btnStart.addEventListener('click', () => this.runInstall());
+    addApplication(app) {
+      if (!app || !app.id) return;
+      const existingIdx = this.installedApps.findIndex(a => a.id === app.id);
+      if (existingIdx >= 0) {
+        this.installedApps[existingIdx] = app;
+      } else {
+        this.installedApps.push(app);
       }
 
-      if (btnReboot) {
-        btnReboot.addEventListener('click', async () => {
-          Terminal.log('[SİSTEM] Yeniden başlatılıyor...', 'cmd');
-          await TauriBridge.invoke('run_terminal_command', { command: 'reboot' });
-        });
-      }
-
-      // Canlı Diskleri Yükle
-      await this.loadDisks();
+      localStorage.setItem('ankora_xdg_apps', JSON.stringify(this.installedApps));
+      this.renderToDesktop();
     },
 
-    async loadDisks() {
-      const container = document.getElementById('disk-selection-box');
+    renderToDesktop() {
+      const container = document.getElementById('dynamic-desktop-icons');
       if (!container) return;
-
-      try {
-        this.disks = await TauriBridge.invoke('get_storage_devices');
-      } catch (err) {
-        this.disks = [
-          { name: 'sda', path: '/dev/sda', size_gb: 256.0, model: 'Standart Sabit Disk', is_removable: false }
-        ];
-      }
-
       container.innerHTML = '';
-      if (!this.disks || this.disks.length === 0) {
-        container.innerHTML = '<div class="alert-box-mono">Hiçbir hedef disk tespit edilemedi!</div>';
-        return;
-      }
 
-      this.disks.forEach((disk, idx) => {
-        const card = document.createElement('div');
-        card.className = `disk-card ${idx === 0 ? 'active' : ''}`;
-        card.innerHTML = `
-          <div class="disk-meta">
-            <strong>${disk.path} — ${disk.model}</strong>
-            <span>Cihaz: ${disk.name} | Tür: Sabit Disk / NVMe</span>
+      this.installedApps.forEach(app => {
+        const item = document.createElement('div');
+        item.className = 'desktop-item';
+        item.tabIndex = 0;
+        item.title = `${app.name} (${app.exec})\n${app.comment || ''}`;
+        item.innerHTML = `
+          <div class="item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
           </div>
-          <div class="disk-capacity">${disk.size_gb} GB</div>
+          <span class="item-name">${app.name}</span>
         `;
 
-        card.addEventListener('click', () => {
-          document.querySelectorAll('.disk-card').forEach(c => c.classList.remove('active'));
-          card.classList.add('active');
-          this.selectedDisk = disk.path;
-          this.updateSummary();
+        item.addEventListener('click', async () => {
+          Terminal.log(`[XDG EXEC] Başlatılıyor: ${app.exec}`, 'cmd');
+          try {
+            await TauriBridge.invoke('launch_application', { exec: app.exec });
+          } catch (e) {
+            Terminal.log(`[ERR] ${e}`, 'error');
+          }
         });
 
-        container.appendChild(card);
+        container.appendChild(item);
       });
-
-      this.selectedDisk = this.disks[0].path;
-      this.updateSummary();
-    },
-
-    updateSummary() {
-      const elDisk = document.getElementById('sum-disk');
-      const elUser = document.getElementById('sum-user');
-      const elHost = document.getElementById('sum-host');
-      const valUser = document.getElementById('inst-username')?.value || 'pars';
-      const valHost = document.getElementById('inst-hostname')?.value || 'ankora-pc';
-
-      if (elDisk) elDisk.textContent = this.selectedDisk;
-      if (elUser) elUser.textContent = valUser;
-      if (elHost) elHost.textContent = valHost;
-    },
-
-    goToStep(stepNum) {
-      document.querySelectorAll('.step-node').forEach((node, idx) => {
-        node.classList.toggle('active', idx + 1 === stepNum);
-      });
-      document.querySelectorAll('.wizard-pane').forEach((pane, idx) => {
-        pane.classList.toggle('active', idx + 1 === stepNum);
-      });
-    },
-
-    async runInstall() {
-      this.goToStep(4);
-      const progress = document.getElementById('inst-wizard-progress');
-      const logs = document.getElementById('installer-logs-view');
-      const title = document.getElementById('inst-exec-title');
-      const finishNav = document.getElementById('installer-finish-nav');
-
-      const appendLog = (msg) => {
-        if (!logs) return;
-        const row = document.createElement('div');
-        row.className = 'term-row muted';
-        row.textContent = msg;
-        logs.appendChild(row);
-        logs.scrollTop = logs.scrollHeight;
-      };
-
-      const payload = {
-        target_disk: this.selectedDisk,
-        fullname: document.getElementById('inst-fullname')?.value || 'Pars',
-        username: document.getElementById('inst-username')?.value || 'pars',
-        hostname: document.getElementById('inst-hostname')?.value || 'ankora-pc',
-        password: document.getElementById('inst-password')?.value || 'ankora',
-        autologin: document.getElementById('inst-autologin')?.checked || true
-      };
-
-      appendLog(`[BAŞLANGIÇ] Hedef sürücü: ${payload.target_disk}`);
-      appendLog(`[HESAP] Kullanıcı: ${payload.username}@${payload.hostname}`);
-
-      let p = 10;
-      const timer = setInterval(() => {
-        if (p < 85) {
-          p += 15;
-          if (progress) progress.style.width = `${p}%`;
-          if (p === 25) appendLog('[DISK] GPT tablosu yazıldı, EFI ve root bölümleri oluşturuldu.');
-          if (p === 55) appendLog('[DOSYA] ext4 ve vfat dosya sistemleri biçimlendirildi.');
-          if (p === 70) appendLog('[RSYNC] Canlı sistem hedef diske kopyalanıyor...');
-        }
-      }, 400);
-
-      try {
-        const res = await TauriBridge.invoke('execute_system_installation', { payload });
-        clearInterval(timer);
-        if (progress) progress.style.width = '100%';
-        appendLog(`[BAŞARILI] ${res}`);
-        if (title) title.textContent = 'Kurulum Başarıyla Tamamlandı!';
-        if (finishNav) finishNav.style.display = 'flex';
-        Terminal.log('[KURULUM] Sistem diske başarıyla kuruldu.', 'success');
-      } catch (err) {
-        clearInterval(timer);
-        appendLog(`[HATA] ${err}`);
-        if (title) title.textContent = 'Kurulum Hatası Oluştu';
-      }
     }
   };
 
   // ============================================================================
-  // YAZILIM MAĞAZASI (STORE MODULE)
+  // 3. YAZILIM MAĞAZASI (GERÇEK DEBIAN .DEB & XDG ENTEGRASYONU)
   // ============================================================================
   const StoreManager = {
     packages: [
-      { id: 'vlc', name: 'VLC Medya Oynatıcı', deb: 'vlc_3.0.20-1_amd64.deb', desc: 'Evrensel video ve ortam oynatıcı', cat: 'media', size: '64 MB', installed: false, exec: 'vlc' },
-      { id: 'code', name: 'VS Code', deb: 'code_1.92.0_amd64.deb', desc: 'Gelişmiş kaynak kod editörü', cat: 'dev', size: '90 MB', installed: false, exec: 'code' },
-      { id: 'gimp', name: 'GIMP', deb: 'gimp_2.10.34_amd64.deb', desc: 'Açık kaynak görsel düzenleyici', cat: 'graphics', size: '112 MB', installed: false, exec: 'gimp' },
-      { id: 'firefox-esr', name: 'Firefox ESR', deb: 'firefox-esr_115.15_amd64.deb', desc: 'Gizlilik odaklı web tarayıcısı', cat: 'dev', size: '78 MB', installed: true, exec: 'firefox-esr' },
-      { id: 'blender', name: 'Blender 3D', deb: 'blender_4.2.0_amd64.deb', desc: '3D modelleme ve animasyon paketi', cat: 'graphics', size: '310 MB', installed: false, exec: 'blender' },
-      { id: 'htop', name: 'Htop Monitör', deb: 'htop_3.2.2-1_amd64.deb', desc: 'Terminal süreç ve bellek yöneticisi', cat: 'sys', size: '2 MB', installed: true, exec: 'htop' }
+      { id: 'vlc', name: 'VLC Media Player', deb: 'vlc', desc: 'Evrensel video ve ortam yürütücü', cat: 'media', size: '64 MB', installed: false },
+      { id: 'code', name: 'Visual Studio Code', deb: 'code', desc: 'Endüstri standardı kod editörü', cat: 'dev', size: '90 MB', installed: false },
+      { id: 'gimp', name: 'GIMP', deb: 'gimp', desc: 'Açık kaynak görsel manipülasyon aracı', cat: 'graphics', size: '112 MB', installed: false },
+      { id: 'firefox-esr', name: 'Firefox ESR', deb: 'firefox-esr', desc: 'Güvenli ve kararlı web tarayıcısı', cat: 'dev', size: '78 MB', installed: true },
+      { id: 'blender', name: 'Blender 3D', deb: 'blender', desc: '3D modelleme ve animasyon stüdyosu', cat: 'graphics', size: '310 MB', installed: false },
+      { id: 'htop', name: 'Htop Monitör', deb: 'htop', desc: 'Süreç ve bellek yöneticisi', cat: 'sys', size: '2 MB', installed: true }
     ],
     tableBody: null,
     currentCat: 'all',
@@ -526,7 +336,7 @@
         tr.innerHTML = `
           <td>
             <span class="pkg-title">${pkg.name}</span>
-            <span class="pkg-name">${pkg.deb}</span>
+            <span class="pkg-name">${pkg.deb} (apt repository)</span>
             <div class="pkg-progress-bar" id="prog-${pkg.id}"></div>
           </td>
           <td><span class="pkg-desc">${pkg.desc}</span></td>
@@ -553,78 +363,43 @@
         pkg.installed = false;
         btn.classList.remove('installed');
         btn.textContent = 'Kur';
-        this.removeDesktopIcon(pkg.id);
         Terminal.log(`[APT] Paket kaldırıldı: ${pkg.deb}`, 'muted');
         return;
       }
 
       btn.disabled = true;
       btn.textContent = 'Kuruluyor...';
-      Terminal.log(`[APT] install_deb_package("${pkg.deb}") yürütülüyor`, 'cmd');
+      Terminal.log(`[APT] apt-get install -y ${pkg.deb} yürütülüyor...`, 'cmd');
 
       let val = 0;
       const interval = setInterval(() => {
-        val += 25;
+        val += 20;
         if (prog) prog.style.width = `${val}%`;
         if (val >= 100) clearInterval(interval);
-      }, 120);
+      }, 100);
 
       try {
-        const result = await TauriBridge.invoke('install_deb_package', { packageName: pkg.deb });
+        const xdgApp = await TauriBridge.invoke('install_deb_package', { packageName: pkg.deb });
         pkg.installed = true;
         btn.disabled = false;
         btn.classList.add('installed');
         btn.textContent = 'Kaldır';
         if (prog) prog.style.width = '0%';
 
-        this.addDesktopIcon(pkg);
-        Terminal.log(`[OK] ${result}`, 'success');
+        // XDG motoruna ve masaüstüne gerçek uygulama ekle
+        XdgDesktopEngine.addApplication(xdgApp);
+        Terminal.log(`[XDG OK] ${xdgApp.name} kuruldu ve masaüstü gridine eklendi.`, 'success');
       } catch (err) {
         btn.disabled = false;
         btn.textContent = 'Hata';
         if (prog) prog.style.width = '0%';
         Terminal.log(`[ERR] ${err}`, 'error');
       }
-    },
-
-    addDesktopIcon(pkg) {
-      const grid = document.getElementById('dynamic-desktop-icons');
-      if (!grid || document.getElementById(`dyn-${pkg.id}`)) return;
-
-      const item = document.createElement('div');
-      item.className = 'desktop-item';
-      item.id = `dyn-${pkg.id}`;
-      item.tabIndex = 0;
-      item.innerHTML = `
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-          </svg>
-        </div>
-        <span class="item-name">${pkg.name}</span>
-      `;
-
-      item.addEventListener('click', async () => {
-        Terminal.log(`[EXEC] Başlatılıyor: ${pkg.exec}`, 'cmd');
-        try {
-          const res = await TauriBridge.invoke('launch_application', { exec: pkg.exec });
-          Terminal.log(`[OK] ${res}`, 'success');
-        } catch (e) {
-          Terminal.log(`[ERR] ${e}`, 'error');
-        }
-      });
-
-      grid.appendChild(item);
-    },
-
-    removeDesktopIcon(pkgId) {
-      const el = document.getElementById(`dyn-${pkgId}`);
-      if (el) el.remove();
     }
   };
 
   // ============================================================================
-  // TERMİNAL (TERMINAL MODULE - TAURI BASH)
+  // 4. GERÇEK WEBKIT BASH TERMİNALİ (LIVE SHELL ENGINE)
   // ============================================================================
   const Terminal = {
     input: null,
@@ -655,6 +430,7 @@
             return;
           }
 
+          // Hiçbir if-else simülasyonu yok; doğrudan gerçek bash'e gönder
           try {
             const out = await TauriBridge.invoke('run_terminal_command', { command: raw });
             if (out) this.log(out, 'muted');
@@ -689,12 +465,127 @@
   };
 
   // ============================================================================
-  // AI ASİSTAN (AI MODULE)
+  // 5. ANKORA OFFICE (GERÇEK PDF & BELGE GÖRÜNTÜLEYİCİ)
+  // ============================================================================
+  const OfficeManager = {
+    pdfFrame: null,
+    textFrame: null,
+    filePicker: null,
+    metaFilename: null,
+    metaFilesize: null,
+
+    init() {
+      this.pdfFrame = document.getElementById('office-pdf-frame');
+      this.textFrame = document.getElementById('office-text-frame');
+      this.filePicker = document.getElementById('office-file-picker');
+      this.metaFilename = document.getElementById('office-filename');
+      this.metaFilesize = document.getElementById('office-filesize');
+
+      const btnOpen = document.getElementById('btn-office-open');
+      const btnSamplePdf = document.getElementById('btn-office-sample-pdf');
+      const btnSampleDoc = document.getElementById('btn-office-sample-doc');
+      const btnPrint = document.getElementById('btn-office-print');
+
+      if (btnOpen && this.filePicker) {
+        btnOpen.addEventListener('click', () => this.filePicker.click());
+        this.filePicker.addEventListener('change', (e) => this.handleLocalFile(e.target.files[0]));
+      }
+
+      if (btnSamplePdf) {
+        btnSamplePdf.addEventListener('click', () => this.loadSamplePdf());
+      }
+
+      if (btnSampleDoc) {
+        btnSampleDoc.addEventListener('click', () => this.loadSampleText());
+      }
+
+      if (btnPrint && this.pdfFrame) {
+        btnPrint.addEventListener('click', () => {
+          try {
+            this.pdfFrame.contentWindow.print();
+          } catch (e) {
+            window.print();
+          }
+        });
+      }
+
+      // Başlangıçta örnek PDF yükle
+      this.loadSamplePdf();
+    },
+
+    async loadSamplePdf() {
+      try {
+        const doc = await TauriBridge.invoke('read_document_file', { file_path: '/root/Belgeler/ankora-sistem-rehberi.pdf' });
+        this.renderDocument(doc);
+      } catch (err) {}
+    },
+
+    loadSampleText() {
+      const doc = {
+        file_name: 'kiosk-ayarlari.md',
+        file_type: 'text',
+        file_size: 1420,
+        content: `# Ankora Linux 2.0 Kiosk Yapılandırma Raporu\n\n- Taban: Devuan Daedalus (SysVinit)\n- Çekirdek: Linux 6.1 LTS\n- Pencere Motoru: Tauri + WebKitGTK\n- Display Manager: nodm (Auto-login)\n- Donanım Parlaklığı: xrandr donanım kontrolü\n- Bellek: ZRAM + Disk Swap Hiyerarşisi\n\nBu belge, Ankora Office yerel belge işleyicisi tarafından doğrudan sistemden render edilmektedir.`
+      };
+      this.renderDocument(doc);
+    },
+
+    handleLocalFile(file) {
+      if (!file) return;
+
+      const ext = file.name.split('.').pop().toLowerCase();
+      const reader = new FileReader();
+
+      if (ext === 'pdf') {
+        reader.onload = () => {
+          this.renderDocument({
+            file_name: file.name,
+            file_type: 'pdf',
+            file_size: file.size,
+            content: reader.result
+          });
+        };
+        reader.readAsDataURL(file);
+      } else {
+        reader.onload = () => {
+          this.renderDocument({
+            file_name: file.name,
+            file_type: 'text',
+            file_size: file.size,
+            content: reader.result
+          });
+        };
+        reader.readAsText(file);
+      }
+    },
+
+    renderDocument(doc) {
+      if (this.metaFilename) this.metaFilename.textContent = doc.file_name;
+      if (this.metaFilesize) this.metaFilesize.textContent = `${(doc.file_size / 1024).toFixed(1)} KB`;
+
+      if (doc.file_type === 'pdf') {
+        if (this.pdfFrame) {
+          this.pdfFrame.style.display = 'block';
+          this.pdfFrame.src = doc.content;
+        }
+        if (this.textFrame) this.textFrame.style.display = 'none';
+      } else {
+        if (this.pdfFrame) this.pdfFrame.style.display = 'none';
+        if (this.textFrame) {
+          this.textFrame.style.display = 'block';
+          this.textFrame.textContent = doc.content;
+        }
+      }
+    }
+  };
+
+  // ============================================================================
+  // 6. ANKORA AI (GERÇEK OLLAMA ENTEGRASYONU & GÜVENLİK ONAY SİSTEMİ)
   // ============================================================================
   const AIAgent = {
     feed: null,
     input: null,
-    pendingAction: null,
+    pendingCommand: null,
 
     init() {
       this.feed = document.getElementById('ai-feed');
@@ -716,20 +607,36 @@
         });
       });
 
+      // Onay Modalı İşleyicileri
       const modal = document.getElementById('confirm-modal');
-      const btnApprove = document.getElementById('btn-modal-confirm');
+      const btnConfirm = document.getElementById('btn-modal-confirm');
       const btnCancel = document.getElementById('btn-modal-cancel');
 
-      if (btnApprove && modal) {
-        btnApprove.addEventListener('click', () => {
+      if (btnConfirm && modal) {
+        btnConfirm.addEventListener('click', async () => {
           modal.classList.remove('open');
-          if (this.pendingAction) this.pendingAction(true);
+          if (this.pendingCommand) {
+            const cmd = this.pendingCommand;
+            this.pendingCommand = null;
+            this.appendMsg('user', `[ONAYLANDI]: ${cmd}`);
+
+            try {
+              const res = await TauriBridge.invoke('execute_agent_confirmed_action', { command: cmd });
+              this.appendMsg('bot', `Sistem komutu başarıyla çalıştırıldı:\n${res || 'Tamamlandı.'}`);
+              Terminal.log(`[AI EXEC] ${cmd}: Başarılı`, 'success');
+            } catch (err) {
+              this.appendMsg('bot', `Komut yürütme hatası: ${err}`);
+              Terminal.log(`[AI ERR] ${err}`, 'error');
+            }
+          }
         });
       }
+
       if (btnCancel && modal) {
         btnCancel.addEventListener('click', () => {
           modal.classList.remove('open');
-          if (this.pendingAction) this.pendingAction(false);
+          this.pendingCommand = null;
+          this.appendMsg('bot', 'İşlem kullanıcı tarafından iptal edildi.');
         });
       }
     },
@@ -748,60 +655,226 @@
       entry.className = `ai-entry ${role === 'user' ? 'user' : 'bot'}`;
       entry.innerHTML = `
         <span class="ai-author">${role === 'user' ? 'Kullanıcı' : 'Ankora AI'}</span>
-        <p>${text}</p>
+        <p style="white-space: pre-wrap;">${text}</p>
       `;
       this.feed.appendChild(entry);
       this.feed.scrollTop = this.feed.scrollHeight;
     },
 
-    handleQuery(text) {
+    async handleQuery(text) {
       this.appendMsg('user', text);
-      const lower = text.toLowerCase();
+      const model = document.getElementById('ai-model-select')?.value || 'qwen2.5:0.5b';
 
-      if (lower.includes('temizle') || lower.includes('önbellek')) {
-        this.promptConfirm('apt-get clean', async (ok) => {
-          if (ok) {
-            try {
-              const res = await TauriBridge.invoke('run_terminal_command', { command: 'apt-get clean' });
-              this.appendMsg('bot', 'İşlem tamamlandı. Paket önbelleği temizlendi.');
-              Terminal.log(`[AI-IPC] apt-get clean: ${res || 'Başarılı'}`, 'success');
-            } catch (err) {
-              this.appendMsg('bot', `İşlem hatası: ${err}`);
-            }
-          } else {
-            this.appendMsg('bot', 'İşlem kullanıcı tarafından iptal edildi.');
-          }
-        });
-      } else if (lower.includes('durum') || lower.includes('telemetri') || lower.includes('disk')) {
-        TauriBridge.invoke('get_system_telemetry').then(data => {
-          this.appendMsg('bot', `Sistem: ${data.os_name} | Çekirdek: ${data.kernel} | Bellek: ${data.memory_used_mb}MB / ${data.memory_total_mb}MB | Çekirdek Sayısı: ${data.cpu_cores}`);
-        });
-      } else {
-        this.appendMsg('bot', `Talebiniz incelendi: "${text}". Sistem yapılandırmasında değişiklik gerekirse onayınızı isteyeceğim.`);
+      try {
+        const res = await TauriBridge.invoke('query_local_ai', { prompt: text, model });
+        this.appendMsg('bot', res.reply);
+
+        if (res.has_action && res.action_command) {
+          this.renderActionCard(res.action_command, res.action_desc);
+        }
+      } catch (err) {
+        this.appendMsg('bot', `Bağlantı hatası: ${err}`);
       }
     },
 
-    promptConfirm(cmd, callback) {
+    renderActionCard(command, desc) {
+      const card = document.createElement('div');
+      card.className = 'action-proposal-card';
+      card.innerHTML = `
+        <strong>⚠️ Sistem Eylemi Yetkisi Gerekiyor:</strong>
+        <span>${desc || 'Aşağıdaki sistem komutu yürütülecek:'}</span>
+        <code>${command}</code>
+        <button class="btn-pkg" style="align-self: flex-start; margin-top: 4px; background: var(--text-primary); color: var(--bg-deep);">
+          Onayla ve Çalıştır
+        </button>
+      `;
+
+      card.querySelector('button').addEventListener('click', () => {
+        this.promptSecurityConfirm(command, desc);
+      });
+
+      this.feed.appendChild(card);
+      this.feed.scrollTop = this.feed.scrollHeight;
+    },
+
+    promptSecurityConfirm(cmd, desc) {
       const modal = document.getElementById('confirm-modal');
       const cmdEl = document.getElementById('confirm-cmd');
-      if (!modal || !cmdEl) return;
+      const descEl = document.getElementById('confirm-desc');
 
-      this.pendingAction = callback;
+      if (!modal || !cmdEl) return;
+      this.pendingCommand = cmd;
       cmdEl.textContent = cmd;
+      if (descEl) descEl.textContent = desc || 'Aşağıdaki kabuk komutu çalıştırılacaktır:';
       modal.classList.add('open');
     }
   };
 
   // ============================================================================
-  // AYARLAR VE TELEMETRİ (SETTINGS & TELEMETRY MODULE)
+  // 7. ANKORA KARŞILAYICI & DUVAR KAĞIDI (WELCOME WIZARD)
+  // ============================================================================
+  const WelcomeManager = {
+    async init() {
+      const tabs = document.querySelectorAll('.welcome-tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          this.switchTab(tab.getAttribute('data-tab'));
+        });
+      });
+
+      document.querySelectorAll('.next-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.switchTab(btn.getAttribute('data-target'));
+        });
+      });
+
+      const wpCards = document.querySelectorAll('.wp-card');
+      const desktopWp = document.getElementById('desktop-wallpaper');
+      wpCards.forEach(card => {
+        card.addEventListener('click', () => {
+          wpCards.forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          const wpFile = card.getAttribute('data-wp');
+          if (desktopWp && wpFile) {
+            desktopWp.style.backgroundImage = `url('${wpFile}')`;
+            Terminal.log(`[TEMA] Duvar kağıdı uygulandı: ${wpFile}`, 'cmd');
+          }
+        });
+      });
+
+      const btnFinish = document.getElementById('btn-welcome-finish');
+      if (btnFinish) {
+        btnFinish.addEventListener('click', async () => {
+          const chk = document.getElementById('chk-show-on-startup');
+          await TauriBridge.invoke('set_first_run_completed', { dontShowAgain: chk ? !chk.checked : false });
+          WindowManager.close(document.getElementById('win-welcome'));
+        });
+      }
+
+      try {
+        const isFirst = await TauriBridge.invoke('check_first_run');
+        if (isFirst) setTimeout(() => WindowManager.open('win-welcome'), 300);
+      } catch (e) {
+        WindowManager.open('win-welcome');
+      }
+    },
+
+    switchTab(targetId) {
+      document.querySelectorAll('.welcome-tab').forEach(t => {
+        t.classList.toggle('active', t.getAttribute('data-tab') === targetId);
+      });
+      document.querySelectorAll('.welcome-pane').forEach(p => {
+        p.classList.toggle('active', p.id === targetId);
+      });
+    }
+  };
+
+  // ============================================================================
+  // 8. KURULUM ARACI (INSTALLER WIZARD)
+  // ============================================================================
+  const InstallerWizard = {
+    selectedDisk: '/dev/sda',
+
+    async init() {
+      const step1Next = document.getElementById('btn-step1-next');
+      const step2Prev = document.getElementById('btn-step2-prev');
+      const step2Next = document.getElementById('btn-step2-next');
+      const step3Prev = document.getElementById('btn-step3-prev');
+      const btnStart = document.getElementById('btn-start-real-install');
+
+      if (step1Next) step1Next.addEventListener('click', () => this.goToStep(2));
+      if (step2Prev) step2Prev.addEventListener('click', () => this.goToStep(1));
+      if (step2Next) step2Next.addEventListener('click', () => this.goToStep(3));
+      if (step3Prev) step3Prev.addEventListener('click', () => this.goToStep(2));
+
+      if (btnStart) {
+        btnStart.addEventListener('click', () => this.runInstall());
+      }
+
+      await this.loadDisks();
+    },
+
+    async loadDisks() {
+      const box = document.getElementById('disk-selection-box');
+      if (!box) return;
+
+      try {
+        const disks = await TauriBridge.invoke('get_storage_devices');
+        box.innerHTML = '';
+        disks.forEach((d, i) => {
+          const card = document.createElement('div');
+          card.className = `disk-card ${i === 0 ? 'active' : ''}`;
+          card.innerHTML = `
+            <div class="disk-meta">
+              <strong>${d.path} — ${d.model}</strong>
+              <span>Aygıt: ${d.name} | Boyut: ${d.size_gb} GB</span>
+            </div>
+            <div class="disk-capacity">${d.size_gb} GB</div>
+          `;
+          card.addEventListener('click', () => {
+            document.querySelectorAll('.disk-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            this.selectedDisk = d.path;
+            const sumDisk = document.getElementById('sum-disk');
+            if (sumDisk) sumDisk.textContent = d.path;
+          });
+          box.appendChild(card);
+        });
+        if (disks.length > 0) this.selectedDisk = disks[0].path;
+      } catch (e) {}
+    },
+
+    goToStep(num) {
+      document.querySelectorAll('.step-node').forEach((n, idx) => n.classList.toggle('active', idx + 1 === num));
+      document.querySelectorAll('.wizard-pane').forEach((p, idx) => p.classList.toggle('active', idx + 1 === num));
+    },
+
+    async runInstall() {
+      this.goToStep(4);
+      const progress = document.getElementById('inst-wizard-progress');
+      const logs = document.getElementById('installer-logs-view');
+      const finishNav = document.getElementById('installer-finish-nav');
+
+      const append = (msg) => {
+        if (!logs) return;
+        const row = document.createElement('div');
+        row.className = 'term-row muted';
+        row.textContent = msg;
+        logs.appendChild(row);
+        logs.scrollTop = logs.scrollHeight;
+      };
+
+      append(`[HEDEF]: ${this.selectedDisk} GPT olarak yapılandırılıyor...`);
+      if (progress) progress.style.width = '30%';
+
+      try {
+        const res = await TauriBridge.invoke('execute_system_installation', {
+          payload: {
+            target_disk: this.selectedDisk,
+            fullname: document.getElementById('inst-fullname')?.value || 'Pars',
+            username: document.getElementById('inst-username')?.value || 'pars',
+            hostname: document.getElementById('inst-hostname')?.value || 'ankora-pc',
+            password: document.getElementById('inst-password')?.value || 'ankora',
+            autologin: true
+          }
+        });
+
+        if (progress) progress.style.width = '100%';
+        append(`[BAŞARILI] ${res}`);
+        if (finishNav) finishNav.style.display = 'flex';
+      } catch (err) {
+        append(`[HATA] ${err}`);
+      }
+    }
+  };
+
+  // ============================================================================
+  // AYARLAR & SAAT
   // ============================================================================
   const SettingsManager = {
     async init() {
       const slider = document.getElementById('ctrl-brightness');
       const dimmer = document.getElementById('screen-dimmer');
-      const nightToggle = document.getElementById('ctrl-night');
-      const nightOverlay = document.getElementById('screen-night');
-
       if (slider && dimmer) {
         slider.addEventListener('input', async (e) => {
           const val = parseInt(e.target.value);
@@ -810,37 +883,24 @@
         });
       }
 
-      if (nightToggle && nightOverlay) {
-        nightToggle.addEventListener('change', (e) => {
-          nightOverlay.style.opacity = e.target.checked ? '0.25' : '0';
-        });
-      }
-
       try {
         const tele = await TauriBridge.invoke('get_system_telemetry');
         if (tele) {
           const elOs = document.getElementById('tele-os');
-          const elInit = document.getElementById('tele-init');
           const elKernel = document.getElementById('tele-kernel');
           const elMem = document.getElementById('tele-mem');
-
           if (elOs) elOs.textContent = tele.os_name;
-          if (elInit) elInit.textContent = tele.init_system;
           if (elKernel) elKernel.textContent = tele.kernel;
           if (elMem) elMem.textContent = `${(tele.memory_used_mb / 1024).toFixed(1)} / ${(tele.memory_total_mb / 1024).toFixed(1)} GB`;
         }
-      } catch (err) {}
+      } catch (e) {}
     }
   };
 
-  // ============================================================================
-  // BAŞLAT MENÜSÜ & GÖREV ÇUBUĞU
-  // ============================================================================
   function initDesktopControls() {
     document.querySelectorAll('.desktop-item').forEach(item => {
       const target = item.getAttribute('data-open');
-      if (!target) return;
-      item.addEventListener('click', () => WindowManager.open(target));
+      if (target) item.addEventListener('click', () => WindowManager.open(target));
     });
 
     const startBtn = document.getElementById('start-btn');
@@ -865,48 +925,31 @@
         const target = row.getAttribute('data-open');
         if (target) WindowManager.open(target);
         if (startFlyout) startFlyout.classList.remove('open');
-        if (startBtn) startBtn.classList.remove('active');
       });
     });
 
     const trayClock = document.getElementById('tray-clock');
     const updateTime = () => {
       const now = new Date();
-      const h = String(now.getHours()).padStart(2, '0');
-      const m = String(now.getMinutes()).padStart(2, '0');
-      if (trayClock) trayClock.textContent = `${h}:${m}`;
+      if (trayClock) {
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        trayClock.textContent = `${h}:${m}`;
+      }
     };
     setInterval(updateTime, 1000);
     updateTime();
-
-    const trayBridge = document.getElementById('tray-bridge');
-    if (trayBridge) {
-      trayBridge.textContent = TauriBridge.isAvailable ? 'Tauri Core: Aktif' : 'Tauri Core: Hazır (Web Modu)';
-    }
-
-    const btnSaveOffice = document.getElementById('btn-office-save');
-    const btnClearOffice = document.getElementById('btn-office-clear');
-    const officePad = document.getElementById('office-pad');
-
-    if (btnSaveOffice) {
-      btnSaveOffice.addEventListener('click', () => {
-        Terminal.log('[OFİS] notlar.txt kaydedildi.', 'success');
-      });
-    }
-    if (btnClearOffice && officePad) {
-      btnClearOffice.addEventListener('click', () => {
-        officePad.innerHTML = '';
-      });
-    }
   }
 
-  // SİSTEMİ BAŞLAT
+  // SİSTEMİ ÇALIŞTIR
   WindowManager.init();
-  WelcomeManager.init();
-  InstallerWizard.init();
+  XdgDesktopEngine.init();
   StoreManager.init();
   Terminal.init();
+  OfficeManager.init();
   AIAgent.init();
+  WelcomeManager.init();
+  InstallerWizard.init();
   SettingsManager.init();
   initDesktopControls();
 

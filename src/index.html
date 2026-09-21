@@ -477,10 +477,10 @@
     <!-- ======================================================================= -->
     <!-- 5. AI AJAN                                                              -->
     <!-- ======================================================================= -->
-    <section class="window" id="win-ai" style="top: 60px; left: 140px; width: 720px; height: 500px;" aria-labelledby="ai-header-title">
+    <section class="window" id="win-ai" style="top: 60px; left: 140px; width: 760px; height: 520px;" aria-labelledby="ai-header-title">
       <div class="window-header" data-tauri-drag-region>
         <div class="window-meta">
-          <span id="ai-header-title">Ankora AI Sistem Asistanı</span>
+          <span id="ai-header-title">Ankora AI Sistem Asistanı (Ollama / Qwen LLM)</span>
         </div>
         <div class="window-controls">
           <button class="ctrl-btn min" title="Küçült">−</button>
@@ -491,35 +491,50 @@
       <div class="window-view">
         <div class="ai-layout">
           <div class="ai-status-bar">
-            <span>Bağlantı: Tauri IPC (Native Rust Engine)</span>
-            <span id="ai-status-indicator">Aktif</span>
+            <div class="ai-model-select-group">
+              <span>Model:</span>
+              <select id="ai-model-select" class="select-mono-sm">
+                <option value="qwen2.5:0.5b">Qwen 2.5 (0.5B - Hafif Yerel)</option>
+                <option value="llama3">Llama 3 (Meta AI)</option>
+                <option value="deepseek-r1">DeepSeek R1</option>
+                <option value="mistral">Mistral 7B</option>
+              </select>
+            </div>
+            <div class="ai-endpoint-info">
+              <span>Sunucu: <strong id="ai-endpoint-label">localhost:11434</strong></span>
+              <span class="status-pill" id="ai-status-indicator">Bağlı / Hazır</span>
+            </div>
           </div>
           <div class="ai-feed" id="ai-feed">
             <div class="ai-entry bot">
               <span class="ai-author">Ankora AI</span>
-              <p>Sistem yönetim asistanı devrede. Sistem paketlerini yönetebilir ve komut yürütebilirim. Kritik değişiklikler öncesinde sistem onayınızı isteyeceğim.</p>
+              <p>Devuan Linux çekirdeğine bağlı yerel sistem asistanınızım. Donanım telemetrisini inceleyebilir, paket kurulumu yapabilir ve kabuk komutları yürütebilirim. Yetkili işlemler öncesinde sistem onayınızı alacağım.</p>
             </div>
           </div>
           <div class="ai-quick-row">
-            <button class="ai-tag-btn" data-query="Sistem durumunu ve telemetriyi raporla">Sistem Durumu</button>
-            <button class="ai-tag-btn" data-query="Gereksiz paket önbelleklerini temizle">Önbellek Temizliği</button>
-            <button class="ai-tag-btn" data-query="Disk doluluk oranını denetle">Disk Raporu</button>
+            <button class="ai-tag-btn" data-query="Sistem önbelleklerini temizle">Önbellek Temizliği</button>
+            <button class="ai-tag-btn" data-query="Disk kullanımını ve RAM durumunu denetle">Disk & RAM Raporu</button>
+            <button class="ai-tag-btn" data-query="Ağ bağlantısını ve IP durumunu listele">Ağ Durumu</button>
           </div>
           <div class="ai-prompt-box">
-            <input type="text" id="ai-prompt-input" placeholder="Komut veya sistem görevi iletin...">
-            <button class="btn-pkg" id="btn-ai-submit">Çalıştır</button>
+            <input type="text" id="ai-prompt-input" placeholder="Komut veya görev belirtin (Örn: Gereksiz paketleri sil, RAM durumunu ver)...">
+            <button class="btn-pkg" id="btn-ai-submit">Gönder</button>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ======================================================================= -->
-    <!-- 6. BELGELER / NOTLAR                                                    -->
+    <!-- 6. ANKORA OFFICE (GERÇEK PDF / DOCX / METİN GÖRÜNTÜLEYİCİ)             -->
     <!-- ======================================================================= -->
-    <section class="window" id="win-office" style="top: 80px; left: 160px; width: 700px; height: 480px;" aria-labelledby="office-header-title">
+    <section class="window" id="win-office" style="top: 60px; left: 130px; width: 880px; height: 560px;" aria-labelledby="office-header-title">
       <div class="window-header" data-tauri-drag-region>
         <div class="window-meta">
-          <span id="office-header-title">Metin Düzenleyici — notlar.txt</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="width: 15px; height: 15px;">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          <span id="office-header-title">Ankora Office — Belge & PDF Görüntüleyici</span>
         </div>
         <div class="window-controls">
           <button class="ctrl-btn min" title="Küçült">−</button>
@@ -530,16 +545,23 @@
       <div class="window-view">
         <div class="office-layout">
           <div class="office-bar">
-            <button class="office-btn" data-cmd="bold"><b>B</b></button>
-            <button class="office-btn" data-cmd="italic"><i>I</i></button>
-            <button class="office-btn" id="btn-office-clear">Temizle</button>
-            <button class="office-btn" id="btn-office-save" style="margin-left: auto;">Kaydet</button>
+            <input type="file" id="office-file-picker" accept=".pdf,.docx,.txt,.md" style="display: none;">
+            <button class="office-btn" id="btn-office-open">📁 Dosya Aç...</button>
+            <div class="office-doc-meta" id="office-doc-meta">
+              <strong id="office-filename">ankora-sistem-rehberi.pdf</strong>
+              <span id="office-filesize">64 KB</span>
+            </div>
+            <div class="office-bar-actions">
+              <button class="office-btn" id="btn-office-sample-pdf">Örnek PDF</button>
+              <button class="office-btn" id="btn-office-sample-doc">Kiosk Raporu</button>
+              <button class="office-btn" id="btn-office-print">Yazdır</button>
+            </div>
           </div>
-          <div class="office-pad" id="office-pad" contenteditable="true">
-            <h2>Ankora Linux Notları</h2>
-            <p>Tauri + Rust çekirdeği ile güçlendirilmiş hafif Kiosk Desktop Environment.</p>
-            <p>- WebKitGTK ve Rust IPC ile native performans.</p>
-            <p>- Tamamen bağımsız, systemd gereksinimi olmayan Devuan mimarisi.</p>
+          <div class="office-viewer-body" id="office-viewer-body">
+            <!-- PDF Görüntüleyici (Native WebKit Frame) -->
+            <iframe id="office-pdf-frame" class="office-pdf-frame" src="about:blank"></iframe>
+            <!-- Metin / Markdown Görüntüleyici -->
+            <div id="office-text-frame" class="office-text-frame" style="display: none;"></div>
           </div>
         </div>
       </div>
