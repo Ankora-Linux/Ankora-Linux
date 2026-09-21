@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <defs>
+    <radialGradient id="silkBg" cx="40%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#12131b"/>
+      <stop offset="60%" stop-color="#090a0e"/>
+      <stop offset="100%" stop-color="#020304"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#silkBg)"/>
+
+  <!-- Fluid Ribbon Waves -->
+  <path d="M-100,200 C400,600 700,-100 1200,400 C1600,800 1800,200 2100,500" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" fill="none"/>
+  <path d="M-100,240 C400,640 700,-60 1200,440 C1600,840 1800,240 2100,540" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none"/>
+  <path d="M-100,280 C400,680 700,-20 1200,480 C1600,880 1800,280 2100,580" stroke="rgba(255,255,255,0.11)" stroke-width="1.8" fill="none"/>
+  <path d="M-100,320 C400,720 700,20 1200,520 C1600,920 1800,320 2100,620" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+  <path d="M-100,360 C400,760 700,60 1200,560 C1600,960 1800,360 2100,660" stroke="rgba(255,255,255,0.12)" stroke-width="1.8" fill="none"/>
+  <path d="M-100,400 C400,800 700,100 1200,600 C1600,1000 1800,400 2100,700" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none"/>
+  <path d="M-100,440 C400,840 700,140 1200,640 C1600,1040 1800,440 2100,740" stroke="rgba(255,255,255,0.05)" stroke-width="1.2" fill="none"/>
+  <path d="M-100,480 C400,880 700,180 1200,680 C1600,1080 1800,480 2100,780" stroke="rgba(255,255,255,0.03)" stroke-width="1" fill="none"/>
+
+  <!-- Minimalist Light Focus -->
+  <circle cx="1200" cy="520" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="1200" cy="520" r="18" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+</svg>

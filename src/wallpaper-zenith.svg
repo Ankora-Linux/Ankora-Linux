@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <defs>
+    <linearGradient id="zenithBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#050608"/>
+      <stop offset="50%" stop-color="#090a0f"/>
+      <stop offset="100%" stop-color="#11131a"/>
+    </linearGradient>
+    <linearGradient id="facetLight" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a2e3d"/>
+      <stop offset="100%" stop-color="#141720"/>
+    </linearGradient>
+    <linearGradient id="facetDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#171922"/>
+      <stop offset="100%" stop-color="#0a0c10"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#zenithBg)"/>
+
+  <!-- Minimal Monolith Facets -->
+  <!-- Left Shadow Facet -->
+  <polygon points="960,180 680,880 960,1020" fill="url(#facetDark)"/>
+  
+  <!-- Right Light Facet -->
+  <polygon points="960,180 1240,880 960,1020" fill="url(#facetLight)"/>
+
+  <!-- Center Vertex Line -->
+  <line x1="960" y1="180" x2="960" y2="1020" stroke="#717993" stroke-width="1.8"/>
+
+  <!-- Outer Edges -->
+  <line x1="960" y1="180" x2="680" y2="880" stroke="#3d4356" stroke-width="1.2"/>
+  <line x1="960" y1="180" x2="1240" y2="880" stroke="#5a637d" stroke-width="1.2"/>
+  <line x1="680" y1="880" x2="960" y2="1020" stroke="#252935" stroke-width="1.2"/>
+  <line x1="1240" y1="880" x2="960" y2="1020" stroke="#3d4356" stroke-width="1.2"/>
+
+  <!-- Subtle Horizon Aura -->
+  <circle cx="960" cy="180" r="140" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <circle cx="960" cy="180" r="280" stroke="rgba(255,255,255,0.015)" stroke-width="1"/>
+
+  <!-- Ground Plane Grid -->
+  <line x1="400" y1="940" x2="1520" y2="940" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <line x1="200" y1="1020" x2="1720" y2="1020" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+</svg>

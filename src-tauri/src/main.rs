@@ -654,94 +654,189 @@ async fn list_available_documents() -> Result<Vec<String>, String> {
 // 6. ANKORA AI VE GÜVENLİ EYLEM ZİNCİRİ - GÜVENLİK BULGUSU #6
 // ============================================================================
 #[tauri::command]
-async fn query_local_ai(prompt: String, endpoint: Option<String>, model: Option<String>) -> Result<AiResponse, String> {
-    let url = endpoint.unwrap_or_else(|| "http://127.0.0.1:11434/api/generate".to_string());
-    let ai_model = model.unwrap_or_else(|| "qwen2.5:0.5b".to_string());
+async fn query_local_ai(
+    prompt: String,
+    provider: Option<String>,
+    endpoint: Option<String>,
+    api_key: Option<String>,
+    model: Option<String>,
+    agent_mode: Option<String>,
+) -> Result<AiResponse, String> {
+    let prov = provider.unwrap_or_else(|| "ollama".to_string()).to_lowercase();
+    let mode = agent_mode.unwrap_or_else(|| "sysadmin".to_string()).to_lowercase();
 
-    let sys_prompt = "Sen Ankora Linux (Devuan Daedalus) işletim sisteminin yerel sistem asistanısın. \
-Kullanıcıya teknik, kısa ve profesyonel yanıtlar ver. \
-Eğer kullanıcının talebi sistemde bir bakım veya durum sorgusu gerektiriyorsa, \
-yanıtının sonuna tam olarak şu formatta bir eylem etiketi ekle: \
-<<<ACTION:{\"command\":\"izin_verilen_komut\",\"desc\":\"Eylemin açıklaması\"}>>> \
-Asla tehlikeli veya rastgele komut üretme. Sadece doğrulanmış sistem komutları üret.";
-
-    let payload = serde_json::json!({
-        "model": ai_model,
-        "prompt": format!("{}\n\nKullanıcı: {}", sys_prompt, prompt),
-        "stream": false
-    });
+    let sys_prompt = match mode.as_str() {
+        "developer" => {
+            "Sen Ankora Linux (Devuan Daedalus) sistem geliştirici ve terminal asistanısın. \
+            Bash betikleri, Debian derleme, Rust/C geliştirme ve paket araçları konusunda teknik rehberlik sağla. \
+            Eğer bir komut yürütülmesi gerekiyorsa yanıtının sonuna tam olarak şu formatta bir eylem etiketi ekle: \
+            <<<ACTION:{\"command\":\"izin_verilen_komut\",\"desc\":\"Eylemin açıklaması\"}>>> \
+            Sadece izin verilen sistem bakım komutları üret."
+        }
+        "general" => {
+            "Sen Ankora Linux işletim sisteminin dost canlısı, Türkçe ve profesyonel genel asistanısın. \
+            Kullanıcının sorularını açık, kibar ve teknik doğrulukla yanıtla. \
+            Gerekirse sistem komutunu şu formatta ekle: \
+            <<<ACTION:{\"command\":\"izin_verilen_komut\",\"desc\":\"Eylemin açıklaması\"}>>>"
+        }
+        _ => {
+            "Sen Ankora Linux (Devuan Daedalus) işletim sisteminin yerel sistem yöneticisi ve teftiş ajanısın. \
+            Kullanıcıya teknik, kısa ve profesyonel yanıtlar ver. \
+            Eğer kullanıcının talebi sistemde bir bakım, telemetre sorgusu veya temizlik gerektiriyorsa, \
+            yanıtının sonuna tam olarak şu formatta bir eylem etiketi ekle: \
+            <<<ACTION:{\"command\":\"izin_verilen_komut\",\"desc\":\"Eylemin açıklaması\"}>>> \
+            Asla tehlikeli veya rastgele komut üretme. Sadece doğrulanmış sistem komutları üret."
+        }
+    };
 
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(30))
         .build()
         .map_err(|e| e.to_string())?;
 
-    let res = client.post(&url).json(&payload).send().await;
+    let parse_action_from_text = |text: &str| -> (String, bool, Option<String>, Option<String>) {
+        if let Some(start_idx) = text.find("<<<ACTION:") {
+            if let Some(end_idx) = text[start_idx..].find(">>>") {
+                let json_str = &text[start_idx + 10..start_idx + end_idx];
+                let clean_reply = text[..start_idx].trim().to_string();
 
-    match res {
-        Ok(resp) => {
-            if resp.status().is_success() {
-                let json_data: serde_json::Value = resp.json().await.map_err(|e| e.to_string())?;
-                let raw_reply = json_data["response"].as_str().unwrap_or("").to_string();
-
-                if let Some(start_idx) = raw_reply.find("<<<ACTION:") {
-                    if let Some(end_idx) = raw_reply[start_idx..].find(">>>") {
-                        let json_str = &raw_reply[start_idx + 10..start_idx + end_idx];
-                        let clean_reply = raw_reply[..start_idx].trim().to_string();
-
-                        if let Ok(action_val) = serde_json::from_str::<serde_json::Value>(json_str) {
-                            let proposed_cmd = action_val["command"].as_str().unwrap_or("").trim().to_string();
-                            // Sadece whitelist içerisindeki komutların eylem kartı olarak üretilmesine izin verilir
-                            if ALLOWED_AGENT_ACTIONS.contains(&proposed_cmd.as_str()) {
-                                return Ok(AiResponse {
-                                    reply: clean_reply,
-                                    has_action: true,
-                                    action_command: Some(proposed_cmd),
-                                    action_desc: action_val["desc"].as_str().map(|s| s.to_string()),
-                                });
-                            }
-                        }
+                if let Ok(action_val) = serde_json::from_str::<serde_json::Value>(json_str) {
+                    let proposed_cmd = action_val["command"].as_str().unwrap_or("").trim().to_string();
+                    if ALLOWED_AGENT_ACTIONS.contains(&proposed_cmd.as_str()) {
+                        return (
+                            clean_reply,
+                            true,
+                            Some(proposed_cmd),
+                            action_val["desc"].as_str().map(|s| s.to_string()),
+                        );
                     }
                 }
+            }
+        }
+        (text.to_string(), false, None, None)
+    };
 
-                Ok(AiResponse {
-                    reply: raw_reply,
-                    has_action: false,
-                    action_command: None,
-                    action_desc: None,
-                })
-            } else {
-                Err(format!("Ollama API hatası (Kod: {})", resp.status()))
+    // 1. OLLAMA
+    if prov == "ollama" {
+        let url = endpoint.unwrap_or_else(|| "http://127.0.0.1:11434/api/generate".to_string());
+        let ai_model = model.unwrap_or_else(|| "qwen2.5:0.5b".to_string());
+        let payload = serde_json::json!({
+            "model": ai_model,
+            "prompt": format!("{}\n\nKullanıcı: {}", sys_prompt, prompt),
+            "stream": false
+        });
+
+        if let Ok(resp) = client.post(&url).json(&payload).send().await {
+            if resp.status().is_success() {
+                if let Ok(json_data) = resp.json::<serde_json::Value>().await {
+                    let raw_reply = json_data["response"].as_str().unwrap_or("").to_string();
+                    let (reply, has_action, action_command, action_desc) = parse_action_from_text(&raw_reply);
+                    return Ok(AiResponse { reply, has_action, action_command, action_desc });
+                }
             }
         }
-        Err(_) => {
-            let p_lower = prompt.to_lowercase();
-            if p_lower.contains("temizle") || p_lower.contains("önbellek") {
-                Ok(AiResponse {
-                    reply: "Sistem önbelleklerinin temizlenmesi için paket önbelleği boşaltılmalıdır.".to_string(),
-                    has_action: true,
-                    action_command: Some("apt-get clean && rm -rf /tmp/*".to_string()),
-                    action_desc: Some("Sistem ve geçici dosya önbelleklerini temizleme".to_string()),
-                })
-            } else if p_lower.contains("durum") || p_lower.contains("disk") {
-                Ok(AiResponse {
-                    reply: "Disk ve bellek doluluk raporu taranıyor.".to_string(),
-                    has_action: true,
-                    action_command: Some("df -h / && free -m".to_string()),
-                    action_desc: Some("Disk ve bellek durumunu sorgulama".to_string()),
-                })
-            } else {
-                Ok(AiResponse {
-                    reply: format!(
-                        "Ankora AI Çekirdeği hazır. Dahili sistem analiz modunda yanıt veriliyor: \"{}\"",
-                        prompt
-                    ),
-                    has_action: false,
-                    action_command: None,
-                    action_desc: None,
-                })
+    } 
+    // 2. GOOGLE GEMINI
+    else if prov == "gemini" {
+        let key = api_key.unwrap_or_default();
+        if key.is_empty() {
+            return Err("Google Gemini API anahtarı girilmedi. Lütfen ayarlar panelinden API anahtarınızı girin.".to_string());
+        }
+        let ai_model = model.unwrap_or_else(|| "gemini-2.0-flash".to_string());
+        let url = format!(
+            "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent?key={}",
+            ai_model, key
+        );
+        let payload = serde_json::json!({
+            "contents": [{
+                "parts": [{ "text": format!("{}\n\nKullanıcı: {}", sys_prompt, prompt) }]
+            }]
+        });
+
+        match client.post(&url).json(&payload).send().await {
+            Ok(resp) if resp.status().is_success() => {
+                if let Ok(json_data) = resp.json::<serde_json::Value>().await {
+                    let text = json_data["candidates"][0]["content"]["parts"][0]["text"].as_str().unwrap_or("").to_string();
+                    let (reply, has_action, action_command, action_desc) = parse_action_from_text(&text);
+                    return Ok(AiResponse { reply, has_action, action_command, action_desc });
+                }
+            }
+            Ok(resp) => {
+                return Err(format!("Gemini API Hatası (HTTP {}): API anahtarını veya model adını kontrol edin.", resp.status()));
+            }
+            Err(e) => return Err(format!("Gemini bağlantı hatası: {}", e)),
+        }
+    }
+    // 3. OPENAI / GROQ / OPENROUTER / CUSTOM
+    else {
+        let (url, default_model) = match prov.as_str() {
+            "openai" => ("https://api.openai.com/v1/chat/completions".to_string(), "gpt-4o-mini".to_string()),
+            "groq" => ("https://api.groq.com/openai/v1/chat/completions".to_string(), "llama-3.3-70b-versatile".to_string()),
+            "openrouter" => ("https://openrouter.ai/api/v1/chat/completions".to_string(), "anthropic/claude-3.5-sonnet".to_string()),
+            _ => (endpoint.unwrap_or_else(|| "http://127.0.0.1:8000/v1/chat/completions".to_string()), "default".to_string())
+        };
+        let ai_model = model.unwrap_or(default_model);
+        let key = api_key.unwrap_or_default();
+
+        let mut req = client.post(&url);
+        if !key.is_empty() {
+            req = req.header("Authorization", format!("Bearer {}", key));
+        }
+
+        let payload = serde_json::json!({
+            "model": ai_model,
+            "messages": [
+                {"role": "system", "content": sys_prompt},
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.3
+        });
+
+        match req.json(&payload).send().await {
+            Ok(resp) if resp.status().is_success() => {
+                if let Ok(json_data) = resp.json::<serde_json::Value>().await {
+                    let text = json_data["choices"][0]["message"]["content"].as_str().unwrap_or("").to_string();
+                    let (reply, has_action, action_command, action_desc) = parse_action_from_text(&text);
+                    return Ok(AiResponse { reply, has_action, action_command, action_desc });
+                }
+            }
+            Ok(resp) => {
+                return Err(format!("API Servis Hatası (HTTP {}): API anahtarı veya servis adresi doğrulanamadı.", resp.status()));
+            }
+            Err(e) => {
+                if prov != "ollama" {
+                    return Err(format!("{} servisine bağlanılamadı: {}", prov.to_uppercase(), e));
+                }
             }
         }
+    }
+
+    // Yerel akıllı analiz modu (Fallback)
+    let p_lower = prompt.to_lowercase();
+    if p_lower.contains("temizle") || p_lower.contains("önbellek") {
+        Ok(AiResponse {
+            reply: "Sistem önbelleklerinin temizlenmesi için paket önbelleği boşaltılmalıdır.".to_string(),
+            has_action: true,
+            action_command: Some("apt-get clean && rm -rf /tmp/*".to_string()),
+            action_desc: Some("Sistem ve geçici dosya önbelleklerini temizleme".to_string()),
+        })
+    } else if p_lower.contains("durum") || p_lower.contains("disk") || p_lower.contains("ram") {
+        Ok(AiResponse {
+            reply: "Disk ve bellek doluluk raporu taranıyor.".to_string(),
+            has_action: true,
+            action_command: Some("df -h / && free -m".to_string()),
+            action_desc: Some("Disk ve bellek durumunu sorgulama".to_string()),
+        })
+    } else {
+        Ok(AiResponse {
+            reply: format!(
+                "Ankora AI Çekirdeği hazır. Harici API veya yerel Ollama servisi çevrimdışı olduğundan dahili analiz modunda yanıt veriliyor:\n\"{}\"\n\n(Kendi API anahtarınızı (OpenAI, Gemini, Groq) AI penceresindeki 'API Ayarları' butonundan bağlayabilirsiniz.)",
+                prompt
+            ),
+            has_action: false,
+            action_command: None,
+            action_desc: None,
+        })
     }
 }
 

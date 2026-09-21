@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <defs>
+    <radialGradient id="matrixVignette" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#14151c"/>
+      <stop offset="65%" stop-color="#0a0b0e"/>
+      <stop offset="100%" stop-color="#030405"/>
+    </radialGradient>
+    <pattern id="hexGrid" width="60" height="104" patternUnits="userSpaceOnUse" patternTransform="scale(1)">
+      <path d="M30 0 L60 17.32 L60 52 L30 69.28 L0 52 L0 17.32 Z" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+      <path d="M30 104 L60 86.68 L60 52 L30 69.28 L0 52 L0 86.68 Z" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="glowLine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2563eb" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#matrixVignette)"/>
+  <rect width="1920" height="1080" fill="url(#hexGrid)"/>
+
+  <!-- Technical Axis & Framing -->
+  <line x1="160" y1="0" x2="160" y2="1080" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <line x1="1760" y1="0" x2="1760" y2="1080" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <line x1="0" y1="540" x2="1920" y2="540" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+  <!-- Central Technical Reticle -->
+  <circle cx="960" cy="540" r="320" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="4 8"/>
+  <circle cx="960" cy="540" r="180" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <circle cx="960" cy="540" r="4" fill="#38bdf8" opacity="0.6"/>
+
+  <!-- Subtle Diagonal Accent -->
+  <line x1="400" y1="200" x2="900" y2="450" stroke="url(#glowLine)" stroke-width="1.5"/>
+  <circle cx="900" cy="450" r="3" fill="#60a5fa" opacity="0.8"/>
+  
+  <text x="180" y="80" fill="rgba(255,255,255,0.15)" font-family="monospace" font-size="11" letter-spacing="2">ANKORA_SYS_NODE // 64-BIT SYSVINIT ARCH</text>
+  <text x="1620" y="1020" fill="rgba(255,255,255,0.12)" font-family="monospace" font-size="10" letter-spacing="1">LAT 39.93° N // LON 32.85° E</text>
+</svg>

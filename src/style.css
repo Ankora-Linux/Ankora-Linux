@@ -2753,3 +2753,246 @@ html, body {
   color: var(--text-primary);
   margin-bottom: 8px;
 }
+
+/* ==============================================================================
+   MONOKROM SVG İKONLAR & BUTON GLİFLERİ
+   ============================================================================== */
+.nav-icon-svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.8;
+  color: var(--text-secondary);
+  transition: color 0.15s ease, stroke 0.15s ease;
+  flex-shrink: 0;
+}
+
+.settings-nav-item.active .nav-icon-svg {
+  color: var(--accent-active, #2563eb);
+}
+
+.btn-icon-svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.8;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+/* ==============================================================================
+   AI AJAN & ÇOKLU API SAĞLAYICI ÇEKMECESİ (DRAWER)
+   ============================================================================== */
+.ai-provider-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-capsule {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+}
+
+.ai-config-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ai-config-toggle-btn:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--border-medium);
+}
+
+.ai-config-drawer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.28s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s ease, opacity 0.2s ease;
+  opacity: 0;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 16px;
+}
+
+.ai-config-drawer.open {
+  max-height: 280px;
+  opacity: 1;
+  padding: 14px 16px;
+}
+
+.drawer-inner-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.drawer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drawer-field.full-width {
+  grid-column: span 2;
+}
+
+.drawer-field label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.input-mono-sm, .select-mono-sm {
+  padding: 6px 8px;
+  background: var(--bg-base);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-ui);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  outline: none;
+}
+
+.input-mono-sm:focus, .select-mono-sm:focus {
+  border-color: var(--accent-active, #2563eb);
+}
+
+.input-key-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-key-wrap input {
+  width: 100%;
+  padding-right: 32px;
+}
+
+.btn-toggle-key-view {
+  position: absolute;
+  right: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-toggle-key-view:hover {
+  color: var(--text-primary);
+}
+
+/* ==============================================================================
+   KİŞİSELLEŞTİRME SEÇİM PİLLERİ (OPTION PILLS)
+   ============================================================================== */
+.option-pill-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.option-pill-btn {
+  padding: 6px 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.option-pill-btn:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+.option-pill-btn.active {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--accent-active, #2563eb);
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
+}
+
+/* Sol Hizalı Görev Çubuğu Modu */
+.taskbar.align-left .taskbar-center-cluster {
+  left: 200px;
+  transform: none;
+}
+
+body.taskbar-align-left .start-flyout {
+  left: 24px;
+  transform: translateY(16px) scale(0.98);
+}
+
+body.taskbar-align-left .start-flyout.open {
+  transform: translateY(0) scale(1);
+}
+
+/* Pencere Saydamlık Modları */
+body.glass-solid .window {
+  background: var(--bg-base);
+  backdrop-filter: none;
+}
+
+body.glass-balanced .window {
+  background: rgba(19, 20, 27, 0.88);
+  backdrop-filter: blur(24px) saturate(130%);
+}
+
+body.glass-high .window {
+  background: rgba(19, 20, 27, 0.65);
+  backdrop-filter: blur(32px) saturate(160%);
+}
+
+body.theme-light.glass-solid .window {
+  background: #ffffff;
+}
+
+body.theme-light.glass-balanced .window {
+  background: rgba(255, 255, 255, 0.88);
+}
+
+body.theme-light.glass-high .window {
+  background: rgba(255, 255, 255, 0.68);
+}
+
+/* ==============================================================================
+   ANİMASYON HIZI MODLARI (ANIMATION PROFILES)
+   ============================================================================== */
+body.anim-smooth * {
+  /* Standart akıcı 60 FPS geçişler */
+}
+
+body.anim-fast * {
+  transition-duration: 0.08s !important;
+  animation-duration: 0.08s !important;
+}
+
+body.anim-none *,
+body.anim-none *::before,
+body.anim-none *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+

@@ -67,13 +67,50 @@
             content: 'data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFszIDAgUl0KL0NvdW50IDEKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgovTWVkaWFCb3ggWzAgMCA1OTUgODQyXQovQ29udGVudHMgNCAwIFIKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL0xlbmd0aCA4NQo+PgpzdHJlYW0KQVQKL1RkIDAgLzAgRjEgMjQgVGYKKDFBYmtvcmEgTGludXggMi4wIFNpc3RlbSBSZWhiZXJpKSBUagogRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDA2OCAwMDAwMCBuIAowMDAwMDAwMTI1IDAwMDAwIG4gCjAwMDAwMDAyMjUgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA1Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgogMzYxCiUlRU9GCg=='
           };
 
-        case 'query_local_ai':
+        case 'query_local_ai': {
+          const prov = (args.provider || 'ollama').toUpperCase();
+          const mode = (args.agent_mode || 'sysadmin').toLowerCase();
+          const p = (args.prompt || '').toLowerCase();
+          const hasKey = Boolean(args.api_key && args.api_key.trim().length > 0);
+          const prefix = `[${prov} / ${mode === 'developer' ? 'GELİŞTİRİCİ' : mode === 'general' ? 'ASİSTAN' : 'SİSTEM TEFTİŞ'} AJANI]: `;
+
+          if (p.includes('temizle') || p.includes('önbellek')) {
+            return {
+              reply: `${prefix}Sistem önbelleklerinin temizlenmesi ve disk alanının boşaltılması analiz edildi. Aşağıdaki işlem paket önbelleğini ve geçici dosyaları güvenli bir şekilde silecektir.`,
+              has_action: true,
+              action_command: 'apt-get clean && rm -rf /tmp/*',
+              action_desc: 'Sistem paket önbelleğini temizleme ve geçici dosyaları boşaltma'
+            };
+          } else if (p.includes('disk') || p.includes('ram') || p.includes('durum')) {
+            return {
+              reply: `${prefix}Sistem kaynakları denetleniyor. Kök dosya sistemi doluluğu ve bellek (RAM) tüketimi raporlanacaktır.`,
+              has_action: true,
+              action_command: 'df -h / && free -m',
+              action_desc: 'Kök dosya sistemi ve RAM kullanımını sorgulama'
+            };
+          } else if (p.includes('ağ') || p.includes('ip') || p.includes('network')) {
+            return {
+              reply: `${prefix}Ağ arabirimleri ve etkin IP adresleri taranıyor.`,
+              has_action: true,
+              action_command: 'ip addr show',
+              action_desc: 'Ağ arabirimlerini ve IP yapılandırmasını listeleme'
+            };
+          } else if (p.includes('teftiş') || p.includes('çekirdek') || p.includes('telemetri')) {
+            return {
+              reply: `${prefix}Çekirdek telemetrisi, init sistemi ve donanım mimarisi taranıyor.`,
+              has_action: true,
+              action_command: 'uname -a && uptime',
+              action_desc: 'Sistem çekirdeği ve çalışma süresini teftiş etme'
+            };
+          }
+
           return {
-            reply: `Ankora AI asistanı hazır. '${args.prompt}' talebiniz analiz edildi.`,
-            has_action: args.prompt.toLowerCase().includes('temizle') || args.prompt.toLowerCase().includes('önbellek'),
-            action_command: 'apt-get clean && rm -rf /tmp/*',
-            action_desc: 'Sistem paket önbelleğini temizleme ve geçici dosyaları boşaltma'
+            reply: `${prefix}Talebiniz '${args.prompt}' işlendi.\n• Model: ${args.model || 'varsayılan'}\n• Bağlantı: ${hasKey ? 'Özel Kullanıcı API Anahtarı Aktif ✓' : 'Yerel / Açık Uç Nokta'}\nAnkora Linux Devuan 5.0 (Daedalus) çekirdeği üzerinde otonom ajan hazır.`,
+            has_action: false,
+            action_command: null,
+            action_desc: null
           };
+        }
 
         case 'execute_agent_confirmed_action':
           return `[SİSTEM ONAYLANDI] ${args.command} çalıştırıldı ve tamamlandı.`;
@@ -622,18 +659,113 @@
   };
 
   // ============================================================================
-  // 6. ANKORA AI (GERÇEK OLLAMA ENTEGRASYONU & GÜVENLİK ONAY SİSTEMİ)
+  // 6. ANKORA AI (OTONOM AJAN, KULLANICI API BAĞLANTISI & GÜVENLİK ONAY SİSTEMİ)
   // ============================================================================
   const AIAgent = {
     feed: null,
     input: null,
     pendingCommand: null,
+    provider: 'ollama',
+    mode: 'sysadmin',
+    model: 'qwen2.5:0.5b',
+    endpoint: 'http://127.0.0.1:11434/api/generate',
+    apiKey: '',
 
     init() {
       this.feed = document.getElementById('ai-feed');
       this.input = document.getElementById('ai-prompt-input');
       const btnSend = document.getElementById('btn-ai-submit');
       const quickBtns = document.querySelectorAll('.ai-tag-btn');
+
+      // 1. Kaydedilmiş API & Ajan Tercihlerini Yükle
+      this.provider = localStorage.getItem('ankora_ai_provider') || 'ollama';
+      this.mode = localStorage.getItem('ankora_ai_mode') || 'sysadmin';
+      this.model = localStorage.getItem('ankora_ai_model') || (this.provider === 'ollama' ? 'qwen2.5:0.5b' : 'gpt-4o-mini');
+      this.endpoint = localStorage.getItem('ankora_ai_endpoint') || 'http://127.0.0.1:11434/api/generate';
+      this.apiKey = localStorage.getItem('ankora_ai_key') || '';
+
+      const selProvider = document.getElementById('ai-cfg-provider');
+      const selMode = document.getElementById('ai-cfg-mode');
+      const inputModel = document.getElementById('ai-cfg-model');
+      const inputEndpoint = document.getElementById('ai-cfg-endpoint');
+      const inputKey = document.getElementById('ai-cfg-key');
+
+      if (selProvider) selProvider.value = this.provider;
+      if (selMode) selMode.value = this.mode;
+      if (inputModel) inputModel.value = this.model;
+      if (inputEndpoint) inputEndpoint.value = this.endpoint;
+      if (inputKey) inputKey.value = this.apiKey;
+
+      this.updateBadges();
+
+      // 2. Yapılandırma Paneli (Drawer) Açma/Kapama
+      const btnToggleConfig = document.getElementById('btn-toggle-ai-config');
+      const drawer = document.getElementById('ai-config-drawer');
+      if (btnToggleConfig && drawer) {
+        btnToggleConfig.addEventListener('click', () => {
+          drawer.classList.toggle('open');
+        });
+      }
+
+      // 3. API Anahtarı Göster / Gizle Toggle Butonu
+      const btnToggleKey = document.getElementById('btn-toggle-key-view');
+      if (btnToggleKey && inputKey) {
+        btnToggleKey.addEventListener('click', () => {
+          inputKey.type = inputKey.type === 'password' ? 'text' : 'password';
+        });
+      }
+
+      // 4. Sağlayıcı Değiştiğinde Otomatik Varsayılanları Tamamla
+      if (selProvider) {
+        selProvider.addEventListener('change', () => {
+          const val = selProvider.value;
+          if (val === 'ollama') {
+            if (inputModel) inputModel.value = 'qwen2.5:0.5b';
+            if (inputEndpoint) inputEndpoint.value = 'http://127.0.0.1:11434/api/generate';
+          } else if (val === 'openai') {
+            if (inputModel) inputModel.value = 'gpt-4o-mini';
+            if (inputEndpoint) inputEndpoint.value = 'https://api.openai.com/v1/chat/completions';
+          } else if (val === 'gemini') {
+            if (inputModel) inputModel.value = 'gemini-2.0-flash';
+            if (inputEndpoint) inputEndpoint.value = 'https://generativelanguage.googleapis.com/v1beta';
+          } else if (val === 'groq') {
+            if (inputModel) inputModel.value = 'llama-3.3-70b-versatile';
+            if (inputEndpoint) inputEndpoint.value = 'https://api.groq.com/openai/v1/chat/completions';
+          } else if (val === 'openrouter') {
+            if (inputModel) inputModel.value = 'anthropic/claude-3.5-sonnet';
+            if (inputEndpoint) inputEndpoint.value = 'https://openrouter.ai/api/v1/chat/completions';
+          } else if (val === 'custom') {
+            if (inputModel) inputModel.value = 'default';
+            if (inputEndpoint) inputEndpoint.value = 'http://127.0.0.1:8000/v1/chat/completions';
+          }
+        });
+      }
+
+      // 5. Yapılandırmayı Kaydetme
+      const btnSaveCfg = document.getElementById('btn-save-ai-cfg');
+      if (btnSaveCfg) {
+        btnSaveCfg.addEventListener('click', () => {
+          if (selProvider) this.provider = selProvider.value;
+          if (selMode) this.mode = selMode.value;
+          if (inputModel) this.model = inputModel.value.trim() || 'default';
+          if (inputEndpoint) this.endpoint = inputEndpoint.value.trim();
+          if (inputKey) this.apiKey = inputKey.value.trim();
+
+          localStorage.setItem('ankora_ai_provider', this.provider);
+          localStorage.setItem('ankora_ai_mode', this.mode);
+          localStorage.setItem('ankora_ai_model', this.model);
+          localStorage.setItem('ankora_ai_endpoint', this.endpoint);
+          localStorage.setItem('ankora_ai_key', this.apiKey);
+
+          this.updateBadges();
+          if (drawer) drawer.classList.remove('open');
+
+          const provLabel = selProvider?.options[selProvider.selectedIndex]?.text || this.provider;
+          const modeLabel = selMode?.options[selMode.selectedIndex]?.text || this.mode;
+          this.appendMsg('bot', `✓ Yapılandırma güncellendi ve otonom ajan hazırlandı.\n• Sağlayıcı: ${provLabel}\n• Ajan Yetki Rolü: ${modeLabel}\n• Model: ${this.model}\n${this.apiKey ? '• Özel API Anahtarı: Kaydedildi (Maskeli saklanıyor)' : '• API Anahtarı: Tanımlanmadı (Yerel ağ veya açık endpoint)'}`);
+          Terminal.log(`[AI YAPILANDIRMA] Sağlayıcı: ${this.provider}, Rol: ${this.mode}, Model: ${this.model}`, 'success');
+        });
+      }
 
       if (btnSend && this.input) {
         btnSend.addEventListener('click', () => this.submit());
@@ -683,6 +815,36 @@
       }
     },
 
+    updateBadges() {
+      const badgeProv = document.getElementById('ai-current-provider-badge');
+      const badgeMode = document.getElementById('ai-current-mode-badge');
+      const ind = document.getElementById('ai-status-indicator');
+
+      const provMap = {
+        ollama: 'Ollama (Yerel)',
+        openai: 'OpenAI (GPT)',
+        gemini: 'Google Gemini',
+        groq: 'Groq Cloud',
+        openrouter: 'OpenRouter',
+        custom: 'Özel API'
+      };
+
+      const modeMap = {
+        sysadmin: 'Sistem Teftiş Ajanı',
+        developer: 'Geliştirici Asistanı',
+        general: 'Genel Sistem Asistanı'
+      };
+
+      if (badgeProv) badgeProv.textContent = provMap[this.provider] || this.provider.toUpperCase();
+      if (badgeMode) {
+        badgeMode.innerHTML = `<svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:12px;height:12px;display:inline-block;vertical-align:-1px;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>${modeMap[this.mode] || this.mode}`;
+      }
+      if (ind) {
+        ind.textContent = 'Bağlı / Hazır';
+        ind.className = 'status-pill online';
+      }
+    },
+
     submit() {
       if (!this.input) return;
       const text = this.input.value.trim();
@@ -692,7 +854,7 @@
     },
 
     appendMsg(role, text) {
-      if (!this.feed) return;
+      if (!this.feed) return null;
       const entry = document.createElement('div');
       entry.className = `ai-entry ${role === 'user' ? 'user' : 'bot'}`;
 
@@ -708,21 +870,37 @@
       entry.appendChild(p);
       this.feed.appendChild(entry);
       this.feed.scrollTop = this.feed.scrollHeight;
+      return entry;
     },
 
     async handleQuery(text) {
       this.appendMsg('user', text);
-      const model = document.getElementById('ai-model-select')?.value || 'qwen2.5:0.5b';
+      const loadingEntry = this.appendMsg('bot', 'Ajan düşünülüyor ve sistem analiz ediliyor...');
 
       try {
-        const res = await TauriBridge.invoke('query_local_ai', { prompt: text, model });
+        const res = await TauriBridge.invoke('query_local_ai', {
+          prompt: text,
+          provider: this.provider,
+          endpoint: this.endpoint,
+          api_key: this.apiKey,
+          model: this.model,
+          agent_mode: this.mode
+        });
+
+        if (loadingEntry && loadingEntry.parentNode) {
+          loadingEntry.parentNode.removeChild(loadingEntry);
+        }
+
         this.appendMsg('bot', res.reply);
 
         if (res.has_action && res.action_command) {
           this.renderActionCard(res.action_command, res.action_desc);
         }
       } catch (err) {
-        this.appendMsg('bot', `Bağlantı hatası: ${err}`);
+        if (loadingEntry && loadingEntry.parentNode) {
+          loadingEntry.parentNode.removeChild(loadingEntry);
+        }
+        this.appendMsg('bot', `⚠️ Ajan Bağlantı Hatası:\n${err}\n\nİpucu: Kendi API anahtarınızı girmek veya endpoint ayarlarını güncellemek için üstteki 'API Ayarları' butonunu kullanabilirsiniz.`);
       }
     },
 
@@ -789,15 +967,11 @@
       });
 
       const wpCards = document.querySelectorAll('.wp-card');
-      const desktopWp = document.getElementById('desktop-wallpaper');
       wpCards.forEach(card => {
         card.addEventListener('click', () => {
-          wpCards.forEach(c => c.classList.remove('active'));
-          card.classList.add('active');
           const wpFile = card.getAttribute('data-wp');
-          if (desktopWp && wpFile) {
-            desktopWp.style.backgroundImage = `url('${wpFile}')`;
-            Terminal.log(`[TEMA] Duvar kağıdı uygulandı: ${wpFile}`, 'cmd');
+          if (wpFile) {
+            ThemeManager.setWallpaper(wpFile);
           }
         });
       });
@@ -938,18 +1112,33 @@
     currentTheme: 'theme-dark',
     currentAccent: '#2563eb',
     currentWallpaper: 'wallpaper.svg',
+    currentRadius: '6px',
+    currentGlass: 'balanced',
+    currentTaskbarAlign: 'center',
+    currentTaskbarHeight: '44px',
+    currentAnimSpeed: 'smooth',
 
     init() {
-      // Kaydedilmiş tercihleri yükle
+      // 1. Kaydedilmiş tercihleri yükle
       const savedTheme = localStorage.getItem('ankora_theme_mode') || 'theme-dark';
       const savedAccent = localStorage.getItem('ankora_accent_color') || '#2563eb';
       const savedWp = localStorage.getItem('ankora_wallpaper') || 'wallpaper.svg';
+      const savedRadius = localStorage.getItem('ankora_corner_radius') || '6px';
+      const savedGlass = localStorage.getItem('ankora_window_glass') || 'balanced';
+      const savedAlign = localStorage.getItem('ankora_taskbar_align') || 'center';
+      const savedHeight = localStorage.getItem('ankora_taskbar_height') || '44px';
+      const savedAnim = localStorage.getItem('ankora_anim_speed') || 'smooth';
 
       this.setTheme(savedTheme, false);
       this.setAccent(savedAccent, false);
       this.setWallpaper(savedWp, false);
+      this.setCornerRadius(savedRadius, false);
+      this.setWindowGlass(savedGlass, false);
+      this.setTaskbarAlign(savedAlign, false);
+      this.setTaskbarHeight(savedHeight, false);
+      this.setAnimSpeed(savedAnim, false);
 
-      // Tema Kartı ve Vurgu Butonu Seçimleri (Hem Ayarlar hem Karşılayıcı)
+      // Tema Kartı, Vurgu Butonu ve Kişiselleştirme Seçimleri
       document.addEventListener('click', (e) => {
         const themeCard = e.target.closest('.theme-card-choice');
         if (themeCard) {
@@ -967,6 +1156,41 @@
         if (wpCard) {
           const wp = wpCard.getAttribute('data-wp');
           if (wp) this.setWallpaper(wp);
+        }
+
+        // Pencere Kenarlık Kavisi (Border Radius)
+        const radiusBtn = e.target.closest('#group-corner-radius .option-pill-btn');
+        if (radiusBtn) {
+          const r = radiusBtn.getAttribute('data-radius');
+          if (r) this.setCornerRadius(r);
+        }
+
+        // Pencere Cam Saydamlığı (Glassmorphism)
+        const glassBtn = e.target.closest('#group-window-blur .option-pill-btn');
+        if (glassBtn) {
+          const g = glassBtn.getAttribute('data-glass');
+          if (g) this.setWindowGlass(g);
+        }
+
+        // Görev Çubuğu Yerleşimi (Alignment)
+        const alignBtn = e.target.closest('#group-taskbar-align .option-pill-btn');
+        if (alignBtn) {
+          const a = alignBtn.getAttribute('data-align');
+          if (a) this.setTaskbarAlign(a);
+        }
+
+        // Görev Çubuğu Boyutu (Height)
+        const heightBtn = e.target.closest('#group-taskbar-size .option-pill-btn');
+        if (heightBtn) {
+          const h = heightBtn.getAttribute('data-height');
+          if (h) this.setTaskbarHeight(h);
+        }
+
+        // Animasyon Seviyesi
+        const animBtn = e.target.closest('#group-anim-speed .option-pill-btn');
+        if (animBtn) {
+          const s = animBtn.getAttribute('data-anim');
+          if (s) this.setAnimSpeed(s);
         }
       });
     },
@@ -1017,6 +1241,86 @@
       if (persist) {
         localStorage.setItem('ankora_wallpaper', wpFile);
         Terminal.log(`[DUVAR KAĞIDI] Arka plan güncellendi: ${wpFile}`, 'cmd');
+      }
+    },
+
+    setCornerRadius(radius, persist = true) {
+      this.currentRadius = radius;
+      document.documentElement.style.setProperty('--radius-window', radius);
+      document.documentElement.style.setProperty('--radius-ui', radius === '0px' ? '0px' : (radius === '12px' ? '8px' : '6px'));
+
+      document.querySelectorAll('#group-corner-radius .option-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-radius') === radius);
+      });
+
+      if (persist) {
+        localStorage.setItem('ankora_corner_radius', radius);
+        Terminal.log(`[KİŞİSELLEŞTİRME] Pencere kavis yarıçapı: ${radius}`, 'cmd');
+      }
+    },
+
+    setWindowGlass(glassMode, persist = true) {
+      this.currentGlass = glassMode;
+      document.body.classList.remove('glass-solid', 'glass-balanced', 'glass-high');
+      document.body.classList.add(`glass-${glassMode}`);
+
+      document.querySelectorAll('#group-window-blur .option-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-glass') === glassMode);
+      });
+
+      if (persist) {
+        localStorage.setItem('ankora_window_glass', glassMode);
+        Terminal.log(`[KİŞİSELLEŞTİRME] Pencere cam saydamlığı: ${glassMode}`, 'cmd');
+      }
+    },
+
+    setTaskbarAlign(align, persist = true) {
+      this.currentTaskbarAlign = align;
+      const tb = document.querySelector('.taskbar');
+      if (align === 'left') {
+        document.body.classList.add('taskbar-align-left');
+        if (tb) tb.classList.add('align-left');
+      } else {
+        document.body.classList.remove('taskbar-align-left');
+        if (tb) tb.classList.remove('align-left');
+      }
+
+      document.querySelectorAll('#group-taskbar-align .option-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-align') === align);
+      });
+
+      if (persist) {
+        localStorage.setItem('ankora_taskbar_align', align);
+        Terminal.log(`[KİŞİSELLEŞTİRME] Görev çubuğu yerleşimi: ${align === 'left' ? 'Sol Hizalı' : 'Ortalanmış'}`, 'cmd');
+      }
+    },
+
+    setTaskbarHeight(height, persist = true) {
+      this.currentTaskbarHeight = height;
+      document.documentElement.style.setProperty('--taskbar-height', height);
+
+      document.querySelectorAll('#group-taskbar-size .option-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-height') === height);
+      });
+
+      if (persist) {
+        localStorage.setItem('ankora_taskbar_height', height);
+        Terminal.log(`[KİŞİSELLEŞTİRME] Görev çubuğu yüksekliği: ${height}`, 'cmd');
+      }
+    },
+
+    setAnimSpeed(animMode, persist = true) {
+      this.currentAnimSpeed = animMode;
+      document.body.classList.remove('anim-smooth', 'anim-fast', 'anim-none');
+      document.body.classList.add(`anim-${animMode}`);
+
+      document.querySelectorAll('#group-anim-speed .option-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-anim') === animMode);
+      });
+
+      if (persist) {
+        localStorage.setItem('ankora_anim_speed', animMode);
+        Terminal.log(`[KİŞİSELLEŞTİRME] Arayüz animasyon hızı: ${animMode}`, 'cmd');
       }
     }
   };

@@ -1,84 +1,11 @@
 ﻿================================================================================
-                 ANKORA LINUX 2.0 (DAEDALUS KIOSK DE)
-         TAM PROJE KAYNAK KODLARI, YAPILANDIRMASI VE GÜVENLİK YAMALARI
-                   Oluşturulma Tarihi: 2026-09-21 23:34:36
+ANKORA LINUX 2.0 (DAEDALUS) - TÜM KAYNAK KODLARI VE VEKTÖREL VARLIKLARI
+Açıklama: Gerçek Devuan Linux Live ISO ve Tauri Donanım Hızlandırmalı Masaüstü Ortamı
+Tarih: 2026-09-21 23:46:07
 ================================================================================
 
-GÜVENLİK DENETİMİ VE SERTLEŞTİRME (SECURITY HARDENING COMPLETED):
-1. Sınırsız kabuk IPC'si kapatıldı -> Whitelist ve parametreli denetim getirildi.
-2. CSP 'self' olarak zorunlu kılındı, tüm innerHTML kullanımları güvenli escapeHtml
-   ve DOM textContent API'leriyle değiştirilerek XSS/RCE zinciri kırıldı.
-3. Kurulum betiğindeki format! komut enjeksiyonu kaldırıldı; süreçler izole argüman
-   dizileriyle (Command::args) yürütüldü.
-4. launch_application shell injection açığı kapatıldı, metakarakterler filtrelendi.
-5. read_document_file dizin atlama (path traversal) ve hassas dosya okuma engellendi.
-6. AI eylem zinciri (query_local_ai -> execute_agent_confirmed_action) sadece önceden
-   onaylanmış bakım komutları listesine kısıtlandı.
-7. install_deb_package için Debian paket adı regex doğrulaması ve '--' bayrak koruması getirildi.
-8. Parola düz metin süreç argümanı (ps aux) kaldırıldı; parola doğrudan stdin pipe ile chpasswd'e aktarıldı.
-
---------------------------------------------------------------------------------
-İÇİNDEKİLER DİZİNİ:
---------------------------------------------------------------------------------
- 1. package.json                                                      (     305 bayt)
- 2. src-tauri/Cargo.toml                                              (     613 bayt)
- 3. src-tauri/tauri.conf.json                                         (    1609 bayt)
- 4. src-tauri/build.rs                                                (      39 bayt)
- 5. src-tauri/src/main.rs                                             (   41280 bayt)
- 6. src/index.html                                                    (   67056 bayt)
- 7. src/style.css                                                     (   53428 bayt)
- 8. src/app.js                                                        (   51318 bayt)
- 9. src/logo.svg                                                      (    1930 bayt)
-10. src/wallpaper.svg                                                 (    3004 bayt)
-11. src/wallpaper-nordic.svg                                          (    1371 bayt)
-12. src/wallpaper-obsidian.svg                                        (     926 bayt)
-13. src/wallpaper-topo.svg                                            (    1190 bayt)
-14. README.md                                                         (    6182 bayt)
-15. README_EN.md                                                      (    3390 bayt)
-16. LICENSE                                                           (    1086 bayt)
-17. Ankora2-SourceCode/scripts/yardimci                               (     243 bayt)
-18. Ankora2-SourceCode/etc/refractasnapshot.conf                      (   10787 bayt)
-19. Ankora2-SourceCode/etc/calamares/settings.conf                    (    4051 bayt)
-20. Ankora2-SourceCode/etc/calamares/branding/debian/branding.desc    (    1107 bayt)
-21. Ankora2-SourceCode/etc/calamares/branding/debian/show.qml         (    1692 bayt)
-22. Ankora2-SourceCode/etc/calamares/modules/bootloader.conf          (    2280 bayt)
-23. Ankora2-SourceCode/etc/calamares/modules/displaymanager.conf      (    1077 bayt)
-24. Ankora2-SourceCode/etc/calamares/modules/finished.conf            (      97 bayt)
-25. Ankora2-SourceCode/etc/calamares/modules/fstab.conf               (     252 bayt)
-26. Ankora2-SourceCode/etc/calamares/modules/luksopenswaphookcfg.conf (     180 bayt)
-27. Ankora2-SourceCode/etc/calamares/modules/machineid.conf           (     504 bayt)
-28. Ankora2-SourceCode/etc/calamares/modules/mount.conf               (    1446 bayt)
-29. Ankora2-SourceCode/etc/calamares/modules/packages.conf            (     326 bayt)
-30. Ankora2-SourceCode/etc/calamares/modules/shellprocess_removelive.conf (     195 bayt)
-31. Ankora2-SourceCode/etc/calamares/modules/unpackfs.conf            (     130 bayt)
-32. Ankora2-SourceCode/etc/calamares/modules/users.conf               (     351 bayt)
-33. Ankora2-SourceCode/etc/calamares/modules/welcome.conf             (     313 bayt)
---------------------------------------------------------------------------------
-
-
 ================================================================================
->>> BAŞLANGIÇ: package.json
-================================================================================
-{
-  "name": "ankora-de",
-  "version": "2.0.0",
-  "description": "Ankora Linux Minimalist Kiosk Desktop Environment (Tauri + Rust)",
-  "private": true,
-  "scripts": {
-    "tauri": "tauri",
-    "dev": "tauri dev",
-    "build": "tauri build"
-  },
-  "devDependencies": {
-    "@tauri-apps/cli": "^1.5.0"
-  }
-}
-
-<<< BİTİŞ: package.json
-
-
-================================================================================
->>> BAŞLANGIÇ: src-tauri/Cargo.toml
+DOSYA: src-tauri/Cargo.toml
 ================================================================================
 [package]
 name = "ankora-de"
@@ -103,11 +30,9 @@ reqwest = { version = "0.11", features = ["json"] }
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
 
-<<< BİTİŞ: src-tauri/Cargo.toml
-
 
 ================================================================================
->>> BAŞLANGIÇ: src-tauri/tauri.conf.json
+DOSYA: src-tauri/tauri.conf.json
 ================================================================================
 {
   "$schema": "https://raw.githubusercontent.com/tauri-apps/tauri/tauri-v1/tooling/cli/schema.json",
@@ -176,21 +101,9 @@ custom-protocol = ["tauri/custom-protocol"]
   }
 }
 
-<<< BİTİŞ: src-tauri/tauri.conf.json
-
 
 ================================================================================
->>> BAŞLANGIÇ: src-tauri/build.rs
-================================================================================
-fn main() {
-    tauri_build::build()
-}
-
-<<< BİTİŞ: src-tauri/build.rs
-
-
-================================================================================
->>> BAŞLANGIÇ: src-tauri/src/main.rs
+DOSYA: src-tauri/src/main.rs
 ================================================================================
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
@@ -848,94 +761,189 @@ async fn list_available_documents() -> Result<Vec<String>, String> {
 // 6. ANKORA AI VE GÜVENLİ EYLEM ZİNCİRİ - GÜVENLİK BULGUSU #6
 // ============================================================================
 #[tauri::command]
-async fn query_local_ai(prompt: String, endpoint: Option<String>, model: Option<String>) -> Result<AiResponse, String> {
-    let url = endpoint.unwrap_or_else(|| "http://127.0.0.1:11434/api/generate".to_string());
-    let ai_model = model.unwrap_or_else(|| "qwen2.5:0.5b".to_string());
+async fn query_local_ai(
+    prompt: String,
+    provider: Option<String>,
+    endpoint: Option<String>,
+    api_key: Option<String>,
+    model: Option<String>,
+    agent_mode: Option<String>,
+) -> Result<AiResponse, String> {
+    let prov = provider.unwrap_or_else(|| "ollama".to_string()).to_lowercase();
+    let mode = agent_mode.unwrap_or_else(|| "sysadmin".to_string()).to_lowercase();
 
-    let sys_prompt = "Sen Ankora Linux (Devuan Daedalus) işletim sisteminin yerel sistem asistanısın. \
-Kullanıcıya teknik, kısa ve profesyonel yanıtlar ver. \
-Eğer kullanıcının talebi sistemde bir bakım veya durum sorgusu gerektiriyorsa, \
-yanıtının sonuna tam olarak şu formatta bir eylem etiketi ekle: \
-<<<ACTION:{\"command\":\"izin_verilen_komut\",\"desc\":\"Eylemin açıklaması\"}>>> \
-Asla tehlikeli veya rastgele komut üretme. Sadece doğrulanmış sistem komutları üret.";
-
-    let payload = serde_json::json!({
-        "model": ai_model,
-        "prompt": format!("{}\n\nKullanıcı: {}", sys_prompt, prompt),
-        "stream": false
-    });
+    let sys_prompt = match mode.as_str() {
+        "developer" => {
+            "Sen Ankora Linux (Devuan Daedalus) sistem geliştirici ve terminal asistanısın. \
+            Bash betikleri, Debian derleme, Rust/C geliştirme ve paket araçları konusunda teknik rehberlik sağla. \
+            Eğer bir komut yürütülmesi gerekiyorsa yanıtının sonuna tam olarak şu formatta bir eylem etiketi ekle: \
+            <<<ACTION:{\"command\":\"izin_verilen_komut\",\"desc\":\"Eylemin açıklaması\"}>>> \
+            Sadece izin verilen sistem bakım komutları üret."
+        }
+        "general" => {
+            "Sen Ankora Linux işletim sisteminin dost canlısı, Türkçe ve profesyonel genel asistanısın. \
+            Kullanıcının sorularını açık, kibar ve teknik doğrulukla yanıtla. \
+            Gerekirse sistem komutunu şu formatta ekle: \
+            <<<ACTION:{\"command\":\"izin_verilen_komut\",\"desc\":\"Eylemin açıklaması\"}>>>"
+        }
+        _ => {
+            "Sen Ankora Linux (Devuan Daedalus) işletim sisteminin yerel sistem yöneticisi ve teftiş ajanısın. \
+            Kullanıcıya teknik, kısa ve profesyonel yanıtlar ver. \
+            Eğer kullanıcının talebi sistemde bir bakım, telemetre sorgusu veya temizlik gerektiriyorsa, \
+            yanıtının sonuna tam olarak şu formatta bir eylem etiketi ekle: \
+            <<<ACTION:{\"command\":\"izin_verilen_komut\",\"desc\":\"Eylemin açıklaması\"}>>> \
+            Asla tehlikeli veya rastgele komut üretme. Sadece doğrulanmış sistem komutları üret."
+        }
+    };
 
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(30))
         .build()
         .map_err(|e| e.to_string())?;
 
-    let res = client.post(&url).json(&payload).send().await;
+    let parse_action_from_text = |text: &str| -> (String, bool, Option<String>, Option<String>) {
+        if let Some(start_idx) = text.find("<<<ACTION:") {
+            if let Some(end_idx) = text[start_idx..].find(">>>") {
+                let json_str = &text[start_idx + 10..start_idx + end_idx];
+                let clean_reply = text[..start_idx].trim().to_string();
 
-    match res {
-        Ok(resp) => {
-            if resp.status().is_success() {
-                let json_data: serde_json::Value = resp.json().await.map_err(|e| e.to_string())?;
-                let raw_reply = json_data["response"].as_str().unwrap_or("").to_string();
-
-                if let Some(start_idx) = raw_reply.find("<<<ACTION:") {
-                    if let Some(end_idx) = raw_reply[start_idx..].find(">>>") {
-                        let json_str = &raw_reply[start_idx + 10..start_idx + end_idx];
-                        let clean_reply = raw_reply[..start_idx].trim().to_string();
-
-                        if let Ok(action_val) = serde_json::from_str::<serde_json::Value>(json_str) {
-                            let proposed_cmd = action_val["command"].as_str().unwrap_or("").trim().to_string();
-                            // Sadece whitelist içerisindeki komutların eylem kartı olarak üretilmesine izin verilir
-                            if ALLOWED_AGENT_ACTIONS.contains(&proposed_cmd.as_str()) {
-                                return Ok(AiResponse {
-                                    reply: clean_reply,
-                                    has_action: true,
-                                    action_command: Some(proposed_cmd),
-                                    action_desc: action_val["desc"].as_str().map(|s| s.to_string()),
-                                });
-                            }
-                        }
+                if let Ok(action_val) = serde_json::from_str::<serde_json::Value>(json_str) {
+                    let proposed_cmd = action_val["command"].as_str().unwrap_or("").trim().to_string();
+                    if ALLOWED_AGENT_ACTIONS.contains(&proposed_cmd.as_str()) {
+                        return (
+                            clean_reply,
+                            true,
+                            Some(proposed_cmd),
+                            action_val["desc"].as_str().map(|s| s.to_string()),
+                        );
                     }
                 }
+            }
+        }
+        (text.to_string(), false, None, None)
+    };
 
-                Ok(AiResponse {
-                    reply: raw_reply,
-                    has_action: false,
-                    action_command: None,
-                    action_desc: None,
-                })
-            } else {
-                Err(format!("Ollama API hatası (Kod: {})", resp.status()))
+    // 1. OLLAMA
+    if prov == "ollama" {
+        let url = endpoint.unwrap_or_else(|| "http://127.0.0.1:11434/api/generate".to_string());
+        let ai_model = model.unwrap_or_else(|| "qwen2.5:0.5b".to_string());
+        let payload = serde_json::json!({
+            "model": ai_model,
+            "prompt": format!("{}\n\nKullanıcı: {}", sys_prompt, prompt),
+            "stream": false
+        });
+
+        if let Ok(resp) = client.post(&url).json(&payload).send().await {
+            if resp.status().is_success() {
+                if let Ok(json_data) = resp.json::<serde_json::Value>().await {
+                    let raw_reply = json_data["response"].as_str().unwrap_or("").to_string();
+                    let (reply, has_action, action_command, action_desc) = parse_action_from_text(&raw_reply);
+                    return Ok(AiResponse { reply, has_action, action_command, action_desc });
+                }
             }
         }
-        Err(_) => {
-            let p_lower = prompt.to_lowercase();
-            if p_lower.contains("temizle") || p_lower.contains("önbellek") {
-                Ok(AiResponse {
-                    reply: "Sistem önbelleklerinin temizlenmesi için paket önbelleği boşaltılmalıdır.".to_string(),
-                    has_action: true,
-                    action_command: Some("apt-get clean && rm -rf /tmp/*".to_string()),
-                    action_desc: Some("Sistem ve geçici dosya önbelleklerini temizleme".to_string()),
-                })
-            } else if p_lower.contains("durum") || p_lower.contains("disk") {
-                Ok(AiResponse {
-                    reply: "Disk ve bellek doluluk raporu taranıyor.".to_string(),
-                    has_action: true,
-                    action_command: Some("df -h / && free -m".to_string()),
-                    action_desc: Some("Disk ve bellek durumunu sorgulama".to_string()),
-                })
-            } else {
-                Ok(AiResponse {
-                    reply: format!(
-                        "Ankora AI Çekirdeği hazır. Dahili sistem analiz modunda yanıt veriliyor: \"{}\"",
-                        prompt
-                    ),
-                    has_action: false,
-                    action_command: None,
-                    action_desc: None,
-                })
+    } 
+    // 2. GOOGLE GEMINI
+    else if prov == "gemini" {
+        let key = api_key.unwrap_or_default();
+        if key.is_empty() {
+            return Err("Google Gemini API anahtarı girilmedi. Lütfen ayarlar panelinden API anahtarınızı girin.".to_string());
+        }
+        let ai_model = model.unwrap_or_else(|| "gemini-2.0-flash".to_string());
+        let url = format!(
+            "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent?key={}",
+            ai_model, key
+        );
+        let payload = serde_json::json!({
+            "contents": [{
+                "parts": [{ "text": format!("{}\n\nKullanıcı: {}", sys_prompt, prompt) }]
+            }]
+        });
+
+        match client.post(&url).json(&payload).send().await {
+            Ok(resp) if resp.status().is_success() => {
+                if let Ok(json_data) = resp.json::<serde_json::Value>().await {
+                    let text = json_data["candidates"][0]["content"]["parts"][0]["text"].as_str().unwrap_or("").to_string();
+                    let (reply, has_action, action_command, action_desc) = parse_action_from_text(&text);
+                    return Ok(AiResponse { reply, has_action, action_command, action_desc });
+                }
+            }
+            Ok(resp) => {
+                return Err(format!("Gemini API Hatası (HTTP {}): API anahtarını veya model adını kontrol edin.", resp.status()));
+            }
+            Err(e) => return Err(format!("Gemini bağlantı hatası: {}", e)),
+        }
+    }
+    // 3. OPENAI / GROQ / OPENROUTER / CUSTOM
+    else {
+        let (url, default_model) = match prov.as_str() {
+            "openai" => ("https://api.openai.com/v1/chat/completions".to_string(), "gpt-4o-mini".to_string()),
+            "groq" => ("https://api.groq.com/openai/v1/chat/completions".to_string(), "llama-3.3-70b-versatile".to_string()),
+            "openrouter" => ("https://openrouter.ai/api/v1/chat/completions".to_string(), "anthropic/claude-3.5-sonnet".to_string()),
+            _ => (endpoint.unwrap_or_else(|| "http://127.0.0.1:8000/v1/chat/completions".to_string()), "default".to_string())
+        };
+        let ai_model = model.unwrap_or(default_model);
+        let key = api_key.unwrap_or_default();
+
+        let mut req = client.post(&url);
+        if !key.is_empty() {
+            req = req.header("Authorization", format!("Bearer {}", key));
+        }
+
+        let payload = serde_json::json!({
+            "model": ai_model,
+            "messages": [
+                {"role": "system", "content": sys_prompt},
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.3
+        });
+
+        match req.json(&payload).send().await {
+            Ok(resp) if resp.status().is_success() => {
+                if let Ok(json_data) = resp.json::<serde_json::Value>().await {
+                    let text = json_data["choices"][0]["message"]["content"].as_str().unwrap_or("").to_string();
+                    let (reply, has_action, action_command, action_desc) = parse_action_from_text(&text);
+                    return Ok(AiResponse { reply, has_action, action_command, action_desc });
+                }
+            }
+            Ok(resp) => {
+                return Err(format!("API Servis Hatası (HTTP {}): API anahtarı veya servis adresi doğrulanamadı.", resp.status()));
+            }
+            Err(e) => {
+                if prov != "ollama" {
+                    return Err(format!("{} servisine bağlanılamadı: {}", prov.to_uppercase(), e));
+                }
             }
         }
+    }
+
+    // Yerel akıllı analiz modu (Fallback)
+    let p_lower = prompt.to_lowercase();
+    if p_lower.contains("temizle") || p_lower.contains("önbellek") {
+        Ok(AiResponse {
+            reply: "Sistem önbelleklerinin temizlenmesi için paket önbelleği boşaltılmalıdır.".to_string(),
+            has_action: true,
+            action_command: Some("apt-get clean && rm -rf /tmp/*".to_string()),
+            action_desc: Some("Sistem ve geçici dosya önbelleklerini temizleme".to_string()),
+        })
+    } else if p_lower.contains("durum") || p_lower.contains("disk") || p_lower.contains("ram") {
+        Ok(AiResponse {
+            reply: "Disk ve bellek doluluk raporu taranıyor.".to_string(),
+            has_action: true,
+            action_command: Some("df -h / && free -m".to_string()),
+            action_desc: Some("Disk ve bellek durumunu sorgulama".to_string()),
+        })
+    } else {
+        Ok(AiResponse {
+            reply: format!(
+                "Ankora AI Çekirdeği hazır. Harici API veya yerel Ollama servisi çevrimdışı olduğundan dahili analiz modunda yanıt veriliyor:\n\"{}\"\n\n(Kendi API anahtarınızı (OpenAI, Gemini, Groq) AI penceresindeki 'API Ayarları' butonundan bağlayabilirsiniz.)",
+                prompt
+            ),
+            has_action: false,
+            action_command: None,
+            action_desc: None,
+        })
     }
 }
 
@@ -1269,11 +1277,9 @@ fn main() {
         .expect("Ankora DE başlatılırken hata oluştu");
 }
 
-<<< BİTİŞ: src-tauri/src/main.rs
-
 
 ================================================================================
->>> BAŞLANGIÇ: src/index.html
+DOSYA: src/index.html
 ================================================================================
 <!DOCTYPE html>
 <html lang="tr">
@@ -1421,19 +1427,35 @@ fn main() {
                 <div class="wallpaper-grid">
                   <div class="wp-card active" data-wp="wallpaper.svg">
                     <div class="wp-thumb" style="background-image: url('wallpaper.svg');"></div>
-                    <span>Siyah-Beyaz Dağlar (Varsayılan)</span>
+                    <span>Siyah-Beyaz Dağlar</span>
                   </div>
                   <div class="wp-card" data-wp="wallpaper-obsidian.svg">
                     <div class="wp-thumb" style="background-image: url('wallpaper-obsidian.svg');"></div>
-                    <span>Obsidyen Mat Siyah (İnce Izgara)</span>
+                    <span>Obsidyen Izgara</span>
                   </div>
                   <div class="wp-card" data-wp="wallpaper-topo.svg">
                     <div class="wp-thumb" style="background-image: url('wallpaper-topo.svg');"></div>
-                    <span>Topoğrafik Kontur (Zirve)</span>
+                    <span>Topoğrafik Zirve</span>
                   </div>
                   <div class="wp-card" data-wp="wallpaper-nordic.svg">
                     <div class="wp-thumb" style="background-image: url('wallpaper-nordic.svg');"></div>
-                    <span>Nordik Grafit (Kuzey Silsilesi)</span>
+                    <span>Nordik Silsile</span>
+                  </div>
+                  <div class="wp-card" data-wp="wallpaper-aurora.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper-aurora.svg');"></div>
+                    <span>Nordik Şafak (Aurora)</span>
+                  </div>
+                  <div class="wp-card" data-wp="wallpaper-matrix.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper-matrix.svg');"></div>
+                    <span>Endüstriyel Matris</span>
+                  </div>
+                  <div class="wp-card" data-wp="wallpaper-zenith.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper-zenith.svg');"></div>
+                    <span>Zenith Prizma</span>
+                  </div>
+                  <div class="wp-card" data-wp="wallpaper-abstract-lines.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper-abstract-lines.svg');"></div>
+                    <span>Akıcı İpek Çizgiler</span>
                   </div>
                 </div>
               </div>
@@ -1726,7 +1748,7 @@ fn main() {
     <section class="window" id="win-ai" style="top: 60px; left: 140px; width: 760px; height: 520px;" aria-labelledby="ai-header-title">
       <div class="window-header" data-tauri-drag-region>
         <div class="window-meta">
-          <span id="ai-header-title">Ankora AI Sistem Asistanı (Ollama / Qwen LLM)</span>
+          <span id="ai-header-title">Ankora AI Sistem Asistanı (Otonom Ajan & Çoklu Model)</span>
         </div>
         <div class="window-controls">
           <button class="ctrl-btn min" title="Küçült">−</button>
@@ -1737,33 +1759,86 @@ fn main() {
       <div class="window-view">
         <div class="ai-layout">
           <div class="ai-status-bar">
-            <div class="ai-model-select-group">
-              <span>Model:</span>
-              <select id="ai-model-select" class="select-mono-sm">
-                <option value="qwen2.5:0.5b">Qwen 2.5 (0.5B - Hafif Yerel)</option>
-                <option value="llama3">Llama 3 (Meta AI)</option>
-                <option value="deepseek-r1">DeepSeek R1</option>
-                <option value="mistral">Mistral 7B</option>
-              </select>
+            <div class="ai-provider-info">
+              <span class="ai-capsule" id="ai-current-provider-badge">Ollama (Yerel)</span>
+              <span class="ai-capsule" id="ai-current-mode-badge">
+                <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:12px;height:12px;display:inline-block;vertical-align:-1px;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                Sistem Teftiş Ajanı
+              </span>
             </div>
             <div class="ai-endpoint-info">
-              <span>Sunucu: <strong id="ai-endpoint-label">localhost:11434</strong></span>
-              <span class="status-pill" id="ai-status-indicator">Bağlı / Hazır</span>
+              <span class="status-pill online" id="ai-status-indicator">Bağlı / Hazır</span>
+              <button class="ai-config-toggle-btn" id="btn-toggle-ai-config" title="API Anahtarı ve Sağlayıcı Yapılandırması">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width: 14px; height: 14px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <span>API Ayarları</span>
+              </button>
             </div>
           </div>
+
+          <!-- Ajan & Özel API Bağlantı Paneli (Drawer) -->
+          <div class="ai-config-drawer" id="ai-config-drawer">
+            <div class="drawer-inner-grid">
+              <div class="drawer-field">
+                <label>AI Sağlayıcı</label>
+                <select id="ai-cfg-provider" class="select-mono-sm">
+                  <option value="ollama">Yerel Ollama (localhost:11434)</option>
+                  <option value="openai">OpenAI (ChatGPT / GPT-4o)</option>
+                  <option value="gemini">Google Gemini (Gemini 2.0 Flash)</option>
+                  <option value="groq">Groq Cloud (Llama 3.3 70B Ultra Hızlı)</option>
+                  <option value="openrouter">OpenRouter (Evrensel Hub)</option>
+                  <option value="custom">Özel OpenAI Uyumlu Endpoint</option>
+                </select>
+              </div>
+
+              <div class="drawer-field">
+                <label>Ajan Rolü & Yetkisi</label>
+                <select id="ai-cfg-mode" class="select-mono-sm">
+                  <option value="sysadmin">Sistem Yöneticisi & Teftiş Ajanı (Root Diagnostic)</option>
+                  <option value="developer">Geliştirici & Terminal Asistanı</option>
+                  <option value="general">Genel Sistem Asistanı</option>
+                </select>
+              </div>
+
+              <div class="drawer-field">
+                <label>Model Adı</label>
+                <input type="text" id="ai-cfg-model" class="input-mono-sm" value="qwen2.5:0.5b" placeholder="qwen2.5:0.5b / gpt-4o-mini / gemini-2.0-flash">
+              </div>
+
+              <div class="drawer-field">
+                <label>API Endpoint (Base URL)</label>
+                <input type="text" id="ai-cfg-endpoint" class="input-mono-sm" value="http://127.0.0.1:11434/api/generate" placeholder="http://127.0.0.1:11434/api/generate">
+              </div>
+
+              <div class="drawer-field full-width">
+                <label>Kullanıcı API Anahtarı (Kendi API'nizi Bağlayın)</label>
+                <div class="input-key-wrap">
+                  <input type="password" id="ai-cfg-key" class="input-mono-sm" placeholder="sk-... veya AIzaSy... (Güvenle saklanır)">
+                  <button type="button" class="btn-toggle-key-view" id="btn-toggle-key-view" title="Göster / Gizle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="drawer-actions full-width">
+                <button class="btn-pkg-sm" id="btn-save-ai-cfg">Yapılandırmayı Kaydet & Ajanı Başlat</button>
+              </div>
+            </div>
+          </div>
+
           <div class="ai-feed" id="ai-feed">
             <div class="ai-entry bot">
               <span class="ai-author">Ankora AI</span>
-              <p>Devuan Linux çekirdeğine bağlı yerel sistem asistanınızım. Donanım telemetrisini inceleyebilir, paket kurulumu yapabilir ve kabuk komutları yürütebilirim. Yetkili işlemler öncesinde sistem onayınızı alacağım.</p>
+              <p>Devuan Linux çekirdeğine bağlı sistem asistanınız ve otonom ajanınız hazır. Kendi API anahtarınızı (OpenAI, Gemini, Groq, OpenRouter) 'API Ayarları' butonundan bağlayabilir veya yerel Ollama ile çevrimdışı çalışabilirsiniz. Sistem eylemleri öncesinde her zaman güvenlik onayınız alınır.</p>
             </div>
           </div>
           <div class="ai-quick-row">
             <button class="ai-tag-btn" data-query="Sistem önbelleklerini temizle">Önbellek Temizliği</button>
             <button class="ai-tag-btn" data-query="Disk kullanımını ve RAM durumunu denetle">Disk & RAM Raporu</button>
             <button class="ai-tag-btn" data-query="Ağ bağlantısını ve IP durumunu listele">Ağ Durumu</button>
+            <button class="ai-tag-btn" data-query="Çekirdek sürümünü ve telemetri durumunu ver">Sistem Teftişi</button>
           </div>
           <div class="ai-prompt-box">
-            <input type="text" id="ai-prompt-input" placeholder="Komut veya görev belirtin (Örn: Gereksiz paketleri sil, RAM durumunu ver)...">
+            <input type="text" id="ai-prompt-input" placeholder="Ajana görev veya sistem komutu verin (Örn: Önbelleği temizle, disk durumunu ver)...">
             <button class="btn-pkg" id="btn-ai-submit">Gönder</button>
           </div>
         </div>
@@ -1792,7 +1867,10 @@ fn main() {
         <div class="office-layout">
           <div class="office-bar">
             <input type="file" id="office-file-picker" accept=".pdf,.docx,.txt,.md" style="display: none;">
-            <button class="office-btn" id="btn-office-open">📁 Dosya Aç...</button>
+            <button class="office-btn" id="btn-office-open">
+              <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+              <span>Dosya Aç...</span>
+            </button>
             <div class="office-doc-meta" id="office-doc-meta">
               <strong id="office-filename">ankora-sistem-rehberi.pdf</strong>
               <span id="office-filesize">64 KB</span>
@@ -1837,31 +1915,31 @@ fn main() {
             </div>
             <div class="settings-nav-list">
               <button class="settings-nav-item active" data-pane="pane-set-theme">
-                <span class="nav-icon">🎨</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 0 0 20 2 2 0 0 0 2-2 1 1 0 0 1 1-1h2a5 5 0 0 0 5-5c0-4.42-4.48-12-10-12z"></path></svg>
                 <span>Görünüm & Tema</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-display">
-                <span class="nav-icon">🖥️</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                 <span>Ekran & Görüntü</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-audio">
-                <span class="nav-icon">🔊</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                 <span>Ses & Bildirimler</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-network">
-                <span class="nav-icon">🌐</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                 <span>Ağ & İnternet</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-power">
-                <span class="nav-icon">⚡</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                 <span>Güç & Kiosk</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-storage">
-                <span class="nav-icon">💾</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="8" rx="2"></rect><rect x="2" y="14" width="20" height="8" rx="2"></rect><line x1="6" y1="8" x2="6.01" y2="8"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
                 <span>Depolama & Disk</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-about">
-                <span class="nav-icon">ℹ️</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                 <span>Sistem & Dağıtım</span>
               </button>
             </div>
@@ -1922,7 +2000,7 @@ fn main() {
 
               <!-- Duvar Kağıdı Seçimi -->
               <div class="settings-card-group">
-                <span class="card-group-title">Duvar Kağıdı</span>
+                <span class="card-group-title">Duvar Kağıdı (8 Vektörel Arka Plan)</span>
                 <div class="wallpaper-thumb-grid">
                   <div class="wp-thumb-card active" data-wp="wallpaper.svg">
                     <div class="thumb-img" style="background-image: url('wallpaper.svg');"></div>
@@ -1938,8 +2016,65 @@ fn main() {
                   </div>
                   <div class="wp-thumb-card" data-wp="wallpaper-nordic.svg">
                     <div class="thumb-img" style="background-image: url('wallpaper-nordic.svg');"></div>
-                    <span>Nordik Zirveler</span>
+                    <span>Nordik Silsile</span>
                   </div>
+                  <div class="wp-thumb-card" data-wp="wallpaper-aurora.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper-aurora.svg');"></div>
+                    <span>Nordik Şafak</span>
+                  </div>
+                  <div class="wp-thumb-card" data-wp="wallpaper-matrix.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper-matrix.svg');"></div>
+                    <span>Endüstriyel Matris</span>
+                  </div>
+                  <div class="wp-thumb-card" data-wp="wallpaper-zenith.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper-zenith.svg');"></div>
+                    <span>Zenith Prizma</span>
+                  </div>
+                  <div class="wp-thumb-card" data-wp="wallpaper-abstract-lines.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper-abstract-lines.svg');"></div>
+                    <span>Akıcı İpek Çizgiler</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Gelişmiş Kişiselleştirme Seçenekleri -->
+              <div class="settings-card-group">
+                <span class="card-group-title">Pencere Kenarlık Kavisi (Border Radius)</span>
+                <div class="option-pill-group" id="group-corner-radius">
+                  <button class="option-pill-btn" data-radius="0px">Keskin (0px Flat)</button>
+                  <button class="option-pill-btn active" data-radius="6px">Modern (6px)</button>
+                  <button class="option-pill-btn" data-radius="12px">Yuvarlak (12px)</button>
+                </div>
+              </div>
+
+              <div class="settings-card-group">
+                <span class="card-group-title">Pencere Saydamlığı & Cam Efekti</span>
+                <div class="option-pill-group" id="group-window-blur">
+                  <button class="option-pill-btn" data-glass="solid">Tam Opak (Katı)</button>
+                  <button class="option-pill-btn active" data-glass="balanced">Dengeli Cam (%85)</button>
+                  <button class="option-pill-btn" data-glass="high">Şeffaf Cam (%65)</button>
+                </div>
+              </div>
+
+              <div class="settings-card-group">
+                <span class="card-group-title">Görev Çubuğu Yerleşimi & Boyutu</span>
+                <div class="option-pill-group" id="group-taskbar-align">
+                  <button class="option-pill-btn active" data-align="center">Ortalanmış (Win 11)</button>
+                  <button class="option-pill-btn" data-align="left">Sol Hizalı (Klasik Linux)</button>
+                </div>
+                <div class="option-pill-group" id="group-taskbar-size" style="margin-top: 8px;">
+                  <button class="option-pill-btn" data-height="36px">Kompakt (36px)</button>
+                  <button class="option-pill-btn active" data-height="44px">Standart (44px)</button>
+                  <button class="option-pill-btn" data-height="52px">Geniş (52px)</button>
+                </div>
+              </div>
+
+              <div class="settings-card-group">
+                <span class="card-group-title">Arayüz Animasyon Seviyesi</span>
+                <div class="option-pill-group" id="group-anim-speed">
+                  <button class="option-pill-btn active" data-anim="smooth">Akıcı 60 FPS</button>
+                  <button class="option-pill-btn" data-anim="fast">Minimal / Hızlı</button>
+                  <button class="option-pill-btn" data-anim="none">Kapalı (Kiosk)</button>
                 </div>
               </div>
             </div>
@@ -2117,7 +2252,10 @@ fn main() {
                       <strong>Ankora_Lab_5G</strong>
                       <span>WPA2/WPA3 Kişisel • 5 GHz</span>
                     </div>
-                    <span class="wifi-signal">📶 %96 (Bağlı)</span>
+                    <span class="wifi-signal">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 13px; height: 13px; display: inline-block; vertical-align: -2px; margin-right: 4px;"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                      %96 (Bağlı)
+                    </span>
                   </div>
                   <div class="wifi-row">
                     <div class="wifi-row-meta">
@@ -2561,11 +2699,9 @@ fn main() {
 </body>
 </html>
 
-<<< BİTİŞ: src/index.html
-
 
 ================================================================================
->>> BAŞLANGIÇ: src/style.css
+DOSYA: src/style.css
 ================================================================================
 /* ==============================================================================
    ANKORA LINUX - ULTRA-MINIMALIST MONOCHROME TAURI DESKTOP ENVIRONMENT
@@ -5323,11 +5459,252 @@ html, body {
   margin-bottom: 8px;
 }
 
-<<< BİTİŞ: src/style.css
+/* ==============================================================================
+   MONOKROM SVG İKONLAR & BUTON GLİFLERİ
+   ============================================================================== */
+.nav-icon-svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.8;
+  color: var(--text-secondary);
+  transition: color 0.15s ease, stroke 0.15s ease;
+  flex-shrink: 0;
+}
+
+.settings-nav-item.active .nav-icon-svg {
+  color: var(--accent-active, #2563eb);
+}
+
+.btn-icon-svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.8;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+/* ==============================================================================
+   AI AJAN & ÇOKLU API SAĞLAYICI ÇEKMECESİ (DRAWER)
+   ============================================================================== */
+.ai-provider-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-capsule {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+}
+
+.ai-config-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ai-config-toggle-btn:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--border-medium);
+}
+
+.ai-config-drawer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.28s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s ease, opacity 0.2s ease;
+  opacity: 0;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 16px;
+}
+
+.ai-config-drawer.open {
+  max-height: 280px;
+  opacity: 1;
+  padding: 14px 16px;
+}
+
+.drawer-inner-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.drawer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drawer-field.full-width {
+  grid-column: span 2;
+}
+
+.drawer-field label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.input-mono-sm, .select-mono-sm {
+  padding: 6px 8px;
+  background: var(--bg-base);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-ui);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  outline: none;
+}
+
+.input-mono-sm:focus, .select-mono-sm:focus {
+  border-color: var(--accent-active, #2563eb);
+}
+
+.input-key-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-key-wrap input {
+  width: 100%;
+  padding-right: 32px;
+}
+
+.btn-toggle-key-view {
+  position: absolute;
+  right: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-toggle-key-view:hover {
+  color: var(--text-primary);
+}
+
+/* ==============================================================================
+   KİŞİSELLEŞTİRME SEÇİM PİLLERİ (OPTION PILLS)
+   ============================================================================== */
+.option-pill-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.option-pill-btn {
+  padding: 6px 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.option-pill-btn:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+.option-pill-btn.active {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--accent-active, #2563eb);
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
+}
+
+/* Sol Hizalı Görev Çubuğu Modu */
+.taskbar.align-left .taskbar-center-cluster {
+  left: 200px;
+  transform: none;
+}
+
+body.taskbar-align-left .start-flyout {
+  left: 24px;
+  transform: translateY(16px) scale(0.98);
+}
+
+body.taskbar-align-left .start-flyout.open {
+  transform: translateY(0) scale(1);
+}
+
+/* Pencere Saydamlık Modları */
+body.glass-solid .window {
+  background: var(--bg-base);
+  backdrop-filter: none;
+}
+
+body.glass-balanced .window {
+  background: rgba(19, 20, 27, 0.88);
+  backdrop-filter: blur(24px) saturate(130%);
+}
+
+body.glass-high .window {
+  background: rgba(19, 20, 27, 0.65);
+  backdrop-filter: blur(32px) saturate(160%);
+}
+
+body.theme-light.glass-solid .window {
+  background: #ffffff;
+}
+
+body.theme-light.glass-balanced .window {
+  background: rgba(255, 255, 255, 0.88);
+}
+
+body.theme-light.glass-high .window {
+  background: rgba(255, 255, 255, 0.68);
+}
+
+/* ==============================================================================
+   ANİMASYON HIZI MODLARI (ANIMATION PROFILES)
+   ============================================================================== */
+body.anim-smooth * {
+  /* Standart akıcı 60 FPS geçişler */
+}
+
+body.anim-fast * {
+  transition-duration: 0.08s !important;
+  animation-duration: 0.08s !important;
+}
+
+body.anim-none *,
+body.anim-none *::before,
+body.anim-none *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+
 
 
 ================================================================================
->>> BAŞLANGIÇ: src/app.js
+DOSYA: src/app.js
 ================================================================================
 (() => {
   'use strict';
@@ -5398,13 +5775,50 @@ html, body {
             content: 'data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFszIDAgUl0KL0NvdW50IDEKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgovTWVkaWFCb3ggWzAgMCA1OTUgODQyXQovQ29udGVudHMgNCAwIFIKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL0xlbmd0aCA4NQo+PgpzdHJlYW0KQVQKL1RkIDAgLzAgRjEgMjQgVGYKKDFBYmtvcmEgTGludXggMi4wIFNpc3RlbSBSZWhiZXJpKSBUagogRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDA2OCAwMDAwMCBuIAowMDAwMDAwMTI1IDAwMDAwIG4gCjAwMDAwMDAyMjUgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA1Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgogMzYxCiUlRU9GCg=='
           };
 
-        case 'query_local_ai':
+        case 'query_local_ai': {
+          const prov = (args.provider || 'ollama').toUpperCase();
+          const mode = (args.agent_mode || 'sysadmin').toLowerCase();
+          const p = (args.prompt || '').toLowerCase();
+          const hasKey = Boolean(args.api_key && args.api_key.trim().length > 0);
+          const prefix = `[${prov} / ${mode === 'developer' ? 'GELİŞTİRİCİ' : mode === 'general' ? 'ASİSTAN' : 'SİSTEM TEFTİŞ'} AJANI]: `;
+
+          if (p.includes('temizle') || p.includes('önbellek')) {
+            return {
+              reply: `${prefix}Sistem önbelleklerinin temizlenmesi ve disk alanının boşaltılması analiz edildi. Aşağıdaki işlem paket önbelleğini ve geçici dosyaları güvenli bir şekilde silecektir.`,
+              has_action: true,
+              action_command: 'apt-get clean && rm -rf /tmp/*',
+              action_desc: 'Sistem paket önbelleğini temizleme ve geçici dosyaları boşaltma'
+            };
+          } else if (p.includes('disk') || p.includes('ram') || p.includes('durum')) {
+            return {
+              reply: `${prefix}Sistem kaynakları denetleniyor. Kök dosya sistemi doluluğu ve bellek (RAM) tüketimi raporlanacaktır.`,
+              has_action: true,
+              action_command: 'df -h / && free -m',
+              action_desc: 'Kök dosya sistemi ve RAM kullanımını sorgulama'
+            };
+          } else if (p.includes('ağ') || p.includes('ip') || p.includes('network')) {
+            return {
+              reply: `${prefix}Ağ arabirimleri ve etkin IP adresleri taranıyor.`,
+              has_action: true,
+              action_command: 'ip addr show',
+              action_desc: 'Ağ arabirimlerini ve IP yapılandırmasını listeleme'
+            };
+          } else if (p.includes('teftiş') || p.includes('çekirdek') || p.includes('telemetri')) {
+            return {
+              reply: `${prefix}Çekirdek telemetrisi, init sistemi ve donanım mimarisi taranıyor.`,
+              has_action: true,
+              action_command: 'uname -a && uptime',
+              action_desc: 'Sistem çekirdeği ve çalışma süresini teftiş etme'
+            };
+          }
+
           return {
-            reply: `Ankora AI asistanı hazır. '${args.prompt}' talebiniz analiz edildi.`,
-            has_action: args.prompt.toLowerCase().includes('temizle') || args.prompt.toLowerCase().includes('önbellek'),
-            action_command: 'apt-get clean && rm -rf /tmp/*',
-            action_desc: 'Sistem paket önbelleğini temizleme ve geçici dosyaları boşaltma'
+            reply: `${prefix}Talebiniz '${args.prompt}' işlendi.\n• Model: ${args.model || 'varsayılan'}\n• Bağlantı: ${hasKey ? 'Özel Kullanıcı API Anahtarı Aktif ✓' : 'Yerel / Açık Uç Nokta'}\nAnkora Linux Devuan 5.0 (Daedalus) çekirdeği üzerinde otonom ajan hazır.`,
+            has_action: false,
+            action_command: null,
+            action_desc: null
           };
+        }
 
         case 'execute_agent_confirmed_action':
           return `[SİSTEM ONAYLANDI] ${args.command} çalıştırıldı ve tamamlandı.`;
@@ -5953,18 +6367,113 @@ html, body {
   };
 
   // ============================================================================
-  // 6. ANKORA AI (GERÇEK OLLAMA ENTEGRASYONU & GÜVENLİK ONAY SİSTEMİ)
+  // 6. ANKORA AI (OTONOM AJAN, KULLANICI API BAĞLANTISI & GÜVENLİK ONAY SİSTEMİ)
   // ============================================================================
   const AIAgent = {
     feed: null,
     input: null,
     pendingCommand: null,
+    provider: 'ollama',
+    mode: 'sysadmin',
+    model: 'qwen2.5:0.5b',
+    endpoint: 'http://127.0.0.1:11434/api/generate',
+    apiKey: '',
 
     init() {
       this.feed = document.getElementById('ai-feed');
       this.input = document.getElementById('ai-prompt-input');
       const btnSend = document.getElementById('btn-ai-submit');
       const quickBtns = document.querySelectorAll('.ai-tag-btn');
+
+      // 1. Kaydedilmiş API & Ajan Tercihlerini Yükle
+      this.provider = localStorage.getItem('ankora_ai_provider') || 'ollama';
+      this.mode = localStorage.getItem('ankora_ai_mode') || 'sysadmin';
+      this.model = localStorage.getItem('ankora_ai_model') || (this.provider === 'ollama' ? 'qwen2.5:0.5b' : 'gpt-4o-mini');
+      this.endpoint = localStorage.getItem('ankora_ai_endpoint') || 'http://127.0.0.1:11434/api/generate';
+      this.apiKey = localStorage.getItem('ankora_ai_key') || '';
+
+      const selProvider = document.getElementById('ai-cfg-provider');
+      const selMode = document.getElementById('ai-cfg-mode');
+      const inputModel = document.getElementById('ai-cfg-model');
+      const inputEndpoint = document.getElementById('ai-cfg-endpoint');
+      const inputKey = document.getElementById('ai-cfg-key');
+
+      if (selProvider) selProvider.value = this.provider;
+      if (selMode) selMode.value = this.mode;
+      if (inputModel) inputModel.value = this.model;
+      if (inputEndpoint) inputEndpoint.value = this.endpoint;
+      if (inputKey) inputKey.value = this.apiKey;
+
+      this.updateBadges();
+
+      // 2. Yapılandırma Paneli (Drawer) Açma/Kapama
+      const btnToggleConfig = document.getElementById('btn-toggle-ai-config');
+      const drawer = document.getElementById('ai-config-drawer');
+      if (btnToggleConfig && drawer) {
+        btnToggleConfig.addEventListener('click', () => {
+          drawer.classList.toggle('open');
+        });
+      }
+
+      // 3. API Anahtarı Göster / Gizle Toggle Butonu
+      const btnToggleKey = document.getElementById('btn-toggle-key-view');
+      if (btnToggleKey && inputKey) {
+        btnToggleKey.addEventListener('click', () => {
+          inputKey.type = inputKey.type === 'password' ? 'text' : 'password';
+        });
+      }
+
+      // 4. Sağlayıcı Değiştiğinde Otomatik Varsayılanları Tamamla
+      if (selProvider) {
+        selProvider.addEventListener('change', () => {
+          const val = selProvider.value;
+          if (val === 'ollama') {
+            if (inputModel) inputModel.value = 'qwen2.5:0.5b';
+            if (inputEndpoint) inputEndpoint.value = 'http://127.0.0.1:11434/api/generate';
+          } else if (val === 'openai') {
+            if (inputModel) inputModel.value = 'gpt-4o-mini';
+            if (inputEndpoint) inputEndpoint.value = 'https://api.openai.com/v1/chat/completions';
+          } else if (val === 'gemini') {
+            if (inputModel) inputModel.value = 'gemini-2.0-flash';
+            if (inputEndpoint) inputEndpoint.value = 'https://generativelanguage.googleapis.com/v1beta';
+          } else if (val === 'groq') {
+            if (inputModel) inputModel.value = 'llama-3.3-70b-versatile';
+            if (inputEndpoint) inputEndpoint.value = 'https://api.groq.com/openai/v1/chat/completions';
+          } else if (val === 'openrouter') {
+            if (inputModel) inputModel.value = 'anthropic/claude-3.5-sonnet';
+            if (inputEndpoint) inputEndpoint.value = 'https://openrouter.ai/api/v1/chat/completions';
+          } else if (val === 'custom') {
+            if (inputModel) inputModel.value = 'default';
+            if (inputEndpoint) inputEndpoint.value = 'http://127.0.0.1:8000/v1/chat/completions';
+          }
+        });
+      }
+
+      // 5. Yapılandırmayı Kaydetme
+      const btnSaveCfg = document.getElementById('btn-save-ai-cfg');
+      if (btnSaveCfg) {
+        btnSaveCfg.addEventListener('click', () => {
+          if (selProvider) this.provider = selProvider.value;
+          if (selMode) this.mode = selMode.value;
+          if (inputModel) this.model = inputModel.value.trim() || 'default';
+          if (inputEndpoint) this.endpoint = inputEndpoint.value.trim();
+          if (inputKey) this.apiKey = inputKey.value.trim();
+
+          localStorage.setItem('ankora_ai_provider', this.provider);
+          localStorage.setItem('ankora_ai_mode', this.mode);
+          localStorage.setItem('ankora_ai_model', this.model);
+          localStorage.setItem('ankora_ai_endpoint', this.endpoint);
+          localStorage.setItem('ankora_ai_key', this.apiKey);
+
+          this.updateBadges();
+          if (drawer) drawer.classList.remove('open');
+
+          const provLabel = selProvider?.options[selProvider.selectedIndex]?.text || this.provider;
+          const modeLabel = selMode?.options[selMode.selectedIndex]?.text || this.mode;
+          this.appendMsg('bot', `✓ Yapılandırma güncellendi ve otonom ajan hazırlandı.\n• Sağlayıcı: ${provLabel}\n• Ajan Yetki Rolü: ${modeLabel}\n• Model: ${this.model}\n${this.apiKey ? '• Özel API Anahtarı: Kaydedildi (Maskeli saklanıyor)' : '• API Anahtarı: Tanımlanmadı (Yerel ağ veya açık endpoint)'}`);
+          Terminal.log(`[AI YAPILANDIRMA] Sağlayıcı: ${this.provider}, Rol: ${this.mode}, Model: ${this.model}`, 'success');
+        });
+      }
 
       if (btnSend && this.input) {
         btnSend.addEventListener('click', () => this.submit());
@@ -6014,6 +6523,36 @@ html, body {
       }
     },
 
+    updateBadges() {
+      const badgeProv = document.getElementById('ai-current-provider-badge');
+      const badgeMode = document.getElementById('ai-current-mode-badge');
+      const ind = document.getElementById('ai-status-indicator');
+
+      const provMap = {
+        ollama: 'Ollama (Yerel)',
+        openai: 'OpenAI (GPT)',
+        gemini: 'Google Gemini',
+        groq: 'Groq Cloud',
+        openrouter: 'OpenRouter',
+        custom: 'Özel API'
+      };
+
+      const modeMap = {
+        sysadmin: 'Sistem Teftiş Ajanı',
+        developer: 'Geliştirici Asistanı',
+        general: 'Genel Sistem Asistanı'
+      };
+
+      if (badgeProv) badgeProv.textContent = provMap[this.provider] || this.provider.toUpperCase();
+      if (badgeMode) {
+        badgeMode.innerHTML = `<svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:12px;height:12px;display:inline-block;vertical-align:-1px;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>${modeMap[this.mode] || this.mode}`;
+      }
+      if (ind) {
+        ind.textContent = 'Bağlı / Hazır';
+        ind.className = 'status-pill online';
+      }
+    },
+
     submit() {
       if (!this.input) return;
       const text = this.input.value.trim();
@@ -6023,7 +6562,7 @@ html, body {
     },
 
     appendMsg(role, text) {
-      if (!this.feed) return;
+      if (!this.feed) return null;
       const entry = document.createElement('div');
       entry.className = `ai-entry ${role === 'user' ? 'user' : 'bot'}`;
 
@@ -6039,21 +6578,37 @@ html, body {
       entry.appendChild(p);
       this.feed.appendChild(entry);
       this.feed.scrollTop = this.feed.scrollHeight;
+      return entry;
     },
 
     async handleQuery(text) {
       this.appendMsg('user', text);
-      const model = document.getElementById('ai-model-select')?.value || 'qwen2.5:0.5b';
+      const loadingEntry = this.appendMsg('bot', 'Ajan düşünülüyor ve sistem analiz ediliyor...');
 
       try {
-        const res = await TauriBridge.invoke('query_local_ai', { prompt: text, model });
+        const res = await TauriBridge.invoke('query_local_ai', {
+          prompt: text,
+          provider: this.provider,
+          endpoint: this.endpoint,
+          api_key: this.apiKey,
+          model: this.model,
+          agent_mode: this.mode
+        });
+
+        if (loadingEntry && loadingEntry.parentNode) {
+          loadingEntry.parentNode.removeChild(loadingEntry);
+        }
+
         this.appendMsg('bot', res.reply);
 
         if (res.has_action && res.action_command) {
           this.renderActionCard(res.action_command, res.action_desc);
         }
       } catch (err) {
-        this.appendMsg('bot', `Bağlantı hatası: ${err}`);
+        if (loadingEntry && loadingEntry.parentNode) {
+          loadingEntry.parentNode.removeChild(loadingEntry);
+        }
+        this.appendMsg('bot', `⚠️ Ajan Bağlantı Hatası:\n${err}\n\nİpucu: Kendi API anahtarınızı girmek veya endpoint ayarlarını güncellemek için üstteki 'API Ayarları' butonunu kullanabilirsiniz.`);
       }
     },
 
@@ -6120,15 +6675,11 @@ html, body {
       });
 
       const wpCards = document.querySelectorAll('.wp-card');
-      const desktopWp = document.getElementById('desktop-wallpaper');
       wpCards.forEach(card => {
         card.addEventListener('click', () => {
-          wpCards.forEach(c => c.classList.remove('active'));
-          card.classList.add('active');
           const wpFile = card.getAttribute('data-wp');
-          if (desktopWp && wpFile) {
-            desktopWp.style.backgroundImage = `url('${wpFile}')`;
-            Terminal.log(`[TEMA] Duvar kağıdı uygulandı: ${wpFile}`, 'cmd');
+          if (wpFile) {
+            ThemeManager.setWallpaper(wpFile);
           }
         });
       });
@@ -6269,18 +6820,33 @@ html, body {
     currentTheme: 'theme-dark',
     currentAccent: '#2563eb',
     currentWallpaper: 'wallpaper.svg',
+    currentRadius: '6px',
+    currentGlass: 'balanced',
+    currentTaskbarAlign: 'center',
+    currentTaskbarHeight: '44px',
+    currentAnimSpeed: 'smooth',
 
     init() {
-      // Kaydedilmiş tercihleri yükle
+      // 1. Kaydedilmiş tercihleri yükle
       const savedTheme = localStorage.getItem('ankora_theme_mode') || 'theme-dark';
       const savedAccent = localStorage.getItem('ankora_accent_color') || '#2563eb';
       const savedWp = localStorage.getItem('ankora_wallpaper') || 'wallpaper.svg';
+      const savedRadius = localStorage.getItem('ankora_corner_radius') || '6px';
+      const savedGlass = localStorage.getItem('ankora_window_glass') || 'balanced';
+      const savedAlign = localStorage.getItem('ankora_taskbar_align') || 'center';
+      const savedHeight = localStorage.getItem('ankora_taskbar_height') || '44px';
+      const savedAnim = localStorage.getItem('ankora_anim_speed') || 'smooth';
 
       this.setTheme(savedTheme, false);
       this.setAccent(savedAccent, false);
       this.setWallpaper(savedWp, false);
+      this.setCornerRadius(savedRadius, false);
+      this.setWindowGlass(savedGlass, false);
+      this.setTaskbarAlign(savedAlign, false);
+      this.setTaskbarHeight(savedHeight, false);
+      this.setAnimSpeed(savedAnim, false);
 
-      // Tema Kartı ve Vurgu Butonu Seçimleri (Hem Ayarlar hem Karşılayıcı)
+      // Tema Kartı, Vurgu Butonu ve Kişiselleştirme Seçimleri
       document.addEventListener('click', (e) => {
         const themeCard = e.target.closest('.theme-card-choice');
         if (themeCard) {
@@ -6298,6 +6864,41 @@ html, body {
         if (wpCard) {
           const wp = wpCard.getAttribute('data-wp');
           if (wp) this.setWallpaper(wp);
+        }
+
+        // Pencere Kenarlık Kavisi (Border Radius)
+        const radiusBtn = e.target.closest('#group-corner-radius .option-pill-btn');
+        if (radiusBtn) {
+          const r = radiusBtn.getAttribute('data-radius');
+          if (r) this.setCornerRadius(r);
+        }
+
+        // Pencere Cam Saydamlığı (Glassmorphism)
+        const glassBtn = e.target.closest('#group-window-blur .option-pill-btn');
+        if (glassBtn) {
+          const g = glassBtn.getAttribute('data-glass');
+          if (g) this.setWindowGlass(g);
+        }
+
+        // Görev Çubuğu Yerleşimi (Alignment)
+        const alignBtn = e.target.closest('#group-taskbar-align .option-pill-btn');
+        if (alignBtn) {
+          const a = alignBtn.getAttribute('data-align');
+          if (a) this.setTaskbarAlign(a);
+        }
+
+        // Görev Çubuğu Boyutu (Height)
+        const heightBtn = e.target.closest('#group-taskbar-size .option-pill-btn');
+        if (heightBtn) {
+          const h = heightBtn.getAttribute('data-height');
+          if (h) this.setTaskbarHeight(h);
+        }
+
+        // Animasyon Seviyesi
+        const animBtn = e.target.closest('#group-anim-speed .option-pill-btn');
+        if (animBtn) {
+          const s = animBtn.getAttribute('data-anim');
+          if (s) this.setAnimSpeed(s);
         }
       });
     },
@@ -6348,6 +6949,86 @@ html, body {
       if (persist) {
         localStorage.setItem('ankora_wallpaper', wpFile);
         Terminal.log(`[DUVAR KAĞIDI] Arka plan güncellendi: ${wpFile}`, 'cmd');
+      }
+    },
+
+    setCornerRadius(radius, persist = true) {
+      this.currentRadius = radius;
+      document.documentElement.style.setProperty('--radius-window', radius);
+      document.documentElement.style.setProperty('--radius-ui', radius === '0px' ? '0px' : (radius === '12px' ? '8px' : '6px'));
+
+      document.querySelectorAll('#group-corner-radius .option-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-radius') === radius);
+      });
+
+      if (persist) {
+        localStorage.setItem('ankora_corner_radius', radius);
+        Terminal.log(`[KİŞİSELLEŞTİRME] Pencere kavis yarıçapı: ${radius}`, 'cmd');
+      }
+    },
+
+    setWindowGlass(glassMode, persist = true) {
+      this.currentGlass = glassMode;
+      document.body.classList.remove('glass-solid', 'glass-balanced', 'glass-high');
+      document.body.classList.add(`glass-${glassMode}`);
+
+      document.querySelectorAll('#group-window-blur .option-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-glass') === glassMode);
+      });
+
+      if (persist) {
+        localStorage.setItem('ankora_window_glass', glassMode);
+        Terminal.log(`[KİŞİSELLEŞTİRME] Pencere cam saydamlığı: ${glassMode}`, 'cmd');
+      }
+    },
+
+    setTaskbarAlign(align, persist = true) {
+      this.currentTaskbarAlign = align;
+      const tb = document.querySelector('.taskbar');
+      if (align === 'left') {
+        document.body.classList.add('taskbar-align-left');
+        if (tb) tb.classList.add('align-left');
+      } else {
+        document.body.classList.remove('taskbar-align-left');
+        if (tb) tb.classList.remove('align-left');
+      }
+
+      document.querySelectorAll('#group-taskbar-align .option-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-align') === align);
+      });
+
+      if (persist) {
+        localStorage.setItem('ankora_taskbar_align', align);
+        Terminal.log(`[KİŞİSELLEŞTİRME] Görev çubuğu yerleşimi: ${align === 'left' ? 'Sol Hizalı' : 'Ortalanmış'}`, 'cmd');
+      }
+    },
+
+    setTaskbarHeight(height, persist = true) {
+      this.currentTaskbarHeight = height;
+      document.documentElement.style.setProperty('--taskbar-height', height);
+
+      document.querySelectorAll('#group-taskbar-size .option-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-height') === height);
+      });
+
+      if (persist) {
+        localStorage.setItem('ankora_taskbar_height', height);
+        Terminal.log(`[KİŞİSELLEŞTİRME] Görev çubuğu yüksekliği: ${height}`, 'cmd');
+      }
+    },
+
+    setAnimSpeed(animMode, persist = true) {
+      this.currentAnimSpeed = animMode;
+      document.body.classList.remove('anim-smooth', 'anim-fast', 'anim-none');
+      document.body.classList.add(`anim-${animMode}`);
+
+      document.querySelectorAll('#group-anim-speed .option-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-anim') === animMode);
+      });
+
+      if (persist) {
+        localStorage.setItem('ankora_anim_speed', animMode);
+        Terminal.log(`[KİŞİSELLEŞTİRME] Arayüz animasyon hızı: ${animMode}`, 'cmd');
       }
     }
   };
@@ -6686,57 +7367,9 @@ html, body {
 })();
 
 
-<<< BİTİŞ: src/app.js
-
 
 ================================================================================
->>> BAŞLANGIÇ: src/logo.svg
-================================================================================
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <!-- Matte Dark Background -->
-  <rect width="512" height="512" rx="96" fill="#060608"/>
-  <rect x="8" y="8" width="496" height="496" rx="88" stroke="#1f1f26" stroke-width="2"/>
-
-  <!-- Geometric Anchor & Apex 'A' Monogram -->
-  <g transform="translate(0, -10)">
-    <!-- Top Anchor Ring -->
-    <circle cx="256" cy="110" r="38" stroke="#f0f0f4" stroke-width="14" fill="none"/>
-    <circle cx="256" cy="110" r="18" fill="#141418"/>
-
-    <!-- Crossbar -->
-    <path d="M190 156 H322" stroke="#f0f0f4" stroke-width="14" stroke-linecap="square"/>
-
-    <!-- Central Shaft -->
-    <line x1="256" y1="148" x2="256" y2="380" stroke="#f0f0f4" stroke-width="14"/>
-
-    <!-- Outer Apex Legs ('A' shape) -->
-    <path d="M256 156 L150 360" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
-    <path d="M256 156 L362 360" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
-
-    <!-- 'A' Horizontal Bridge -->
-    <path d="M188 280 H324" stroke="#ffffff" stroke-width="16"/>
-
-    <!-- Anchor Curved Flukes -->
-    <path d="M130 250 C130 380 382 380 382 250" stroke="#ffffff" stroke-width="20" fill="none" stroke-linecap="round"/>
-
-    <!-- Left & Right Arrow Tips -->
-    <polygon points="130,225 105,275 155,275" fill="#f0f0f4"/>
-    <polygon points="382,225 357,275 407,275" fill="#f0f0f4"/>
-
-    <!-- Anchor Bottom Center Keel -->
-    <polygon points="256,410 236,365 276,365" fill="#f0f0f4"/>
-  </g>
-
-  <!-- Typography -->
-  <text x="256" y="455" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="800" letter-spacing="9" fill="#f0f0f4">ANKORA</text>
-  <text x="256" y="482" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" letter-spacing="12" fill="#757582">LINUX</text>
-</svg>
-
-<<< BİTİŞ: src/logo.svg
-
-
-================================================================================
->>> BAŞLANGIÇ: src/wallpaper.svg
+DOSYA: src/wallpaper.svg
 ================================================================================
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
   <defs>
@@ -6787,11 +7420,55 @@ html, body {
   <path d="M0 1040 Q480 1015 960 1045 T1920 1020" stroke="#0f0f13" stroke-width="1" fill="none"/>
 </svg>
 
-<<< BİTİŞ: src/wallpaper.svg
+
+================================================================================
+DOSYA: src/wallpaper-obsidian.svg
+================================================================================
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <rect width="1920" height="1080" fill="#040405"/>
+  <defs>
+    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="0.85" fill="#22222a"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#gridPattern)"/>
+  
+  <circle cx="960" cy="540" r="280" stroke="#16161b" stroke-width="1.5" stroke-dasharray="6 6" fill="none"/>
+  <circle cx="960" cy="540" r="180" stroke="#1f1f26" stroke-width="1" fill="none"/>
+  <circle cx="960" cy="540" r="80" stroke="#2b2b34" stroke-width="1" fill="#09090c"/>
+  <circle cx="960" cy="540" r="12" fill="#ffffff" fill-opacity="0.8"/>
+  
+  <line x1="960" y1="220" x2="960" y2="860" stroke="#181820" stroke-width="1"/>
+  <line x1="640" y1="540" x2="1280" y2="540" stroke="#181820" stroke-width="1"/>
+</svg>
 
 
 ================================================================================
->>> BAŞLANGIÇ: src/wallpaper-nordic.svg
+DOSYA: src/wallpaper-topo.svg
+================================================================================
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <rect width="1920" height="1080" fill="#060608"/>
+  <g stroke="#1a1a22" stroke-width="1.25" fill="none">
+    <path d="M-100 200 Q400 120 960 220 T1920 180" />
+    <path d="M-100 280 Q350 200 960 300 T1920 250" stroke="#22222d"/>
+    <path d="M-100 360 Q300 280 960 380 T1920 330" />
+    <path d="M-100 440 Q250 360 960 460 T1920 410" stroke="#282834"/>
+    <path d="M-100 520 Q200 440 960 540 T1920 490" />
+    <path d="M-100 600 Q150 520 960 620 T1920 570" stroke="#2e2e3a"/>
+    <path d="M-100 680 Q200 600 960 700 T1920 650" />
+    <path d="M-100 760 Q250 680 960 780 T1920 730" stroke="#22222d"/>
+    <path d="M-100 840 Q300 760 960 860 T1920 810" />
+    <path d="M-100 920 Q350 840 960 940 T1920 890" stroke="#1c1c24"/>
+    <path d="M-100 1000 Q400 920 960 1020 T1920 970" />
+  </g>
+  <circle cx="1480" cy="420" r="140" stroke="#333340" stroke-width="1" stroke-dasharray="4 4" fill="none"/>
+  <circle cx="1480" cy="420" r="4" fill="#ffffff"/>
+  <text x="1480" y="450" fill="#666675" font-family="monospace" font-size="10" text-anchor="middle">PEAK 4,120M</text>
+</svg>
+
+
+================================================================================
+DOSYA: src/wallpaper-nordic.svg
 ================================================================================
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
   <defs>
@@ -6825,1118 +7502,176 @@ html, body {
   <circle cx="1580" cy="140" r="1.5" fill="#aaaaaa"/>
 </svg>
 
-<<< BİTİŞ: src/wallpaper-nordic.svg
-
 
 ================================================================================
->>> BAŞLANGIÇ: src/wallpaper-obsidian.svg
+DOSYA: src/wallpaper-aurora.svg
 ================================================================================
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
-  <rect width="1920" height="1080" fill="#040405"/>
   <defs>
-    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
-      <circle cx="20" cy="20" r="0.85" fill="#22222a"/>
-    </pattern>
+    <radialGradient id="auroraGlow" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#1e2238" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#0f111c" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#06070a" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="streamGrad1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0"/>
+      <stop offset="35%" stop-color="#60a5fa" stop-opacity="0.25"/>
+      <stop offset="70%" stop-color="#93c5fd" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="streamGrad2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#c084fc" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </linearGradient>
   </defs>
-  <rect width="1920" height="1080" fill="url(#gridPattern)"/>
-  
-  <circle cx="960" cy="540" r="280" stroke="#16161b" stroke-width="1.5" stroke-dasharray="6 6" fill="none"/>
-  <circle cx="960" cy="540" r="180" stroke="#1f1f26" stroke-width="1" fill="none"/>
-  <circle cx="960" cy="540" r="80" stroke="#2b2b34" stroke-width="1" fill="#09090c"/>
-  <circle cx="960" cy="540" r="12" fill="#ffffff" fill-opacity="0.8"/>
-  
-  <line x1="960" y1="220" x2="960" y2="860" stroke="#181820" stroke-width="1"/>
-  <line x1="640" y1="540" x2="1280" y2="540" stroke="#181820" stroke-width="1"/>
-</svg>
 
-<<< BİTİŞ: src/wallpaper-obsidian.svg
+  <rect width="1920" height="1080" fill="url(#auroraGlow)"/>
+
+  <!-- Aurora Ribbon 1 -->
+  <path d="M-100,520 Q300,280 800,420 T1700,340 T2100,480 L2100,1080 L-100,1080 Z" fill="url(#streamGrad1)"/>
+  
+  <!-- Aurora Ribbon 2 -->
+  <path d="M-100,600 Q450,380 950,500 T1850,420 T2100,580 L2100,1080 L-100,1080 Z" fill="url(#streamGrad2)"/>
+
+  <!-- Minimalist Ridge -->
+  <polygon points="-50,1080 340,680 720,1080" fill="#0b0d14"/>
+  <polygon points="340,680 720,1080 580,1080" fill="#131722"/>
+  <line x1="340" y1="680" x2="580" y2="1080" stroke="#333b52" stroke-width="1.2"/>
+
+  <polygon points="560,1080 1020,580 1480,1080" fill="#080a0f"/>
+  <polygon points="1020,580 1480,1080 1280,1080" fill="#10131c"/>
+  <line x1="1020" y1="580" x2="1280" y2="1080" stroke="#2c3346" stroke-width="1.2"/>
+
+  <polygon points="1320,1080 1680,640 2040,1080" fill="#0c0e16"/>
+  <polygon points="1680,640 2040,1080 1880,1080" fill="#141824"/>
+  <line x1="1680" y1="640" x2="1880" y2="1080" stroke="#373f56" stroke-width="1.2"/>
+
+  <!-- Geometric Horizon Grid -->
+  <line x1="0" y1="780" x2="1920" y2="780" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <line x1="0" y1="860" x2="1920" y2="860" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <line x1="0" y1="960" x2="1920" y2="960" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+</svg>
 
 
 ================================================================================
->>> BAŞLANGIÇ: src/wallpaper-topo.svg
+DOSYA: src/wallpaper-matrix.svg
 ================================================================================
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
-  <rect width="1920" height="1080" fill="#060608"/>
-  <g stroke="#1a1a22" stroke-width="1.25" fill="none">
-    <path d="M-100 200 Q400 120 960 220 T1920 180" />
-    <path d="M-100 280 Q350 200 960 300 T1920 250" stroke="#22222d"/>
-    <path d="M-100 360 Q300 280 960 380 T1920 330" />
-    <path d="M-100 440 Q250 360 960 460 T1920 410" stroke="#282834"/>
-    <path d="M-100 520 Q200 440 960 540 T1920 490" />
-    <path d="M-100 600 Q150 520 960 620 T1920 570" stroke="#2e2e3a"/>
-    <path d="M-100 680 Q200 600 960 700 T1920 650" />
-    <path d="M-100 760 Q250 680 960 780 T1920 730" stroke="#22222d"/>
-    <path d="M-100 840 Q300 760 960 860 T1920 810" />
-    <path d="M-100 920 Q350 840 960 940 T1920 890" stroke="#1c1c24"/>
-    <path d="M-100 1000 Q400 920 960 1020 T1920 970" />
-  </g>
-  <circle cx="1480" cy="420" r="140" stroke="#333340" stroke-width="1" stroke-dasharray="4 4" fill="none"/>
-  <circle cx="1480" cy="420" r="4" fill="#ffffff"/>
-  <text x="1480" y="450" fill="#666675" font-family="monospace" font-size="10" text-anchor="middle">PEAK 4,120M</text>
+  <defs>
+    <radialGradient id="matrixVignette" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#14151c"/>
+      <stop offset="65%" stop-color="#0a0b0e"/>
+      <stop offset="100%" stop-color="#030405"/>
+    </radialGradient>
+    <pattern id="hexGrid" width="60" height="104" patternUnits="userSpaceOnUse" patternTransform="scale(1)">
+      <path d="M30 0 L60 17.32 L60 52 L30 69.28 L0 52 L0 17.32 Z" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+      <path d="M30 104 L60 86.68 L60 52 L30 69.28 L0 52 L0 86.68 Z" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="glowLine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2563eb" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#matrixVignette)"/>
+  <rect width="1920" height="1080" fill="url(#hexGrid)"/>
+
+  <!-- Technical Axis & Framing -->
+  <line x1="160" y1="0" x2="160" y2="1080" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <line x1="1760" y1="0" x2="1760" y2="1080" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <line x1="0" y1="540" x2="1920" y2="540" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+  <!-- Central Technical Reticle -->
+  <circle cx="960" cy="540" r="320" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="4 8"/>
+  <circle cx="960" cy="540" r="180" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <circle cx="960" cy="540" r="4" fill="#38bdf8" opacity="0.6"/>
+
+  <!-- Subtle Diagonal Accent -->
+  <line x1="400" y1="200" x2="900" y2="450" stroke="url(#glowLine)" stroke-width="1.5"/>
+  <circle cx="900" cy="450" r="3" fill="#60a5fa" opacity="0.8"/>
+  
+  <text x="180" y="80" fill="rgba(255,255,255,0.15)" font-family="monospace" font-size="11" letter-spacing="2">ANKORA_SYS_NODE // 64-BIT SYSVINIT ARCH</text>
+  <text x="1620" y="1020" fill="rgba(255,255,255,0.12)" font-family="monospace" font-size="10" letter-spacing="1">LAT 39.93° N // LON 32.85° E</text>
 </svg>
 
-<<< BİTİŞ: src/wallpaper-topo.svg
+
+================================================================================
+DOSYA: src/wallpaper-zenith.svg
+================================================================================
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <defs>
+    <linearGradient id="zenithBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#050608"/>
+      <stop offset="50%" stop-color="#090a0f"/>
+      <stop offset="100%" stop-color="#11131a"/>
+    </linearGradient>
+    <linearGradient id="facetLight" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a2e3d"/>
+      <stop offset="100%" stop-color="#141720"/>
+    </linearGradient>
+    <linearGradient id="facetDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#171922"/>
+      <stop offset="100%" stop-color="#0a0c10"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#zenithBg)"/>
+
+  <!-- Minimal Monolith Facets -->
+  <!-- Left Shadow Facet -->
+  <polygon points="960,180 680,880 960,1020" fill="url(#facetDark)"/>
+  
+  <!-- Right Light Facet -->
+  <polygon points="960,180 1240,880 960,1020" fill="url(#facetLight)"/>
+
+  <!-- Center Vertex Line -->
+  <line x1="960" y1="180" x2="960" y2="1020" stroke="#717993" stroke-width="1.8"/>
+
+  <!-- Outer Edges -->
+  <line x1="960" y1="180" x2="680" y2="880" stroke="#3d4356" stroke-width="1.2"/>
+  <line x1="960" y1="180" x2="1240" y2="880" stroke="#5a637d" stroke-width="1.2"/>
+  <line x1="680" y1="880" x2="960" y2="1020" stroke="#252935" stroke-width="1.2"/>
+  <line x1="1240" y1="880" x2="960" y2="1020" stroke="#3d4356" stroke-width="1.2"/>
+
+  <!-- Subtle Horizon Aura -->
+  <circle cx="960" cy="180" r="140" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <circle cx="960" cy="180" r="280" stroke="rgba(255,255,255,0.015)" stroke-width="1"/>
+
+  <!-- Ground Plane Grid -->
+  <line x1="400" y1="940" x2="1520" y2="940" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <line x1="200" y1="1020" x2="1720" y2="1020" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+</svg>
 
 
 ================================================================================
->>> BAŞLANGIÇ: README.md
+DOSYA: src/wallpaper-abstract-lines.svg
 ================================================================================
-<div align="center">
-  <img src="assets/logo.png" alt="Ankora OS Logo" width="240" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-  <br><br>
-  <h1>Ankora Linux (Ankora OS)</h1>
-  <p><b>Devuan Linux Tabanlı, Systemd-Free Hafif Çekirdekli, Modern Kiosk Masaüstü Ortamı (Tauri + Rust)</b></p>
-
-  <p>
-    <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-2.0_(DEVUAN)-ffffff?style=for-the-badge&labelColor=111111" alt="Sürüm">
-    <img src="https://img.shields.io/badge/TABAN-DEVUAN_DAEDALUS-d1d1d1?style=for-the-badge&labelColor=111111" alt="Taban">
-    <img src="https://img.shields.io/badge/MASA%C3%9CST%C3%9C-ANKORA_DE_(TAURI)-ffffff?style=for-the-badge&labelColor=111111" alt="Masaüstü">
-    <img src="https://img.shields.io/badge/L%C3%B0SANS-MIT-41a013?style=for-the-badge&labelColor=111111" alt="Lisans">
-  </p>
-</div>
-
-Ankora OS; düşük donanım kaynaklarına sahip sistemlerde Chrome OS Flex kararlılığı ve yüksek tepkisellik sunmak üzere tasarlanmış, systemd kirliliğinden arındırılmış Devuan Linux tabanlı bağımsız bir dağıtımdır. Masaüstü ortamı (Ankora DE), Rust ve WebKitGTK (Tauri) üzerinde sıfır çökme ve ultra hafif bellek ayak izi ile çalışır.
-
----
-
-## 📌 Ankora OS Nedir?
-
-Ankora OS, genel kullanım dağıtımlarında bulunan gereksiz servis kirliliğini (telemetri, kullanılmayan daemon'lar) engellemek ve donanım limitlerini en verimli şekilde kullanmak amacıyla geliştirilmiştir. Masaüstü ortamında görsel tutarlılık sağlarken arka planda Linux çekirdek parametrelerini (sysctl, zram) düşük gecikmeye göre optimize eder.
-
-Sistemde bulunan yerel AI bileşeni, uzak sunuculara veya API anahtarlarına bağımlı değildir. Makine üzerindeki yerel kaynakları kullanarak doğrudan terminal içinden teknik komut yardımı, hata ayıklama ve sistem analizi sunar.
-
----
-
-## 🛠 Temel Mühendislik Tercihleri ve Mimarisi
-
-### 1. Kademeli Bellek Yönetimi (ZRAM + SWAP Hiyerarşisi)
-Düşük RAM kapasitesinde Out-Of-Memory (OOM) kilitlenmelerini engellemek için bellek mimarisi hiyerarşik olarak kurgulanmıştır:
-* **ZRAM:** RAM üzerinde sıkıştırılmış blok alanı oluşturarak disk I/O yükünü düşürür ve ilk bellek taşıntılarını karşılar.
-* **Disk SWAP:** ZRAM kapasitesi dolduğunda devreye giren ikincil yedek alandır.
-* **vm.swappiness & vm.vfs_cache_pressure:** Çekirdek parametreleri disk okuma/yazma gecikmesini minimize edecek değerlere çekilmiştir.
-
-### 2. Çevrimdışı Terminal AI Asistanı (`yardimci`)
-Terminalde `yardimci` komutuyla çağrılan bileşen, internet bağlantısı gerektirmeksizin çalışır:
-* Veriler harici sunuculara gönderilmez, tamamen yerel bellek üzerinde işlenir.
-* Shell komutları, paket bağımlılıkları ve sistem konfigürasyon dosyaları için hızlı referans sağlar.
-
-### 3. Çift Masaüstü Kirliliğini Önleme (Unified Desktop Stack)
-Hem KDE Plasma hem de XFCE masaüstü ortamlarında sistem üzerine aynı görevi yapan çift uygulama yüklenmez:
-* **Dosya Yöneticisi:** Her iki ortamda da çakışmaları engellemek için varsayılan olarak **Dolphin** kullanılır.
-* **Görsel Bütünlük:** Simge seti olarak **Fairy Wren** entegre edilmiştir.
-
-### 4. Şişkinlikten Arındırılmış Sistem (Bloat-Free)
-* ISO boyutunu ve sistem açılış süresini olumsuz etkileyen Office suitleri (LibreOffice vb.) imajdan çıkarılmıştır.
-* Kullanıcı ihtiyaç duyduğu paketi depo üzerinden tek komutla kurabilir.
-
-### 5. Dahili Oyun ve Grafik Katmanı
-* **GameMode:** Oyun başlatıldığında CPU valörünü performance moduna çeker.
-* **MangoHud:** Vulkan/OpenGL katmanında FPS, sıcaklık ve RAM kullanım değerlerini önceden yapılandırılmış olarak sunar.
-
----
-
-## 📊 Sürüm Karşılaştırma Tablosu
-
-| Sürüm Adı | Sistem Tabanı | Yayın Tipi | Odak Noktası | Durum |
-| :--- | :--- | :--- | :--- | :--- |
-| **Ankora AI Debian** | Debian 13 (Trixie) | Sabit / Stable | Yüksek sistem stabilitesi, düşük kaynak kullanımı | **Aktif Sürüm** |
-| **Ankora Kurumsal** | Debian LTS | Sabit / LTS | Merkezi yönetim profilleri, sıkılaştırılmış güvenlik (AppArmor) | **Planlama** |
-| **Ankora Geliştirici** | Debian / Arch | Özel Derleme | Hazır derleyici araçları (GCC, Rust, Go, Python) ve Zsh terminal yapısı | **Özel Sürüm** |
-
----
-
-## 📋 Sistem Gereksinimleri
-
-| Bileşen | Minimum Gereksinim | Önerilen Sistem |
-| :--- | :--- | :--- |
-| **İşlemci (CPU)** | 64-bit Çift Çekirdek (1.5 GHz) | 64-bit Dört Çekirdek (2.0 GHz+) |
-| **Bellek (RAM)** | 2 GB (ZRAM Aktif) | 4 GB ve üzeri |
-| **Depolama** | 15 GB Boş Disk Alanı | 25 GB SSD Depolama |
-| **Ekran Kartı** | KMS destekli herhangi bir GPU | Vulkan / OpenGL 4.5 destekli GPU |
-
----
-
-## ⚡ Kurulum ve Kullanım Talimatları
-
-### 1. ISO İmajını Diske Yazdırma
-Linux ortamında terminal üzerinden `dd` komutunu kullanarak önyüklenebilir USB oluşturabilirsiniz:
-
-
-sudo dd if=ankora-2.0-debian-x86_64.iso of=/dev/sdX bs=4M status=progress conv=fsync
-
-
-## 🌐 Topluluk ve İletişim
-Bu proje tamamen açık kaynaklıdır ve topluluğun geri bildirimleriyle büyümektedir. Karşılaştığınız sorunlar, yeni özellik talepleri veya sadece selam vermek için bize katılın:
-
-* 💬 **Topluluk Forumu:** [Ankalab Flarum Cloud](https://ankalab.flarum.cloud)
-* 🌍 **Resmi Web Sitesi:** [Sitemiz](https://ankora-linux.github.io/#home) 
-* 🐞 **Hata Bildirimi:** GitHub üzerindeki [Issues](../../issues) sekmesini veya forumdan konu açarak kullanabilirsiniz.
-
-### License & Source Code
-Ankora OS is built on top of **Debian 12 (Bookworm)**. The base system, Linux Kernel, and upstream packages are distributed under the **GPL (GNU General Public License)** or their respective original licenses. You can find the source code for the base Debian packages in the official Debian repositories.
-
-All custom configurations, boot parameters (GRUB/ISOLinux), UI artwork, and build scripts specific to Ankora OS provided in this repository are licensed under the **MIT License**.
-
-<<< BİTİŞ: README.md
-
-
-================================================================================
->>> BAŞLANGIÇ: README_EN.md
-================================================================================
-# 💎 Ankora OS 1.0 (Emerald)
-
-[![Base](https://img.shields.io/badge/Base-Debian%2012%20(Bookworm)-A80030?logo=debian&logoColor=white)](#)
-[![Desktop](https://img.shields.io/badge/Desktop-XFCE-2284F2?logo=xfce&logoColor=white)](#)
-[![Status](https://img.shields.io/badge/Status-Stable-10B981)](#)
-
-> **A Debian-based Linux distribution tailored for gamers and developers, ready out-of-the-box.**
-
-[🇹🇷 Türkçe README için tıklayın (Click here for Turkish)](README.md) 
-## 📖 About Ankora OS
-Ankora OS is not about reinventing the wheel. It is built on the rock-solid foundation of **Debian 12 (Bookworm)** but eliminates the tedious post-installation setup. Designed for developers and gamers, Ankora OS comes pre-configured with essential performance tweaks, modern command-line tools, and a beautifully customized lightweight XFCE desktop environment. 
-
-Whether you want to compile code without running out of memory or jump straight into gaming, Ankora OS respects your time by providing a ready-to-use environment.
-
-## ✨ Key Features
-
-### 🚀 Performance & System
-* **Optimized Memory Management:** Pre-configured **ZRAM** (zstd algorithm at 100% capacity) and **EarlyOOM** to prevent system freezes during heavy workloads or gaming.
-* **Hardware Efficiency:** `irqbalance` and `NetworkManager` are enabled by default for optimal CPU and network routing.
-* **Bloat-Free Desktop:** A deeply customized, lightweight XFCE desktop featuring a modern Dark & Emerald Green aesthetic (`#1e1e2e` / `#10B981`).
-
-### 🛠️ Developer & Gamer Ready
-* **Containers & Packages:** **Docker** and **Flatpak** (with Flathub repo) are integrated and ready to use.
-* **Gaming:** **GameMode** is pre-installed for instant FPS boosts and system optimization during gameplay.
-* **Modern CLI Experience:** Legacy tools are symlinked to their modern, Rust-based alternatives out of the box:
-  * `eza` (replaces `ls`)
-  * `bat` (replaces `cat`)
-  * `fd` (replaces `find`)
-* **Customized Terminal:** A pre-configured `.bashrc` loaded with useful aliases and a beautiful boot ASCII art.
-
-### 💿 Seamless Installation
-* Replaced the standard Debian installer with the user-friendly **Calamares Installer**, fully branded with Ankora OS assets for a smooth setup experience.
-
-## 📸 Screenshots
-
-<img width="1366" height="768" alt="Screenshot_20260822_124753" src="https://github.com/user-attachments/assets/0949fcdc-31d4-4eb2-beaf-f1b1eb99a975" />
-(It was run from a live ISO on an old computer.)
-## 📥 Download & Installation
-
-1. Go to the [Releases](../../releases) page and download the latest `Ankora-OS-1.0-amd64.iso` file.
-2. Flash the ISO to a USB drive using [Ventoy](https://www.ventoy.net/), [Rufus](https://rufus.ie/), or [BalenaEtcher](https://balena.io/etcher/).
-3. Boot your PC from the USB drive.
-4. You can test the system in **Live Mode** or click the **"Install Ankora OS"** icon on the desktop to start the Calamares installer.
-
-## 🤝 Contributing
-Feedback, bug reports, and pull requests are always welcome! If you are a distro-hopper or a developer, feel free to test the ISO and open an issue if you encounter any bugs.
-
-## 📝 License
-Ankora OS is an open-source project and follows the free software guidelines. The base system is Debian, and all respective licenses of the pre-installed open-source software apply.
-
-<<< BİTİŞ: README_EN.md
-
-
-================================================================================
->>> BAŞLANGIÇ: LICENSE
-================================================================================
-MIT License
-
-Copyright (c) 2026 Parsozkn
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-<<< BİTİŞ: LICENSE
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/scripts/yardimci
-================================================================================
-#!/bin/bash
-read -p "Ankora AI Asistanına Sorun: " SORU
-if [ -n "$SORU" ]; then
-    ollama run qwen2.5:0.5b "System: Sen Ankora Linux masaüstü yardımcı asistanısın. Sadece Türkçe yanıt ver, komut çalıştırma. Soru: $SORU"
-fi
-
-<<< BİTİŞ: Ankora2-SourceCode/scripts/yardimci
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/refractasnapshot.conf
-================================================================================
-# This file contains some configuration variables for Refracta Snapshot
-# (version 10.2.x GUI and CLI versions). If you want to change
-# the defaults, this is the place to do it.
-#
-# Put this file in /etc or edit the configfile variable found at the
-# top of refractasnapshot to reflect its true location. If the 
-# script can't find this config file, it'll use the default values.
-# Copyright 2011-2018 fsmithred@gmail.com
-
-
-
-# Some laptops overheat when running rsync or mksquashfs. If limit_cpu
-# is "yes", cpu activity will be limited on those two commands.
-# limit is percentage of cpu allowed for command, up to 100% per core.
-
-limit_cpu="no"
-limit="50"
-
-
-# Default location for error log is /var/log/refractasnashot.log
-
-error_log="/var/log/refractasnapshot.log"
-
-
-# You can change the location of $work_dir (location of system copy) and
-# $snapshot_dir (location of final iso file) in case you don't have enough
-# space on the system. (Defaults are "/home/work" and "/home/snapshot")
-#
-# Hints:
-#   Be sure to use separate directories for these two variables. If you
-# use the same location for both (e.g. /media/disk) and if $save_work
-# is set to "no", your CD image will get deleted when the program
-# finishes. Instead, use something like /media/disk/snapshot and 
-# /media/disk/work, or even /media/disk/snapshot/work.
-#   These directories will be created by the script, and they are 
-# already set to be excluded from the rsync copy of the system (so you
-# don't end up with an extra copy of your system or old snapshots in the
-# final CD image.)
-#   Any filesystems mounted in /mnt or /media will be excluded from the
-# system copy. Filesystems mounted elsewhere will be included and will
-# increase the size of the final CD image. To avoid that, you can either
-# unmount those filesystems before running refractasnapshot, or you can
-# add them to the excludes file. (See snapshot_excludes below.)
-
-snapshot_dir="/mnt/ankora_iso"
-work_dir="/home/work"
-efi_work="${work_dir}/efi-files"
-
-
-# Set to yes to create boot files for uefi.
-
-make_efi="yes"
-
-
-# Set to force xorriso to use $uefi_opt (for testing only)
-
-force_efi="no"
-
-
-# Change $save_work to "yes" if you want the temporary copy of your
-# filesystem to be saved. This will make subsequent snapshot creation
-# go faster.
-# (Default is "no")
-
-save_work="no"
-
-
-# rsync delete options (or any others you want to add)
-# This is only for copy_filesystem() and only if $save_work is "yes"
-# Use only one option per variable!
-# Default options are --delete-before and --delete-excluded
-# Full command in the script is:
-# rsync -av / myfs/ ${rsync_option1} ${rsync_option12} ${rsync_option3} \
-#	--exclude="$work_dir" --exclude="$snapshot_dir" --exclude="$efi_work" --exclude-from="$snapshot_excludes"
-
-rsync_option1="--delete-before"
-rsync_option2=" --delete-excluded"
-rsync_option3=""
-
-# You can change the default rsync excludes file here if you know what
-# you're doing. Be sure to use the full path to the file.
-#
-# It's also possible to edit the excludes file by choosing "Setup"
-# during the execution of the script. 
-#
-# Default is "/usr/lib/refractasnapshot/snapshot_exclude.list"
-
-snapshot_excludes="/usr/lib/refractasnapshot/snapshot_exclude.list"
-
-
-# Change this if you want the live system to use other than the default
-# kernel and initrd. You may need to edit the isolinux boot menu to
-# match the filenames. (Also see custom boot menu section below.)
-#
-# Examples:
-# For kernel_image="/boot/vmlinuz-3.16.0-4-amd64" then the kernel
-# line in the boot menu would contain:
-#	 kernel /live/vmlinuz-3.16.0-4-amd64
-#
-# For Ubuntu:
-#	kernel_image="/boot/vmlinuz"
-#	initrd_image="/boot/vmlinuz"
-#
-# (Defaults are /vmlinuz and /initrd.img)
-
-kernel_image="/vmlinuz"
-initrd_image="/initrd.img"
-
-
-# Multiple snapshots (iso files) are named with the date and time of
-# creation. If you prefer to have them numbered sequentially, comment
-# out the next line. Default is to keep the line uncommented.
-
-stamp="datetime"
-
-
-# The name of the snapshot file will be snapshot-{date or number}.iso.
-# If you'd like to replace "snapshot" with something more memorable,
-# change it here. (example: snapshot_basename="refracta-nox-wheezy")
-# volid is the volume label on the finished (burned) CD, DVD or USB.
-
-snapshot_basename="snapshot"
-volid="liveiso"
-
-
-# Change to "no" if you don't want the sha256sum file created with the iso.
-# (Default is "yes")
-
-make_sha256sum="yes"
-
-
-# Change to "no" if you want a plain iso image instead of isohybrid.
-# (Default is "yes")
-
-make_isohybrid="yes"
-
-
-# Uncomment one of the lines below to use xz or zstd compression for smaller iso. 
-
-# small and slow
-#mksq_opt="-comp xz"
-
-# smaller and slower:
-#mksq_opt="-comp xz -Xbcj x86"
-
-# not as small but faster
-#mksq_opt="-comp zstd -Xcompression-level 22"
-
-####################################
-# Turn stuff on and off section
-
-# Allow users to mount all fixed drives with pmount for live iso.
-# Refractainstaller removes this upon installation.
-# (Default is "yes")
-
-pmount_fixed="yes"
-
-
-# update the mlocate database before copying filesystem.
-
-update_mlocate="yes"
-
-
-# Clear list of recently used files in geany for primary user.
-# Default is "yes"
-
-clear_geany="yes"
-
-
-# Allow password login to ssh for users (not root).
-# If ssh_pass="no", then PasswordAuthentication will be set to "yes"
-# If ssh_pass="no", then PasswordAuthentication will be set to "no"
-# In either of the above cases, if PermitRootLogin was set to "yes",
-# it will be changed to "prohibit-password" (meaning with auth keys only)
-# If ssh_pass is null or set to anything other than "yes" or "no", then
-# /etc/ssh/sshd_config will not be altered.
-
-ssh_pass="no"
-
-########################################################
-# Custom boot menu and help files section. 
-
-# If you're running refractasnapshot on some linux distribution other
-# than Refracta, You might also want to edit or remove some of the help
-# files in the isolinux directory. (f1.txt, f2.txt...)
-# If you want those changes to persist between runs, you should create
-# a custom iso/isolinux directory, and set iso_dir (below) to point
-# to that directory.
-
-
-
-# If the primary user's name is not "user", then live-boot needs to see
-# the user's name in the boot command. In that case, the script will
-# automatically add the correct option. If you set a user name here, it
-# will override that process. Use this if you want to log into the live
-# media as someone other than the primary user (i.e. any user whose
-# uid:gid are not 1000:1000.)
-# Under most circumstances, leave this blank or commented out.
-
-#username=""
-
-
-# Change to "yes" if you want to be able to view or edit the boot menu
-# or any other config files before the final image is made.
-# Note2: For SolusOS and possibly others, boot entries should contain
-# "union=unionfs" in place of "union=aufs".
-# Note3: For anything later than jessie, union=aufs should be removed
-# or possibly replaced with union=overlay
-
-edit_boot_menu="no"
-
-
-
-# EDITOR SETTINGS
-# This gets used if you set edit_boot_menu="yes" or if you run setup
-# and choose to edit the config file or the excludes file.
-# Use an absolute path here.
-# (example: text_editor="/usr/bin/nano)"
-
-# Command-line editor (for refractasnapshot)
-text_editor="$(command -v nano)"
-
-# Graphical editor (for refractasnapshot-gui)
-# Program tests for geany, gedit, kate, kwrite, leafpad, medit, mousepad, pluma
-# You can specify an editor here if needed. 
-# other_editor_option is used to force a new instance of the editor.
-# Example:
-# other_editor="/usr/bin/featherpad"
-# other_editor_option="-w"
-
-other_editor=""
-other_editor_option=""
-
-
-
-# You can change iso_dir if you want to use customized files for the
-# boot menu and boot help pages on the live-cd.
-# Note: 
-# If you're using custom versions (different from what's installed
-# on your system) of isolinux.bin and vesamenu.c32, you'll need to edit
-# or comment out the rsync commands in the script that copy these two
-# files from your system to the work directory. To find the lines, see 
-# /usr/bin/refractasnapshot or /usr/bin/refractsnapshot-gui for the
-# copy_isolinux function, around line 520 or 630, respectively.
-# (Default is "/usr/lib/refractasnapshot/iso")
-# DO NOT USE A TRAILING SLASH HERE!!!"
-
-iso_dir="/usr/lib/refractasnapshot/iso"
-
-
-# Change this if you're using customized boot menu files, AND your
-# menu file is other than the default, live.cfg, AND you set
-# $edit_boot_menu to "yes".
-
-boot_menu="live.cfg"
-
-# grub_template gets used for uefi live boot menu.
-
-grub_template="/usr/lib/refractasnapshot/grub.cfg.template"
-
-
-# Uncomment this to add boot help files specific to the Refracta distribution.
-# Otherwise, generic help files, mostly empty, will be used. If you want
-# to use your own customized files, see iso_dir settings above.
-
-#refracta_boot_help="yes"
-
-
-# Change this to "no" (or comment it) to turn off all initrd checks. 
-# In Bookworm/Daedalus use this instead of initrd_crypt=yes 
-# if you want encrypted persistence. Make sure to have all necessary
-# cryptsetup packages installed.
-initramfs_checks="yes"
-
-# Prepare the initrd to support encrypted volumes. Uncomment this
-# if you plan to use the snapshot on a live usb with an encrypted
-# persistent volume. This will edit /etc/cryptsetup-initramfs/conf-hook
-# to set CRYPTSETUP=y (This does not work right in Bookworm/Daedalus)
-
-#initrd_crypt="yes"
-
-
-# Uncomment to include your network configuration in the snapshot.
-# This will preserve your /etc/network/interfaces and any saved wireless
-# configurations. This works for NetworkManager, simple-netaid/netman
-# and wicd.  
-# It will also add "ip=frommedia" to the boot command, so that the saved
-# configuration will be used.
-# Default is commented; interfaces file in $work_dir/myfs gets replaced
-# and only contains the loopback interface.
-#
-# NOTE!!! If you're using some other network manager, and you don't want
-# your configs to be copied, you need to add the appropriate files to
-# the excludes list. (Tell me what those files are, and I'll fix 
-# refractasnapshot to handle it.)
-
-#netconfig_opt="ip=frommedia"
-
-
-# Uncomment to use old or new style interface names.
-# Use net.ifnames=0 to force old interface names with udev. (eth0)
-# Use net.ifnames=1 to force new interface names with eudev. (enp0s1)
-
-#ifnames_opt="net.ifnames=0"
-
-
-# Snapshot Help text
-
-snapshot_help="/usr/share/doc/refractasnapshot-base/readme.refractasnapshot.txt.gz"
-/usr/share/ollama/.ollama/models
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/refractasnapshot.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/settings.conf
-================================================================================
-# Configuration file for Calamares
-# Syntax is YAML 1.2
----
-
-# "local" is LIBDIR/calamares/modules with settings in SHARE/calamares/modules
-modules-search: [ local, /usr/lib/calamares/modules ]
-
-# If this is set to true, Calamares refers to itself as a "setup program"
-# rather than an "installer". Defaults to the value of dont-chroot, but
-# Calamares will complain if this is not explicitly set.
-oem-setup: false
-
-# If this is set to true, the "Cancel" button will be disabled entirely.
-# The button is also hidden from view.
-#
-# This can be useful if when e.g. Calamares is used as a post-install
-# configuration tool and you require the user to go through all the
-# configuration steps.
-#
-# Default is false, but Calamares will complain if this is not explicitly set.
-#
-# YAML: boolean.
-disable-cancel: false
-
-# If this is set to true, the "Cancel" button will be disabled once
-# you start the 'Installation', meaning there won't be a way to cancel
-# the Installation until it has finished or installation has failed.
-#
-# Default is false, but Calamares will complain if this is not explicitly set.
-#
-# YAML: boolean.
-disable-cancel-during-exec: false
-
-# If this is set to true, then once the end of the sequence has
-# been reached, the quit (done) button is clicked automatically
-# and Calamares will close. Default is false: the user will see
-# that the end of installation has been reached, and that things are ok.
-#
-#
-quit-at-end: false
-
-sequence:
-# Phase 1 - prepare.
-# View modules are shown as UI pages, jobs from job modules
-# are executed immediately in the background.
-# Jobs should be executed sparingly (if at all) in this phase.
-- show:
-  - welcome
-  - locale
-  - keyboard
-  - partition
-  - users
-  - summary
-
-# Phase 2 - install.
-# View modules are not shown. Only the view modules shown
-# in the previous phase are allowed, their names should be
-# added here as placeholders to specify the order in which
-# view module jobs should be enqueued. Job modules are
-# also allowed.
-- exec:
-  - partition
-  - mount
-  - unpackfs
-  - luksbootkeyfile
-  - dpkg-unsafe-io
-  - sources-media
-  - machineid
-  - fstab
-  - locale
-  - keyboard
-  - localecfg
-  - users
-  - displaymanager
-  - networkcfg
-  - hwclock
-  - services-systemd
-  - bootloader-config
-  - grubcfg
-  - bootloader
-  - packages
-  - shellprocess@removelive
-  - plymouthcfg
-  - initramfscfg
-  - initramfs
-  - dpkg-unsafe-io-undo
-  - sources-media-unmount
-  - sources-final
-  - umount
-
-# Phase 3 - postinstall.
-# View modules are shown as UI pages, jobs from job modules are
-# executed immediately in the background.
-# Jobs should be executed sparingly (if at all) in this phase.
-- show:
-  - finished
-
-# A branding component is a directory, either in
-# SHARE/calamares/branding or in /etc/calamares/branding
-# (the latter takes precedence). The directory must contain a
-# YAML file branding.desc which may reference additional resources
-# (such as images) as paths relative to the current directory.
-# Only the name of the branding component (directory) should be
-# specified here, Calamares then takes care of finding it and
-# loading the contents.
-branding: debian
-
-# If this is set to true, Calamares will show an "Are you sure?" prompt right
-# before each execution phase, i.e. at points of no return. If this is set to
-# false, no prompt is shown. Default is false.
-#
-# YAML: boolean.
-prompt-install: false
-
-# If this is set to true, Calamares will execute all target environment
-# commands in the current environment, without chroot. This setting should
-# only be used when setting up Calamares as a post-install configuration tool,
-# as opposed to a full operating system installer.
-#
-# Some official Calamares modules are not expected to function with this
-# setting. (e.g. partitioning seems like a bad idea, since that is expected to
-# have been done already)
-#
-# Default is false (for a normal installer).
-#
-# YAML: boolean.
-dont-chroot: false
-
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/settings.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/branding/debian/branding.desc
-================================================================================
----
-componentName:   debian
-welcomeStyleCalamares: true
-welcomeExpandingLogo: true
-windowExpanding: normal
-windowSize: 800px,580px
-windowPlacement: center
-
-strings:
-    productName:         "Ankora OS"
-    shortProductName:    "Ankora"
-    version:             "2.0"
-    shortVersion:        "2.0"
-    versionedName:       "Ankora OS 2.0"
-    shortVersionedName:  "Ankora 2.0"
-    bootloaderEntryName: "Ankora"
-    productUrl:          https://ankora-linux.github.io/
-    supportUrl:          https://ankalab.flarum.cloud/
-    knownIssuesUrl:      https://ankalab.flarum.cloud/
-    releaseNotesUrl:     https://ankora-linux.github.io/
-    donateUrl:           https://ankalab.flarum.cloud/
-
-
-sidebar: widget
-navigation: widget
-
-images:
-    productLogo:         "debian-logo.png"
-    productIcon:         "debian-logo.png"
-    productWelcome:      "welcome.png"
-
-slideshow:               "show.qml"
-
-style:
-   SidebarBackground:    "#26475b"
-   SidebarText:          "#FFFFFF"
-   SidebarTextCurrent:   "#fbfbfb"
-   SidebarBackgroundCurrent: "#265370"
-
-slideshowAPI: 2
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/branding/debian/branding.desc
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/branding/debian/show.qml
-================================================================================
-/* === This file is part of Calamares - <http://github.com/calamares> ===
- *
- *   Copyright 2015, Teo Mrnjavac <teo@kde.org>
- *   Copyright 2018-2019, Jonathan Carter <jcc@debian.org>
- *
- *   Calamares is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, or (at your option) any later version.
- *
- *   Calamares is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
- */
-
-import QtQuick 2.0;
-import calamares.slideshow 1.0;
-
-Presentation
-{
-    id: presentation
-
-    Timer {
-        interval: 20000
-        repeat: true
-        onTriggered: presentation.goToNextSlide()
-    }
-
-    Slide {
-        Image {
-            id: background1
-            source: "slide1.png"
-            width: 467; height: 280
-            fillMode: Image.PreserveAspectFit
-            anchors.centerIn: parent
-        }
-        Text {
-            anchors.horizontalCenter: background1.horizontalCenter
-            anchors.top: background1.bottom
-            text: qsTr("Welcome to Debian GNU/Linux.<br/>"+
-                  "The rest of the installation is automated and should complete in a few minutes.")
-            wrapMode: Text.WordWrap
-            width: 600
-            horizontalAlignment: Text.Center
-        }
-    }
-
-}
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/branding/debian/show.qml
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/bootloader.conf
-================================================================================
-# Bootloader configuration. The bootloader is installed to allow
-# the system to start (and pick one of the installed operating
-# systems to run).
----
-# Define which bootloader you want to use for EFI installations
-# Possible options are 'grub', 'sb-shim' and 'systemd-boot'.
-efiBootLoader: "grub"
-
-# systemd-boot configuration files settings, set kernel and initramfs file names
-# and amount of time before default selection boots
-kernel: "/vmlinuz-linux"
-img: "/initramfs-linux.img"
-fallback: "/initramfs-linux-fallback.img"
-timeout: "10"
-
-# Optionally set the menu entry name and kernel name to use in systemd-boot.
-# If not specified here, these settings will be taken from branding.desc.
-#
-# bootloaderEntryName: "Generic GNU/Linux"
-# kernelLine: ", with Stable-Kernel"
-# fallbackKernelLine:  ", with Stable-Kernel (fallback initramfs)"
-
-# GRUB 2 binary names and boot directory
-# Some distributions (e.g. Fedora) use grub2-* (resp. /boot/grub2/) names.
-# These names are also used when using sb-shim, since that needs some
-# GRUB functionality (notably grub-probe) to work. As needed, you may use
-# complete paths like `/usr/bin/efibootmgr` for the executables.
-#
-grubInstall: "grub-install"
-grubMkconfig: "grub-mkconfig"
-grubCfg: "/boot/grub/grub.cfg"
-grubProbe: "grub-probe"
-efiBootMgr: "efibootmgr"
-
-# Optionally set the bootloader ID to use for EFI. This is passed to
-# grub-install --bootloader-id.
-#
-# If not set here, the value from bootloaderEntryName from branding.desc
-# is used, with problematic characters (space and slash) replaced.
-#
-# The ID is also used as a directory name within the EFI environment,
-# and the bootloader is copied from /boot/efi/EFI/<dirname>/ . When
-# setting the option here, keep in mind that the name is sanitized
-# (problematic characters, see above, are replaced).
-#
-# efiBootloaderId: "dirname"
-
-# Optionally install a copy of the GRUB EFI bootloader as the EFI
-# fallback loader (either bootia32.efi or bootx64.efi depending on
-# the system). This may be needed on certain systems (Intel DH87MC
-# seems to be the only one). If you set this to false, take care
-# to add another module to optionally install the fallback on those
-# boards that need it.
-installEFIFallback: true 
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/bootloader.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/displaymanager.conf
-================================================================================
-# Configure one or more display managers (e.g. SDDM)
-# with a "best effort" approach.
----
-#The DM module attempts to set up all the DMs found in this list, in that precise order.
-#It also sets up autologin, if the feature is enabled in globalstorage.
-#The displaymanagers list can also be set in globalstorage, and in that case it overrides anything set up here.
-displaymanagers:
-  - slim
-  - sddm
-  - lightdm
-  - gdm
-  - mdm
-  - lxdm
-  - kdm
-
-#Enable the following settings to force a desktop environment in your displaymanager configuration file:
-#defaultDesktopEnvironment:
-#    executable: "startkde"
-#    desktopFile: "plasma"
-
-#If true, try to ensure that the user, group, /var directory etc. for the
-#display manager are set up correctly. This is normally done by the distribution
-#packages, and best left to them. Therefore, it is disabled by default.
-basicSetup: false
-
-#If true, setup autologin for openSUSE. This only makes sense on openSUSE
-#derivatives or other systems where /etc/sysconfig/displaymanager exists.
-sysconfigSetup: false
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/displaymanager.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/finished.conf
-================================================================================
----
-restartNowEnabled: true
-restartNowChecked: true
-restartNowCommand: "systemctl -i reboot"
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/finished.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/fstab.conf
-================================================================================
----
-mountOptions:
-    default: defaults,noatime
-    btrfs: defaults,noatime
-ssdExtraMountOptions:
-    ext4: discard
-    jfs: discard
-    xfs: discard
-    swap: discard
-    btrfs: discard,compress=lzo
-crypttabOptions: luks,keyscript=/bin/cat
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/fstab.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/luksopenswaphookcfg.conf
-================================================================================
-# Writes an openswap configuration with LUKS settings to the given path
----
-# Path of the configuration file to write (in the target system)
-configFilePath: /etc/openswap.conf
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/luksopenswaphookcfg.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/machineid.conf
-================================================================================
----
-# Whether to create /etc/machine-id for systemd.
-systemd: true
-# Whether to create /var/lib/dbus/machine-id for D-Bus.
-dbus: true
-# Whether /var/lib/dbus/machine-id should be a symlink to /etc/machine-id
-# (ignored if dbus is false, or if there is no /etc/machine-id to point to).
-symlink: true
-# Whether to copy entropy from the host
-entropy-copy: true
-# Which files to write (paths in the target)
-entropy-files:
-    - /var/lib/urandom/random-seed
-    - /var/lib/systemd/random-seed
-
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/machineid.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/mount.conf
-================================================================================
-# SPDX-FileCopyrightText: no
-# SPDX-License-Identifier: CC0-1.0
-#
-# Mount filesystems in the target (generally, before treating the
-# target as a usable chroot / "live" system). Filesystems are
-# automatically mounted from the partitioning module. Filesystems
-# listed here are **extra**. The filesystems listed in *extraMounts*
-# are mounted in all target systems.
----
-# Extra filesystems to mount. The key's value is a list of entries; each
-# entry has five keys:
-#   - device    The device node to mount
-#   - fs (optional) The filesystem type to use
-#   - mountPoint Where to mount the filesystem
-#   - options (optional) An array of options to pass to mount
-#   - efi (optional) A boolean that when true is only mounted for UEFI installs
-#
-# The device is not mounted if the mountPoint is unset or if the fs is
-# set to unformatted.
-#
-extraMounts:
-    - device: proc
-      fs: proc
-      mountPoint: /proc
-    - device: sys
-      fs: sysfs
-      mountPoint: /sys
-    - device: /dev
-      mountPoint: /dev
-      options: [ bind ]
-    - device: tmpfs
-      fs: tmpfs
-      mountPoint: /run
-    - device: /run/udev
-      mountPoint: /run/udev
-      options: [ bind ]
-    - device: efivarfs
-      fs: efivarfs
-      mountPoint: /sys/firmware/efi/efivars
-      efi: true
-    - device: /dev/pts
-      mountPoint: /dev/pts
-      options: [ bind ]
-      # /dev/pts is required by apt for storing the logs
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/mount.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/packages.conf
-================================================================================
-backend: apt
-
-operations:
-  - remove:
-      - 'live-boot'
-      - 'live-boot-doc'
-      - 'live-config'
-      - 'live-config-doc'
-      - 'live-config-systemd'
-      - 'live-config-systemd'
-      - 'live-tools'
-      - 'live-task-localisation'
-      - 'live-task-recommended'
-      - 'calamares-settings-debian'
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/packages.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/shellprocess_removelive.conf
-================================================================================
----
-dontChroot: false
-timeout: 10
-script:
-    - "rm -f /etc/lightdm/lightdm.conf.d/*autologin*.conf"
-    - "rm -f /etc/sddm.conf.d/*autologin*.conf"
-    - "rm -f /etc/sudoers.d/live-user"
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/shellprocess_removelive.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/unpackfs.conf
-================================================================================
----
-unpack:
-    -   source: "/run/live/medium/live/filesystem.squashfs"
-        sourcefs: "squashfs"
-        destination: ""
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/unpackfs.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/users.conf
-================================================================================
----
-userGroup:       users
-defaultGroups:
-    - sudo
-    - cdrom
-    - dip
-autologinGroup:  autologin
-sudoersGroup:    sudo
-setRootPassword: false
-
-passwordRequirements:
-    passwordRequirements:
-    nonempty: true
-    minLength: 8
-    maxLength: -1
-    libpwquality:
-        - minlen=8
-        - minclass=2
-        - maxrepeat=3
-
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/users.conf
-
-
-================================================================================
->>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/welcome.conf
-================================================================================
----
-showSupportUrl:         true
-showKnownIssuesUrl:     true
-showReleaseNotesUrl:    true
-
-requirements:
-    requiredStorage:    15
-    requiredRam:        1.0
-    check:
-        - storage
-        - ram
-        - power
-        - root
-    required:
-        - storage
-        - ram
-        - root
-
-<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/welcome.conf
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <defs>
+    <radialGradient id="silkBg" cx="40%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#12131b"/>
+      <stop offset="60%" stop-color="#090a0e"/>
+      <stop offset="100%" stop-color="#020304"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#silkBg)"/>
+
+  <!-- Fluid Ribbon Waves -->
+  <path d="M-100,200 C400,600 700,-100 1200,400 C1600,800 1800,200 2100,500" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" fill="none"/>
+  <path d="M-100,240 C400,640 700,-60 1200,440 C1600,840 1800,240 2100,540" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none"/>
+  <path d="M-100,280 C400,680 700,-20 1200,480 C1600,880 1800,280 2100,580" stroke="rgba(255,255,255,0.11)" stroke-width="1.8" fill="none"/>
+  <path d="M-100,320 C400,720 700,20 1200,520 C1600,920 1800,320 2100,620" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+  <path d="M-100,360 C400,760 700,60 1200,560 C1600,960 1800,360 2100,660" stroke="rgba(255,255,255,0.12)" stroke-width="1.8" fill="none"/>
+  <path d="M-100,400 C400,800 700,100 1200,600 C1600,1000 1800,400 2100,700" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none"/>
+  <path d="M-100,440 C400,840 700,140 1200,640 C1600,1040 1800,440 2100,740" stroke="rgba(255,255,255,0.05)" stroke-width="1.2" fill="none"/>
+  <path d="M-100,480 C400,880 700,180 1200,680 C1600,1080 1800,480 2100,780" stroke="rgba(255,255,255,0.03)" stroke-width="1" fill="none"/>
+
+  <!-- Minimalist Light Focus -->
+  <circle cx="1200" cy="520" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="1200" cy="520" r="18" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+</svg>
 
 

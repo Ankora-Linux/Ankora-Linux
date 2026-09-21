@@ -144,19 +144,35 @@
                 <div class="wallpaper-grid">
                   <div class="wp-card active" data-wp="wallpaper.svg">
                     <div class="wp-thumb" style="background-image: url('wallpaper.svg');"></div>
-                    <span>Siyah-Beyaz Dağlar (Varsayılan)</span>
+                    <span>Siyah-Beyaz Dağlar</span>
                   </div>
                   <div class="wp-card" data-wp="wallpaper-obsidian.svg">
                     <div class="wp-thumb" style="background-image: url('wallpaper-obsidian.svg');"></div>
-                    <span>Obsidyen Mat Siyah (İnce Izgara)</span>
+                    <span>Obsidyen Izgara</span>
                   </div>
                   <div class="wp-card" data-wp="wallpaper-topo.svg">
                     <div class="wp-thumb" style="background-image: url('wallpaper-topo.svg');"></div>
-                    <span>Topoğrafik Kontur (Zirve)</span>
+                    <span>Topoğrafik Zirve</span>
                   </div>
                   <div class="wp-card" data-wp="wallpaper-nordic.svg">
                     <div class="wp-thumb" style="background-image: url('wallpaper-nordic.svg');"></div>
-                    <span>Nordik Grafit (Kuzey Silsilesi)</span>
+                    <span>Nordik Silsile</span>
+                  </div>
+                  <div class="wp-card" data-wp="wallpaper-aurora.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper-aurora.svg');"></div>
+                    <span>Nordik Şafak (Aurora)</span>
+                  </div>
+                  <div class="wp-card" data-wp="wallpaper-matrix.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper-matrix.svg');"></div>
+                    <span>Endüstriyel Matris</span>
+                  </div>
+                  <div class="wp-card" data-wp="wallpaper-zenith.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper-zenith.svg');"></div>
+                    <span>Zenith Prizma</span>
+                  </div>
+                  <div class="wp-card" data-wp="wallpaper-abstract-lines.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper-abstract-lines.svg');"></div>
+                    <span>Akıcı İpek Çizgiler</span>
                   </div>
                 </div>
               </div>
@@ -449,7 +465,7 @@
     <section class="window" id="win-ai" style="top: 60px; left: 140px; width: 760px; height: 520px;" aria-labelledby="ai-header-title">
       <div class="window-header" data-tauri-drag-region>
         <div class="window-meta">
-          <span id="ai-header-title">Ankora AI Sistem Asistanı (Ollama / Qwen LLM)</span>
+          <span id="ai-header-title">Ankora AI Sistem Asistanı (Otonom Ajan & Çoklu Model)</span>
         </div>
         <div class="window-controls">
           <button class="ctrl-btn min" title="Küçült">−</button>
@@ -460,33 +476,86 @@
       <div class="window-view">
         <div class="ai-layout">
           <div class="ai-status-bar">
-            <div class="ai-model-select-group">
-              <span>Model:</span>
-              <select id="ai-model-select" class="select-mono-sm">
-                <option value="qwen2.5:0.5b">Qwen 2.5 (0.5B - Hafif Yerel)</option>
-                <option value="llama3">Llama 3 (Meta AI)</option>
-                <option value="deepseek-r1">DeepSeek R1</option>
-                <option value="mistral">Mistral 7B</option>
-              </select>
+            <div class="ai-provider-info">
+              <span class="ai-capsule" id="ai-current-provider-badge">Ollama (Yerel)</span>
+              <span class="ai-capsule" id="ai-current-mode-badge">
+                <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:12px;height:12px;display:inline-block;vertical-align:-1px;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                Sistem Teftiş Ajanı
+              </span>
             </div>
             <div class="ai-endpoint-info">
-              <span>Sunucu: <strong id="ai-endpoint-label">localhost:11434</strong></span>
-              <span class="status-pill" id="ai-status-indicator">Bağlı / Hazır</span>
+              <span class="status-pill online" id="ai-status-indicator">Bağlı / Hazır</span>
+              <button class="ai-config-toggle-btn" id="btn-toggle-ai-config" title="API Anahtarı ve Sağlayıcı Yapılandırması">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width: 14px; height: 14px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <span>API Ayarları</span>
+              </button>
             </div>
           </div>
+
+          <!-- Ajan & Özel API Bağlantı Paneli (Drawer) -->
+          <div class="ai-config-drawer" id="ai-config-drawer">
+            <div class="drawer-inner-grid">
+              <div class="drawer-field">
+                <label>AI Sağlayıcı</label>
+                <select id="ai-cfg-provider" class="select-mono-sm">
+                  <option value="ollama">Yerel Ollama (localhost:11434)</option>
+                  <option value="openai">OpenAI (ChatGPT / GPT-4o)</option>
+                  <option value="gemini">Google Gemini (Gemini 2.0 Flash)</option>
+                  <option value="groq">Groq Cloud (Llama 3.3 70B Ultra Hızlı)</option>
+                  <option value="openrouter">OpenRouter (Evrensel Hub)</option>
+                  <option value="custom">Özel OpenAI Uyumlu Endpoint</option>
+                </select>
+              </div>
+
+              <div class="drawer-field">
+                <label>Ajan Rolü & Yetkisi</label>
+                <select id="ai-cfg-mode" class="select-mono-sm">
+                  <option value="sysadmin">Sistem Yöneticisi & Teftiş Ajanı (Root Diagnostic)</option>
+                  <option value="developer">Geliştirici & Terminal Asistanı</option>
+                  <option value="general">Genel Sistem Asistanı</option>
+                </select>
+              </div>
+
+              <div class="drawer-field">
+                <label>Model Adı</label>
+                <input type="text" id="ai-cfg-model" class="input-mono-sm" value="qwen2.5:0.5b" placeholder="qwen2.5:0.5b / gpt-4o-mini / gemini-2.0-flash">
+              </div>
+
+              <div class="drawer-field">
+                <label>API Endpoint (Base URL)</label>
+                <input type="text" id="ai-cfg-endpoint" class="input-mono-sm" value="http://127.0.0.1:11434/api/generate" placeholder="http://127.0.0.1:11434/api/generate">
+              </div>
+
+              <div class="drawer-field full-width">
+                <label>Kullanıcı API Anahtarı (Kendi API'nizi Bağlayın)</label>
+                <div class="input-key-wrap">
+                  <input type="password" id="ai-cfg-key" class="input-mono-sm" placeholder="sk-... veya AIzaSy... (Güvenle saklanır)">
+                  <button type="button" class="btn-toggle-key-view" id="btn-toggle-key-view" title="Göster / Gizle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="drawer-actions full-width">
+                <button class="btn-pkg-sm" id="btn-save-ai-cfg">Yapılandırmayı Kaydet & Ajanı Başlat</button>
+              </div>
+            </div>
+          </div>
+
           <div class="ai-feed" id="ai-feed">
             <div class="ai-entry bot">
               <span class="ai-author">Ankora AI</span>
-              <p>Devuan Linux çekirdeğine bağlı yerel sistem asistanınızım. Donanım telemetrisini inceleyebilir, paket kurulumu yapabilir ve kabuk komutları yürütebilirim. Yetkili işlemler öncesinde sistem onayınızı alacağım.</p>
+              <p>Devuan Linux çekirdeğine bağlı sistem asistanınız ve otonom ajanınız hazır. Kendi API anahtarınızı (OpenAI, Gemini, Groq, OpenRouter) 'API Ayarları' butonundan bağlayabilir veya yerel Ollama ile çevrimdışı çalışabilirsiniz. Sistem eylemleri öncesinde her zaman güvenlik onayınız alınır.</p>
             </div>
           </div>
           <div class="ai-quick-row">
             <button class="ai-tag-btn" data-query="Sistem önbelleklerini temizle">Önbellek Temizliği</button>
             <button class="ai-tag-btn" data-query="Disk kullanımını ve RAM durumunu denetle">Disk & RAM Raporu</button>
             <button class="ai-tag-btn" data-query="Ağ bağlantısını ve IP durumunu listele">Ağ Durumu</button>
+            <button class="ai-tag-btn" data-query="Çekirdek sürümünü ve telemetri durumunu ver">Sistem Teftişi</button>
           </div>
           <div class="ai-prompt-box">
-            <input type="text" id="ai-prompt-input" placeholder="Komut veya görev belirtin (Örn: Gereksiz paketleri sil, RAM durumunu ver)...">
+            <input type="text" id="ai-prompt-input" placeholder="Ajana görev veya sistem komutu verin (Örn: Önbelleği temizle, disk durumunu ver)...">
             <button class="btn-pkg" id="btn-ai-submit">Gönder</button>
           </div>
         </div>
@@ -515,7 +584,10 @@
         <div class="office-layout">
           <div class="office-bar">
             <input type="file" id="office-file-picker" accept=".pdf,.docx,.txt,.md" style="display: none;">
-            <button class="office-btn" id="btn-office-open">📁 Dosya Aç...</button>
+            <button class="office-btn" id="btn-office-open">
+              <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+              <span>Dosya Aç...</span>
+            </button>
             <div class="office-doc-meta" id="office-doc-meta">
               <strong id="office-filename">ankora-sistem-rehberi.pdf</strong>
               <span id="office-filesize">64 KB</span>
@@ -560,31 +632,31 @@
             </div>
             <div class="settings-nav-list">
               <button class="settings-nav-item active" data-pane="pane-set-theme">
-                <span class="nav-icon">🎨</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 0 0 20 2 2 0 0 0 2-2 1 1 0 0 1 1-1h2a5 5 0 0 0 5-5c0-4.42-4.48-12-10-12z"></path></svg>
                 <span>Görünüm & Tema</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-display">
-                <span class="nav-icon">🖥️</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                 <span>Ekran & Görüntü</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-audio">
-                <span class="nav-icon">🔊</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                 <span>Ses & Bildirimler</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-network">
-                <span class="nav-icon">🌐</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                 <span>Ağ & İnternet</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-power">
-                <span class="nav-icon">⚡</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                 <span>Güç & Kiosk</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-storage">
-                <span class="nav-icon">💾</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="8" rx="2"></rect><rect x="2" y="14" width="20" height="8" rx="2"></rect><line x1="6" y1="8" x2="6.01" y2="8"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
                 <span>Depolama & Disk</span>
               </button>
               <button class="settings-nav-item" data-pane="pane-set-about">
-                <span class="nav-icon">ℹ️</span>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                 <span>Sistem & Dağıtım</span>
               </button>
             </div>
@@ -645,7 +717,7 @@
 
               <!-- Duvar Kağıdı Seçimi -->
               <div class="settings-card-group">
-                <span class="card-group-title">Duvar Kağıdı</span>
+                <span class="card-group-title">Duvar Kağıdı (8 Vektörel Arka Plan)</span>
                 <div class="wallpaper-thumb-grid">
                   <div class="wp-thumb-card active" data-wp="wallpaper.svg">
                     <div class="thumb-img" style="background-image: url('wallpaper.svg');"></div>
@@ -661,8 +733,65 @@
                   </div>
                   <div class="wp-thumb-card" data-wp="wallpaper-nordic.svg">
                     <div class="thumb-img" style="background-image: url('wallpaper-nordic.svg');"></div>
-                    <span>Nordik Zirveler</span>
+                    <span>Nordik Silsile</span>
                   </div>
+                  <div class="wp-thumb-card" data-wp="wallpaper-aurora.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper-aurora.svg');"></div>
+                    <span>Nordik Şafak</span>
+                  </div>
+                  <div class="wp-thumb-card" data-wp="wallpaper-matrix.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper-matrix.svg');"></div>
+                    <span>Endüstriyel Matris</span>
+                  </div>
+                  <div class="wp-thumb-card" data-wp="wallpaper-zenith.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper-zenith.svg');"></div>
+                    <span>Zenith Prizma</span>
+                  </div>
+                  <div class="wp-thumb-card" data-wp="wallpaper-abstract-lines.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper-abstract-lines.svg');"></div>
+                    <span>Akıcı İpek Çizgiler</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Gelişmiş Kişiselleştirme Seçenekleri -->
+              <div class="settings-card-group">
+                <span class="card-group-title">Pencere Kenarlık Kavisi (Border Radius)</span>
+                <div class="option-pill-group" id="group-corner-radius">
+                  <button class="option-pill-btn" data-radius="0px">Keskin (0px Flat)</button>
+                  <button class="option-pill-btn active" data-radius="6px">Modern (6px)</button>
+                  <button class="option-pill-btn" data-radius="12px">Yuvarlak (12px)</button>
+                </div>
+              </div>
+
+              <div class="settings-card-group">
+                <span class="card-group-title">Pencere Saydamlığı & Cam Efekti</span>
+                <div class="option-pill-group" id="group-window-blur">
+                  <button class="option-pill-btn" data-glass="solid">Tam Opak (Katı)</button>
+                  <button class="option-pill-btn active" data-glass="balanced">Dengeli Cam (%85)</button>
+                  <button class="option-pill-btn" data-glass="high">Şeffaf Cam (%65)</button>
+                </div>
+              </div>
+
+              <div class="settings-card-group">
+                <span class="card-group-title">Görev Çubuğu Yerleşimi & Boyutu</span>
+                <div class="option-pill-group" id="group-taskbar-align">
+                  <button class="option-pill-btn active" data-align="center">Ortalanmış (Win 11)</button>
+                  <button class="option-pill-btn" data-align="left">Sol Hizalı (Klasik Linux)</button>
+                </div>
+                <div class="option-pill-group" id="group-taskbar-size" style="margin-top: 8px;">
+                  <button class="option-pill-btn" data-height="36px">Kompakt (36px)</button>
+                  <button class="option-pill-btn active" data-height="44px">Standart (44px)</button>
+                  <button class="option-pill-btn" data-height="52px">Geniş (52px)</button>
+                </div>
+              </div>
+
+              <div class="settings-card-group">
+                <span class="card-group-title">Arayüz Animasyon Seviyesi</span>
+                <div class="option-pill-group" id="group-anim-speed">
+                  <button class="option-pill-btn active" data-anim="smooth">Akıcı 60 FPS</button>
+                  <button class="option-pill-btn" data-anim="fast">Minimal / Hızlı</button>
+                  <button class="option-pill-btn" data-anim="none">Kapalı (Kiosk)</button>
                 </div>
               </div>
             </div>
@@ -840,7 +969,10 @@
                       <strong>Ankora_Lab_5G</strong>
                       <span>WPA2/WPA3 Kişisel • 5 GHz</span>
                     </div>
-                    <span class="wifi-signal">📶 %96 (Bağlı)</span>
+                    <span class="wifi-signal">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 13px; height: 13px; display: inline-block; vertical-align: -2px; margin-right: 4px;"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                      %96 (Bağlı)
+                    </span>
                   </div>
                   <div class="wifi-row">
                     <div class="wifi-row-meta">
