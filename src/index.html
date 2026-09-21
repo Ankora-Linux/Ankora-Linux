@@ -92,25 +92,72 @@
 
             <!-- TAB 2: DUVAR KAĞIDI & TEMA -->
             <div class="welcome-pane" id="tab-welcome-theme">
-              <h3>Duvar Kağıdı ve Masaüstü Teması</h3>
-              <p>Monokrom endüstriyel felsefeye uygun minimalist vektörel arka planınızı seçin:</p>
-              
-              <div class="wallpaper-grid">
-                <div class="wp-card active" data-wp="wallpaper.svg">
-                  <div class="wp-thumb" style="background-image: url('wallpaper.svg');"></div>
-                  <span>Siyah-Beyaz Dağlar (Varsayılan)</span>
+              <h3>Görünüm, Tema ve Duvar Kağıdı</h3>
+              <p>Masaüstü ortamınızı istediğiniz gibi kişiselleştirin. Seçimleriniz anında uygulanır:</p>
+
+              <!-- Tema Modu Seçici (Son Kullanıcı Dostu Açık / Koyu) -->
+              <div class="welcome-theme-section">
+                <span class="section-label">Masaüstü Teması</span>
+                <div class="theme-picker-grid">
+                  <div class="theme-card-choice" data-theme="theme-light">
+                    <div class="theme-preview-box light">
+                      <div class="preview-mini-bar"></div>
+                      <div class="preview-mini-card"></div>
+                    </div>
+                    <strong>Nordik Açık (Ferah)</strong>
+                    <span>Son kullanıcı dostu, aydınlık gümüş & beyaz</span>
+                  </div>
+                  <div class="theme-card-choice active" data-theme="theme-dark">
+                    <div class="theme-preview-box dark">
+                      <div class="preview-mini-bar"></div>
+                      <div class="preview-mini-card"></div>
+                    </div>
+                    <strong>Modern Grafit</strong>
+                    <span>Dengeli antrasit ve şık endüstriyel kontrast</span>
+                  </div>
+                  <div class="theme-card-choice" data-theme="theme-midnight">
+                    <div class="theme-preview-box midnight">
+                      <div class="preview-mini-bar"></div>
+                      <div class="preview-mini-card"></div>
+                    </div>
+                    <strong>Derin Gece</strong>
+                    <span>OLED dostu lacivert gece modu</span>
+                  </div>
                 </div>
-                <div class="wp-card" data-wp="wallpaper-obsidian.svg">
-                  <div class="wp-thumb" style="background-image: url('wallpaper-obsidian.svg');"></div>
-                  <span>Obsidyen Mat Siyah (İnce Izgara)</span>
+              </div>
+
+              <!-- Vurgu Rengi -->
+              <div class="welcome-theme-section">
+                <span class="section-label">Vurgu Rengi</span>
+                <div class="accent-color-row">
+                  <button class="accent-pill-btn active" data-accent="#2563eb" style="--btn-color: #2563eb;" title="Ankora Mavisi"></button>
+                  <button class="accent-pill-btn" data-accent="#059669" style="--btn-color: #059669;" title="Zümrüt Yeşili"></button>
+                  <button class="accent-pill-btn" data-accent="#7c3aed" style="--btn-color: #7c3aed;" title="Ametist Moru"></button>
+                  <button class="accent-pill-btn" data-accent="#ea580c" style="--btn-color: #ea580c;" title="Kehribar"></button>
+                  <button class="accent-pill-btn" data-accent="#ffffff" style="--btn-color: #ffffff;" title="Gümüş Beyaz"></button>
                 </div>
-                <div class="wp-card" data-wp="wallpaper-topo.svg">
-                  <div class="wp-thumb" style="background-image: url('wallpaper-topo.svg');"></div>
-                  <span>Topoğrafik Kontur (Zirve)</span>
-                </div>
-                <div class="wp-card" data-wp="wallpaper-nordic.svg">
-                  <div class="wp-thumb" style="background-image: url('wallpaper-nordic.svg');"></div>
-                  <span>Nordik Grafit (Kuzey Silsilesi)</span>
+              </div>
+
+              <!-- Duvar Kağıdı Izgarası -->
+              <div class="welcome-theme-section">
+                <span class="section-label">Duvar Kağıdı</span>
+                <div class="wallpaper-grid">
+                  <div class="wp-card active" data-wp="wallpaper.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper.svg');"></div>
+                    <span>Siyah-Beyaz Dağlar (Varsayılan)</span>
+                  </div>
+                  <div class="wp-card" data-wp="wallpaper-obsidian.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper-obsidian.svg');"></div>
+                    <span>Obsidyen Mat Siyah (İnce Izgara)</span>
+                  </div>
+                  <div class="wp-card" data-wp="wallpaper-topo.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper-topo.svg');"></div>
+                    <span>Topoğrafik Kontur (Zirve)</span>
+                  </div>
+                  <div class="wp-card" data-wp="wallpaper-nordic.svg">
+                    <div class="wp-thumb" style="background-image: url('wallpaper-nordic.svg');"></div>
+                    <span>Nordik Grafit (Kuzey Silsilesi)</span>
+                  </div>
                 </div>
               </div>
 
@@ -490,12 +537,13 @@
     </section>
 
     <!-- ======================================================================= -->
-    <!-- 7. AYARLAR                                                              -->
+    <!-- 7. ANKORA SİSTEM AYARLARI (GELİŞMİŞ DAĞITIM VE KİOSK YÖNETİMİ)          -->
     <!-- ======================================================================= -->
-    <section class="window" id="win-settings" style="top: 70px; left: 200px; width: 680px; height: 480px;" aria-labelledby="settings-header-title">
+    <section class="window" id="win-settings" style="top: 40px; left: 140px; width: 880px; height: 580px;" aria-labelledby="settings-header-title">
       <div class="window-header" data-tauri-drag-region>
         <div class="window-meta">
-          <span id="settings-header-title">Sistem Tercihleri</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width: 16px; height: 16px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span id="settings-header-title">Sistem Ayarları — Ankora Linux 2.0</span>
         </div>
         <div class="window-controls">
           <button class="ctrl-btn min" title="Küçült">−</button>
@@ -504,33 +552,457 @@
         </div>
       </div>
       <div class="window-view">
-        <div class="settings-layout">
-          <div class="settings-group">
-            <span class="group-title">Görüntü ve Panel</span>
-            <div class="setting-item">
-              <div class="setting-desc">
-                <strong>Ekran Parlaklığı</strong>
-                <span>xrandr donanım parlaklık çarpanı</span>
-              </div>
-              <input type="range" id="ctrl-brightness" min="20" max="100" value="100" class="slider-mono">
+        <div class="settings-app-container">
+          <!-- Ayarlar Sol Menü -->
+          <nav class="settings-sidebar">
+            <div class="settings-search-wrap">
+              <input type="text" id="settings-filter" class="settings-filter-input" placeholder="Ayar ara...">
             </div>
-            <div class="setting-item">
-              <div class="setting-desc">
-                <strong>Gece Işığı Modu</strong>
-                <span>Mavi ışık azaltma filtresi</span>
-              </div>
-              <input type="checkbox" id="ctrl-night" class="check-mono">
+            <div class="settings-nav-list">
+              <button class="settings-nav-item active" data-pane="pane-set-theme">
+                <span class="nav-icon">🎨</span>
+                <span>Görünüm & Tema</span>
+              </button>
+              <button class="settings-nav-item" data-pane="pane-set-display">
+                <span class="nav-icon">🖥️</span>
+                <span>Ekran & Görüntü</span>
+              </button>
+              <button class="settings-nav-item" data-pane="pane-set-audio">
+                <span class="nav-icon">🔊</span>
+                <span>Ses & Bildirimler</span>
+              </button>
+              <button class="settings-nav-item" data-pane="pane-set-network">
+                <span class="nav-icon">🌐</span>
+                <span>Ağ & İnternet</span>
+              </button>
+              <button class="settings-nav-item" data-pane="pane-set-power">
+                <span class="nav-icon">⚡</span>
+                <span>Güç & Kiosk</span>
+              </button>
+              <button class="settings-nav-item" data-pane="pane-set-storage">
+                <span class="nav-icon">💾</span>
+                <span>Depolama & Disk</span>
+              </button>
+              <button class="settings-nav-item" data-pane="pane-set-about">
+                <span class="nav-icon">ℹ️</span>
+                <span>Sistem & Dağıtım</span>
+              </button>
             </div>
-          </div>
+          </nav>
 
-          <div class="settings-group">
-            <span class="group-title">Donanım Telemetrisi</span>
-            <div class="telemetry-grid">
-              <div class="telemetry-cell"><span>İşletim Sistemi:</span><strong id="tele-os">Devuan Daedalus</strong></div>
-              <div class="telemetry-cell"><span>İnit Sistemi:</span><strong id="tele-init">SysVinit</strong></div>
-              <div class="telemetry-cell"><span>Çekirdek:</span><strong id="tele-kernel">Linux 6.1 LTS</strong></div>
-              <div class="telemetry-cell"><span>Bellek Durumu:</span><strong id="tele-mem">1.2 / 8.0 GB</strong></div>
+          <!-- Ayarlar Sağ Panel İçerikleri -->
+          <div class="settings-panes-view">
+            
+            <!-- 1. PANE: GÖRÜNÜM & TEMA -->
+            <div class="settings-pane active" id="pane-set-theme">
+              <div class="pane-header">
+                <h3>Görünüm & Kişiselleştirme</h3>
+                <p>Sistem temasını, renk paletini ve arka plan görselini zevkinize göre özelleştirin.</p>
+              </div>
+
+              <!-- Tema Modu Seçimi -->
+              <div class="settings-card-group">
+                <span class="card-group-title">Masaüstü Teması</span>
+                <div class="theme-picker-grid">
+                  <div class="theme-card-choice" data-theme="theme-light">
+                    <div class="theme-preview-box light">
+                      <div class="preview-mini-bar"></div>
+                      <div class="preview-mini-card"></div>
+                    </div>
+                    <strong>Nordik Açık (Ferah)</strong>
+                    <span>Son kullanıcı dostu, aydınlık gümüş & beyaz</span>
+                  </div>
+                  <div class="theme-card-choice active" data-theme="theme-dark">
+                    <div class="theme-preview-box dark">
+                      <div class="preview-mini-bar"></div>
+                      <div class="preview-mini-card"></div>
+                    </div>
+                    <strong>Modern Grafit</strong>
+                    <span>Dengeli antrasit ve şık endüstriyel kontrast</span>
+                  </div>
+                  <div class="theme-card-choice" data-theme="theme-midnight">
+                    <div class="theme-preview-box midnight">
+                      <div class="preview-mini-bar"></div>
+                      <div class="preview-mini-card"></div>
+                    </div>
+                    <strong>Derin Gece</strong>
+                    <span>OLED dostu lacivert gece modu</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Vurgu Rengi -->
+              <div class="settings-card-group">
+                <span class="card-group-title">Sistem Vurgu Rengi (Accent)</span>
+                <div class="accent-color-row">
+                  <button class="accent-pill-btn active" data-accent="#2563eb" style="--btn-color: #2563eb;" title="Ankora Mavisi"></button>
+                  <button class="accent-pill-btn" data-accent="#059669" style="--btn-color: #059669;" title="Zümrüt Yeşili"></button>
+                  <button class="accent-pill-btn" data-accent="#7c3aed" style="--btn-color: #7c3aed;" title="Ametist Moru"></button>
+                  <button class="accent-pill-btn" data-accent="#ea580c" style="--btn-color: #ea580c;" title="Kehribar"></button>
+                  <button class="accent-pill-btn" data-accent="#ffffff" style="--btn-color: #ffffff;" title="Gümüş Beyaz"></button>
+                </div>
+              </div>
+
+              <!-- Duvar Kağıdı Seçimi -->
+              <div class="settings-card-group">
+                <span class="card-group-title">Duvar Kağıdı</span>
+                <div class="wallpaper-thumb-grid">
+                  <div class="wp-thumb-card active" data-wp="wallpaper.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper.svg');"></div>
+                    <span>Siyah-Beyaz Dağlar</span>
+                  </div>
+                  <div class="wp-thumb-card" data-wp="wallpaper-obsidian.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper-obsidian.svg');"></div>
+                    <span>Obsidyen Izgara</span>
+                  </div>
+                  <div class="wp-thumb-card" data-wp="wallpaper-topo.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper-topo.svg');"></div>
+                    <span>Topoğrafik Zirve</span>
+                  </div>
+                  <div class="wp-thumb-card" data-wp="wallpaper-nordic.svg">
+                    <div class="thumb-img" style="background-image: url('wallpaper-nordic.svg');"></div>
+                    <span>Nordik Zirveler</span>
+                  </div>
+                </div>
+              </div>
             </div>
+
+            <!-- 2. PANE: EKRAN & DONANIM -->
+            <div class="settings-pane" id="pane-set-display">
+              <div class="pane-header">
+                <h3>Ekran & Donanım Çözünürlüğü</h3>
+                <p>xrandr ve KMS çekirdek sürücüsü üzerinden donanım ekran yapılandırması.</p>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Ekran Parlaklığı</strong>
+                  <span>xrandr donanım arka aydınlatma çarpanı</span>
+                </div>
+                <div class="row-control">
+                  <input type="range" id="ctrl-brightness" min="20" max="100" value="100" class="slider-mono">
+                  <span id="brightness-val-label" class="val-label">%100</span>
+                </div>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Gece Işığı Modu</strong>
+                  <span>Göz yorgunluğunu azaltan sıcak mavi ışık filtresi</span>
+                </div>
+                <div class="row-control">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="ctrl-night">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Ekran Çözünürlüğü</strong>
+                  <span>DisplayPort / eDP panel çözünürlük modu</span>
+                </div>
+                <div class="row-control">
+                  <select id="ctrl-resolution" class="select-mono">
+                    <option value="1920x1080" selected>1920 x 1080 (16:9 Full HD - Önerilen)</option>
+                    <option value="2560x1440">2560 x 1440 (16:9 2K QHD)</option>
+                    <option value="3840x2160">3840 x 2160 (16:9 4K UHD)</option>
+                    <option value="1366x768">1366 x 768 (16:9 WXGA)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Ekran Yenileme Hızı</strong>
+                  <span>Monitör dikey tazeleme frekansı</span>
+                </div>
+                <div class="row-control">
+                  <select id="ctrl-refresh-rate" class="select-mono">
+                    <option value="60">60 Hz (Standart)</option>
+                    <option value="120">120 Hz (Akıcı)</option>
+                    <option value="144">144 Hz (Yüksek Hız)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Arayüz Ölçekleme (DPI)</strong>
+                  <span>Yüksek çözünürlüklü ekranlar için UI büyüteci</span>
+                </div>
+                <div class="row-control">
+                  <select id="ctrl-scaling" class="select-mono">
+                    <option value="100" selected>%100 (Varsayılan)</option>
+                    <option value="125">%125 (Büyütülmüş)</option>
+                    <option value="150">%150 (Yüksek DPI)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. PANE: SES & BİLDİRİMLER -->
+            <div class="settings-pane" id="pane-set-audio">
+              <div class="pane-header">
+                <h3>Ses & Bildirim Ayarları</h3>
+                <p>ALSA ses altyapısı ve sistem bildirim tercihleri.</p>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Ana Çıkış Aygıtı</strong>
+                  <span>Donanım ses kartı veya DAC portu</span>
+                </div>
+                <div class="row-control">
+                  <select id="ctrl-audio-device" class="select-mono">
+                    <option value="alsa-hda" selected>ALSA HDA Intel PCH (Dahili Hoparlör/Jak)</option>
+                    <option value="usb-dac">USB Audio DAC / Harici Kulaklık</option>
+                    <option value="hdmi">HDMI / DisplayPort Digital Audio</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Ana Ses Düzeyi</strong>
+                  <span>Genel hoparlör ses şiddeti</span>
+                </div>
+                <div class="row-control">
+                  <input type="range" id="ctrl-volume" min="0" max="100" value="80" class="slider-mono">
+                  <span id="volume-val-label" class="val-label">%80</span>
+                </div>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Sistem Uyarı Sesleri</strong>
+                  <span>Pencere, hata ve modal etkileşim tonları</span>
+                </div>
+                <div class="row-control">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="ctrl-sound-effects" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Sessiz Mod (Rahatsız Etme)</strong>
+                  <span>Kiosk ekranında açılan tüm bildirimleri gizler</span>
+                </div>
+                <div class="row-control">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="ctrl-dnd">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. PANE: AĞ & İNTERNET -->
+            <div class="settings-pane" id="pane-set-network">
+              <div class="pane-header">
+                <h3>Ağ & İnternet Bağlantısı</h3>
+                <p>Kablolu Gigabit Ethernet ve kablosuz Wi-Fi arayüzleri.</p>
+              </div>
+
+              <div class="network-status-banner">
+                <div class="net-banner-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                </div>
+                <div class="net-banner-meta">
+                  <strong>eth0 — Gigabit Ethernet</strong>
+                  <span>Bağlı • 1000 Mbps Tam Çift Yönlü • İnternet Erişimi Aktif</span>
+                </div>
+                <span class="status-tag-active">Aktif</span>
+              </div>
+
+              <div class="settings-card-group">
+                <span class="card-group-title">Ağ Yapılandırma Bilgileri</span>
+                <div class="telemetry-grid">
+                  <div class="telemetry-cell"><span>IP Adresi:</span><strong>192.168.1.105</strong></div>
+                  <div class="telemetry-cell"><span>Ağ Geçidi (Gateway):</span><strong>192.168.1.1</strong></div>
+                  <div class="telemetry-cell"><span>Alt Ağ Maskesi:</span><strong>255.255.255.0 (/24)</strong></div>
+                  <div class="telemetry-cell"><span>DNS Sunucuları:</span><strong>1.1.1.1, 8.8.8.8</strong></div>
+                </div>
+              </div>
+
+              <div class="settings-card-group">
+                <div class="group-header-row">
+                  <span class="card-group-title">Kablosuz Ağlar (Wi-Fi)</span>
+                  <button class="btn-pkg-sm" id="btn-wifi-scan">Ağları Tara</button>
+                </div>
+                <div class="wifi-list">
+                  <div class="wifi-row connected">
+                    <div class="wifi-row-meta">
+                      <strong>Ankora_Lab_5G</strong>
+                      <span>WPA2/WPA3 Kişisel • 5 GHz</span>
+                    </div>
+                    <span class="wifi-signal">📶 %96 (Bağlı)</span>
+                  </div>
+                  <div class="wifi-row">
+                    <div class="wifi-row-meta">
+                      <strong>Ofis_Guvenli_Fiber</strong>
+                      <span>WPA2 Kurumsal</span>
+                    </div>
+                    <button class="btn-pkg-sm">Bağlan</button>
+                  </div>
+                  <div class="wifi-row">
+                    <div class="wifi-row-meta">
+                      <strong>Misafir_Agi</strong>
+                      <span>Açık Ağ</span>
+                    </div>
+                    <button class="btn-pkg-sm">Bağlan</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. PANE: GÜÇ & KİOSK POLİTİKASI -->
+            <div class="settings-pane" id="pane-set-power">
+              <div class="pane-header">
+                <h3>Güç Yönetimi & Kiosk Politikası</h3>
+                <p>Devuan nodm oto-oturum açma ve kesintisiz çalışma kuralları.</p>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Ekran Zaman Aşımı (Kiosk Uyku)</strong>
+                  <span>Hareketsizlik sonrası ekranın karartılma süresi</span>
+                </div>
+                <div class="row-control">
+                  <select class="select-mono">
+                    <option value="never" selected>Hiçbir Zaman (Kiosk Modu - Önerilen)</option>
+                    <option value="15">15 Dakika</option>
+                    <option value="30">30 Dakika</option>
+                    <option value="60">1 Saat</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Sistem Güç Profili</strong>
+                  <span>İşlemci frekans ölçekleme politikası (cpufreq)</span>
+                </div>
+                <div class="row-control">
+                  <select class="select-mono">
+                    <option value="performance">Yüksek Performans (performance)</option>
+                    <option value="balanced" selected>Dengeli (schedutil / ondemand)</option>
+                    <option value="powersave">Güç Tasarrufu (powersave)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Oto-Giriş (Auto-Login nodm)</strong>
+                  <span>Açılışta şifre sormadan doğrudan masaüstüne gir</span>
+                </div>
+                <div class="row-control">
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="setting-row-item">
+                <div class="row-desc">
+                  <strong>Geçici Live Oturum Modu (OverlayFS)</strong>
+                  <span>Yeniden başlatıldığında tüm disk değişikliklerini sıfırla</span>
+                </div>
+                <div class="row-control">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="chk-overlay-mode">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6. PANE: DEPOLAMA & DİSK -->
+            <div class="settings-pane" id="pane-set-storage">
+              <div class="pane-header">
+                <h3>Depolama Alanı & Önbellek</h3>
+                <p>Disk bölümleri, ZRAM bellek sıkıştırması ve sistem temizlik araçları.</p>
+              </div>
+
+              <div class="disk-usage-card">
+                <div class="disk-usage-meta">
+                  <strong>/dev/sda2 (Kök Dosya Sistemi — ext4)</strong>
+                  <span>14.8 GB kullanılıyor / 64.0 GB Toplam (49.2 GB Boş)</span>
+                </div>
+                <div class="disk-progress-bar">
+                  <div class="disk-progress-fill" style="width: 23%;"></div>
+                </div>
+              </div>
+
+              <div class="disk-usage-card">
+                <div class="disk-usage-meta">
+                  <strong>ZRAM Sıkıştırılmış Takas Belleği (zram0)</strong>
+                  <span>420 MB / 4.0 GB (LZO-RLE Hızlı Sıkıştırma)</span>
+                </div>
+                <div class="disk-progress-bar">
+                  <div class="disk-progress-fill" style="width: 10%; background: #10b981;"></div>
+                </div>
+              </div>
+
+              <div class="settings-card-group">
+                <span class="card-group-title">Sistem Bakım & Temizlik Araçları</span>
+                <div class="storage-action-row">
+                  <div class="storage-action-desc">
+                    <strong>APT Paket Depo Önbelleği</strong>
+                    <span>İndirilen .deb kurulum paketlerini temizler (apt-get clean)</span>
+                  </div>
+                  <button class="btn-pkg" id="btn-clean-apt">Önbelleği Temizle</button>
+                </div>
+                <div class="storage-action-row">
+                  <div class="storage-action-desc">
+                    <strong>Geçici Dosyalar (/tmp)</strong>
+                    <span>Uygulamaların bıraktığı geçici önbellekleri siler</span>
+                  </div>
+                  <button class="btn-pkg" id="btn-clean-tmp">Geçicileri Temizle</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 7. PANE: SİSTEM & DAĞITIM BİLGİSİ (ABOUT & ISO BUILD) -->
+            <div class="settings-pane" id="pane-set-about">
+              <div class="pane-header">
+                <h3>Sistem & Dağıtım Bilgisi</h3>
+                <p>Ankora Linux bağımsız Devuan tabanlı Kiosk işletim sistemi.</p>
+              </div>
+
+              <div class="about-hero-card">
+                <img src="logo.svg" alt="Ankora Logo" class="about-hero-logo">
+                <div class="about-hero-text">
+                  <h2>ANKORA LINUX 2.0</h2>
+                  <span class="hero-edition">Daedalus Edition • Systemd-Free Kiosk Platform</span>
+                  <p>Hafif WebKitGTK ve Rust Tauri çekirdeği ile güçlendirilmiş, bağımsız Devuan GNU/Linux dağıtımı.</p>
+                </div>
+              </div>
+
+              <div class="telemetry-grid">
+                <div class="telemetry-cell"><span>İşletim Sistemi:</span><strong id="tele-os">Devuan Daedalus 5.0</strong></div>
+                <div class="telemetry-cell"><span>İnit Sistemi:</span><strong id="tele-init">SysVinit 3.06 (PID 1)</strong></div>
+                <div class="telemetry-cell"><span>Linux Çekirdeği:</span><strong id="tele-kernel">Linux 6.1.0-22-amd64</strong></div>
+                <div class="telemetry-cell"><span>Bellek (RAM):</span><strong id="tele-mem">1.2 / 8.0 GB (Aktif)</strong></div>
+                <div class="telemetry-cell"><span>Pencere Motoru:</span><strong>Tauri + WebKitGTK</strong></div>
+                <div class="telemetry-cell"><span>ISO İmaj Kimliği:</span><strong>ankora-2.0-daedalus.iso</strong></div>
+              </div>
+
+              <div class="about-update-banner">
+                <div class="update-status-text">
+                  <strong id="update-status-title">Paket Depoları: Güncel</strong>
+                  <span id="update-status-desc">Tüm Devuan resmi aynaları ve Ankora depoları senkronize.</span>
+                </div>
+                <button class="btn-pkg" id="btn-check-updates">Güncellemeleri Denetle</button>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -766,14 +1238,24 @@
 
   <!-- GÖREV ÇUBUĞU (TASKBAR) -->
   <footer class="taskbar">
-    <div class="taskbar-start-group">
-      <button class="start-btn" id="start-btn">
+    <!-- Sol Bilgi / Widget Grubu -->
+    <div class="taskbar-left-group">
+      <div class="taskbar-brand-capsule" title="Ankora Linux Live Kiosk Dağıtımı">
+        <img src="logo.svg" alt="Ankora" class="brand-capsule-logo">
+        <span class="brand-capsule-text">Ankora 2.0</span>
+        <span class="brand-capsule-tag">Live ISO</span>
+      </div>
+    </div>
+
+    <!-- Windows 11 Ortalanmış Başlat ve Görev Sekmeleri Grubu -->
+    <div class="taskbar-center-cluster">
+      <button class="start-btn" id="start-btn" title="Başlat Menüsü (Ctrl + Boşluk)">
         <img src="logo.svg" alt="Ankora" class="start-glyph-logo">
-        <span>Ankora</span>
       </button>
       <div class="taskbar-running-tabs" id="running-tabs"></div>
     </div>
 
+    <!-- Sağ Sistem Tepsisi (Tray) -->
     <div class="taskbar-tray">
       <!-- Hızlı Sistem Tepsisi Araçları -->
       <button class="tray-icon-btn" id="tray-ai-btn" title="AI Sistem Ajanı (Llama)">

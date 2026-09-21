@@ -24,7 +24,7 @@
 
   --accent-white: #ffffff;
   --accent-gray: #888a9f;
-  --accent-active: #5f86f2;
+  --accent-active: #2563eb;
 
   --taskbar-height: 44px;
   --radius-window: 8px;
@@ -32,6 +32,102 @@
 
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Consolas, monospace;
+}
+
+/* ==============================================================================
+   TEMA MOTORU (THEME ENGINE: LIGHT / DARK / MIDNIGHT)
+   ============================================================================== */
+body.theme-light {
+  --bg-deep: #e8ecf4;
+  --bg-base: #ffffff;
+  --bg-panel: #f6f8fc;
+  --bg-surface: #edf1f7;
+  --bg-surface-hover: #e1e7f2;
+  --bg-surface-active: #d4dde9;
+
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-medium: rgba(0, 0, 0, 0.14);
+  --border-focus: rgba(0, 0, 0, 0.35);
+  --border-active-window: var(--accent-active, #2563eb);
+  --border-highlight: #000000;
+
+  --text-primary: #151620;
+  --text-secondary: #52566b;
+  --text-muted: #82869c;
+  --text-inverse: #ffffff;
+
+  --accent-white: #151620;
+  --accent-gray: #6b7085;
+}
+
+body.theme-midnight {
+  --bg-deep: #060914;
+  --bg-base: #0b1022;
+  --bg-panel: #111832;
+  --bg-surface: #182245;
+  --bg-surface-hover: #222e5c;
+  --bg-surface-active: #2c3c74;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.16);
+  --border-focus: rgba(255, 255, 255, 0.4);
+  --border-active-window: #60a5fa;
+
+  --text-primary: #f0f4ff;
+  --text-secondary: #9cb0d8;
+  --text-muted: #647496;
+}
+
+body.theme-light .window {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+body.theme-light .window.active {
+  box-shadow: 0 20px 52px rgba(37, 99, 235, 0.15), 0 0 0 1px rgba(37, 99, 235, 0.4);
+  border-color: var(--accent-active, #2563eb);
+}
+
+body.theme-light .window-header {
+  background: #f1f4fa;
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+body.theme-light .ctrl-btn {
+  color: #555970;
+}
+
+body.theme-light .ctrl-btn:hover {
+  background: #e2e8f2;
+  color: #151620;
+}
+
+body.theme-light .taskbar {
+  background: rgba(246, 248, 252, 0.94);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
+}
+
+body.theme-light .start-flyout {
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+body.theme-light .start-top-section {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+body.theme-light .start-footer-bar {
+  background: #f4f6fa;
+}
+
+body.theme-light .start-dual-section {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+body.theme-light .recent-doc-row:hover,
+body.theme-light .pinned-app-card:hover {
+  background: #e9edf5;
 }
 
 *, *::before, *::after {
@@ -1364,41 +1460,84 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 0 14px;
   z-index: 99995;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.taskbar-start-group {
+.taskbar-left-group {
+  display: flex;
+  align-items: center;
+  min-width: 140px;
+}
+
+.taskbar-brand-capsule {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius-ui);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  cursor: default;
+}
+
+.brand-capsule-logo {
+  width: 15px;
+  height: 15px;
+}
+
+.brand-capsule-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.brand-capsule-tag {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: var(--accent-active, #2563eb);
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+/* Windows 11 Ortalanmış Başlat Kümesi */
+.taskbar-center-cluster {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .start-btn {
+  width: 36px;
   height: 32px;
-  padding: 0 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-ui);
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
   color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .start-btn:hover, .start-btn.active {
   background: var(--bg-surface-hover);
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+  border-color: var(--border-medium);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
+  transform: scale(1.05);
 }
 
 .start-glyph-logo {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   object-fit: contain;
 }
 
@@ -1406,7 +1545,6 @@ html, body {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-left: 8px;
 }
 
 .task-tab {
@@ -1526,19 +1664,19 @@ html, body {
    ============================================================================== */
 .start-flyout {
   position: fixed;
-  bottom: calc(var(--taskbar-height) + 10px);
-  left: 12px;
-  width: 580px;
+  bottom: calc(var(--taskbar-height) + 12px);
+  left: 50%;
+  width: 600px;
   max-height: calc(100vh - var(--taskbar-height) - 30px);
-  background: rgba(20, 21, 29, 0.95);
+  background: var(--bg-panel);
   backdrop-filter: blur(28px) saturate(130%);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--border-medium);
   border-radius: 12px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75), 0 0 0 1px var(--border-subtle);
   display: flex;
   flex-direction: column;
   z-index: 99990;
-  transform: translateY(16px) scale(0.98);
+  transform: translateX(-50%) translateY(16px) scale(0.98);
   opacity: 0;
   pointer-events: none;
   transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease;
@@ -1546,7 +1684,7 @@ html, body {
 }
 
 .start-flyout.open {
-  transform: translateY(0) scale(1);
+  transform: translateX(-50%) translateY(0) scale(1);
   opacity: 1;
   pointer-events: auto;
 }
@@ -1972,4 +2110,646 @@ html, body {
   background: #3d1515;
   border-color: #8c2525;
   color: #ff7b72;
+}
+
+/* ==============================================================================
+   GELİŞMİŞ SİSTEM AYARLARI (WIN-SETTINGS 7-TABBED APP)
+   ============================================================================== */
+.settings-app-container {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+.settings-sidebar {
+  width: 220px;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  padding: 12px 8px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.settings-search-wrap {
+  margin-bottom: 6px;
+}
+
+.settings-filter-input {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-ui);
+  padding: 6px 10px;
+  color: var(--text-primary);
+  font-size: 11.5px;
+  outline: none;
+}
+
+.settings-filter-input:focus {
+  border-color: var(--border-focus);
+}
+
+.settings-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+}
+
+.settings-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-ui);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.12s ease;
+}
+
+.settings-nav-item .nav-icon {
+  font-size: 14px;
+}
+
+.settings-nav-item:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.settings-nav-item.active {
+  background: var(--bg-surface);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.settings-panes-view {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  background: var(--bg-base);
+}
+
+.settings-pane {
+  display: none;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.settings-pane.active {
+  display: flex;
+}
+
+.pane-header {
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 12px;
+  margin-bottom: 4px;
+}
+
+.pane-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pane-header p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.settings-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-group-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Tema Seçici Izgara */
+.theme-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.theme-card-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12px;
+  border-radius: var(--radius-window);
+  background: var(--bg-panel);
+  border: 2px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.theme-card-choice:hover {
+  border-color: var(--border-medium);
+  transform: translateY(-2px);
+}
+
+.theme-card-choice.active {
+  border-color: var(--accent-active, #2563eb);
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.3);
+}
+
+.theme-preview-box {
+  width: 100%;
+  height: 64px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.theme-preview-box.light {
+  background: #f0f3f8;
+}
+.theme-preview-box.light .preview-mini-bar {
+  background: #ffffff;
+  border-bottom: 1px solid #dcdfe6;
+}
+.theme-preview-box.light .preview-mini-card {
+  background: #ffffff;
+  border: 1px solid #e2e5ec;
+}
+
+.theme-preview-box.dark {
+  background: #111218;
+}
+.theme-preview-box.dark .preview-mini-bar {
+  background: #1a1c26;
+  border-bottom: 1px solid #2b2d3d;
+}
+.theme-preview-box.dark .preview-mini-card {
+  background: #242533;
+}
+
+.theme-preview-box.midnight {
+  background: #060914;
+}
+.theme-preview-box.midnight .preview-mini-bar {
+  background: #111832;
+}
+.theme-preview-box.midnight .preview-mini-card {
+  background: #182245;
+}
+
+.preview-mini-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 14px;
+}
+
+.preview-mini-card {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  right: 10px;
+  bottom: 8px;
+  border-radius: 4px;
+}
+
+.theme-card-choice strong {
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.theme-card-choice span {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* Vurgu Renkleri */
+.accent-color-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.accent-pill-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--btn-color);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+
+.accent-pill-btn:hover {
+  transform: scale(1.15);
+}
+
+.accent-pill-btn.active {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 10px var(--btn-color);
+}
+
+/* Duvar Kağıdı Küçük Resimleri */
+.wallpaper-thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.wp-thumb-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 8px;
+  border-radius: var(--radius-ui);
+  background: var(--bg-panel);
+  border: 2px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.wp-thumb-card:hover {
+  border-color: var(--border-medium);
+}
+
+.wp-thumb-card.active {
+  border-color: var(--accent-active, #2563eb);
+}
+
+.thumb-img {
+  width: 100%;
+  height: 56px;
+  border-radius: 4px;
+  background-size: cover;
+  background-position: center bottom;
+  margin-bottom: 6px;
+}
+
+.wp-thumb-card span {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+/* Ayar Satırları */
+.setting-row-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+}
+
+.row-desc {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-desc strong {
+  font-size: 12.5px;
+  color: var(--text-primary);
+}
+
+.row-desc span {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.row-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.val-label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  transition: 0.2s;
+  border-radius: 22px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--text-secondary);
+  transition: 0.2s;
+  border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: var(--accent-active, #2563eb);
+  border-color: var(--accent-active, #2563eb);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(18px);
+  background-color: #ffffff;
+}
+
+/* Select Box */
+.select-mono {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-ui);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Ağ Banner & Wi-Fi Listesi */
+.network-status-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+}
+
+.net-banner-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(37, 99, 235, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-active, #2563eb);
+}
+
+.net-banner-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.net-banner-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.net-banner-meta strong {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.net-banner-meta span {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.status-tag-active {
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.group-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-pkg-sm {
+  padding: 4px 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  color: var(--text-primary);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.btn-pkg-sm:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--border-medium);
+}
+
+.wifi-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wifi-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+}
+
+.wifi-row-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.wifi-row-meta strong {
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.wifi-row-meta span {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+.wifi-signal {
+  font-size: 11.5px;
+  color: #10b981;
+  font-weight: 500;
+}
+
+/* Disk Kullanım Kartları */
+.disk-usage-card {
+  padding: 12px 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.disk-usage-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+}
+
+.disk-usage-meta strong {
+  color: var(--text-primary);
+}
+
+.disk-usage-meta span {
+  color: var(--text-secondary);
+}
+
+.disk-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-surface);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.disk-progress-fill {
+  height: 100%;
+  background: var(--accent-active, #2563eb);
+  border-radius: 3px;
+}
+
+.storage-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+}
+
+.storage-action-desc {
+  display: flex;
+  flex-direction: column;
+}
+
+.storage-action-desc strong {
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.storage-action-desc span {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+/* About Hero & Update Banner */
+.about-hero-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-window);
+}
+
+.about-hero-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.about-hero-text h2 {
+  font-size: 16px;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.hero-edition {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-active, #2563eb);
+  display: block;
+  margin: 2px 0 4px 0;
+}
+
+.about-hero-text p {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.about-update-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  margin-top: 8px;
+}
+
+.update-status-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.update-status-text strong {
+  font-size: 12.5px;
+  color: var(--text-primary);
+}
+
+.update-status-text span {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Karşılayıcı Tab 2 Tema Bölümü */
+.welcome-theme-section {
+  margin-bottom: 14px;
+}
+
+.section-label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
 }
