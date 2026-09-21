@@ -2,6 +2,20 @@
   'use strict';
 
   // ============================================================================
+  // XSS VE ENJEKSİYON ÖNLEYİCİ HTML KAÇIŞ YARDIMCISI (SECURITY ESCAPER)
+  // ============================================================================
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/[&<>"']/g, c => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[c]));
+  }
+
+  // ============================================================================
   // TAURI IPC KÖPRÜSÜ (NATIVE BRIDGE)
   // ============================================================================
   const TauriBridge = {
@@ -271,7 +285,7 @@
               <polygon points="5 3 19 12 5 21 5 3"></polygon>
             </svg>
           </div>
-          <span class="item-name">${app.name}</span>
+          <span class="item-name">${escapeHtml(app.name)}</span>
         `;
 
         item.addEventListener('click', async () => {
@@ -339,12 +353,12 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>
-            <span class="pkg-title">${pkg.name}</span>
-            <span class="pkg-name">${pkg.deb} (Devuan Resmi Deposu)</span>
+            <span class="pkg-title">${escapeHtml(pkg.name)}</span>
+            <span class="pkg-name">${escapeHtml(pkg.deb)} (Devuan Resmi Deposu)</span>
             <div class="pkg-progress-bar" id="prog-${pkg.id}"></div>
           </td>
-          <td><span class="pkg-desc">${pkg.desc}</span></td>
-          <td><span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 11px;">${pkg.size}</span></td>
+          <td><span class="pkg-desc">${escapeHtml(pkg.desc)}</span></td>
+          <td><span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 11px;">${escapeHtml(pkg.size)}</span></td>
           <td style="text-align: right;">
             <button class="btn-pkg ${pkg.installed ? 'installed' : ''}" id="btn-pkg-${pkg.id}">
               ${pkg.installed ? 'Kaldır' : 'Kur'}
@@ -681,10 +695,17 @@
       if (!this.feed) return;
       const entry = document.createElement('div');
       entry.className = `ai-entry ${role === 'user' ? 'user' : 'bot'}`;
-      entry.innerHTML = `
-        <span class="ai-author">${role === 'user' ? 'Kullanıcı' : 'Ankora AI'}</span>
-        <p style="white-space: pre-wrap;">${text}</p>
-      `;
+
+      const author = document.createElement('span');
+      author.className = 'ai-author';
+      author.textContent = role === 'user' ? 'Kullanıcı' : 'Ankora AI';
+
+      const p = document.createElement('p');
+      p.style.whiteSpace = 'pre-wrap';
+      p.textContent = String(text ?? '');
+
+      entry.appendChild(author);
+      entry.appendChild(p);
       this.feed.appendChild(entry);
       this.feed.scrollTop = this.feed.scrollHeight;
     },
@@ -706,20 +727,31 @@
     },
 
     renderActionCard(command, desc) {
+      if (!this.feed) return;
       const card = document.createElement('div');
       card.className = 'action-proposal-card';
-      card.innerHTML = `
-        <strong>⚠️ Sistem Eylemi Yetkisi Gerekiyor:</strong>
-        <span>${desc || 'Aşağıdaki sistem komutu yürütülecek:'}</span>
-        <code>${command}</code>
-        <button class="btn-pkg" style="align-self: flex-start; margin-top: 4px; background: var(--text-primary); color: var(--bg-deep);">
-          Onayla ve Çalıştır
-        </button>
-      `;
 
-      card.querySelector('button').addEventListener('click', () => {
+      const strong = document.createElement('strong');
+      strong.textContent = '⚠️ Sistem Eylemi Yetkisi Gerekiyor:';
+
+      const span = document.createElement('span');
+      span.textContent = desc || 'Aşağıdaki sistem komutu yürütülecek:';
+
+      const code = document.createElement('code');
+      code.textContent = command;
+
+      const btn = document.createElement('button');
+      btn.className = 'btn-pkg';
+      btn.style.cssText = 'align-self: flex-start; margin-top: 4px; background: var(--text-primary); color: var(--bg-deep);';
+      btn.textContent = 'Onayla ve Çalıştır';
+      btn.addEventListener('click', () => {
         this.promptSecurityConfirm(command, desc);
       });
+
+      card.appendChild(strong);
+      card.appendChild(span);
+      card.appendChild(code);
+      card.appendChild(btn);
 
       this.feed.appendChild(card);
       this.feed.scrollTop = this.feed.scrollHeight;
@@ -834,10 +866,10 @@
           card.className = `disk-card ${i === 0 ? 'active' : ''}`;
           card.innerHTML = `
             <div class="disk-meta">
-              <strong>${d.path} — ${d.model}</strong>
-              <span>Aygıt: ${d.name} | Boyut: ${d.size_gb} GB</span>
+              <strong>${escapeHtml(d.path)} — ${escapeHtml(d.model)}</strong>
+              <span>Aygıt: ${escapeHtml(d.name)} | Boyut: ${escapeHtml(d.size_gb)} GB</span>
             </div>
-            <div class="disk-capacity">${d.size_gb} GB</div>
+            <div class="disk-capacity">${escapeHtml(d.size_gb)} GB</div>
           `;
           card.addEventListener('click', () => {
             document.querySelectorAll('.disk-card').forEach(c => c.classList.remove('active'));
