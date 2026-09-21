@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ankora Linux DE</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="desktop-body">
+
+  <!-- Minimalist Monokrom Duvar Kağıdı Katmanı -->
+  <div class="desktop-wallpaper" id="desktop-wallpaper"></div>
+
+  <!-- Donanım Parlaklık ve Gece Filtresi -->
+  <div id="screen-dimmer" class="screen-dimmer"></div>
+  <div id="screen-night" class="screen-night"></div>
+
+  <!-- MASAÜSTÜ ÇALIŞMA ALANI -->
+  <main class="desktop-workspace" id="desktop-workspace">
+
+    <!-- MASAÜSTÜ SİMGELERİ -->
+    <nav class="desktop-grid" id="desktop-grid" aria-label="Masaüstü Simgeleri">
+      
+      <!-- KARŞILAYICI -->
+      <div class="desktop-item" data-open="win-welcome" tabindex="0" role="button">
+        <div class="item-icon brand-icon">
+          <img src="logo.svg" alt="Ankora Logo" class="desktop-item-logo">
+        </div>
+        <span class="item-name">Karşılayıcı</span>
+      </div>
+
+      <!-- KURULUM ARACI -->
+      <div class="desktop-item highlight-item" data-open="win-installer" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 8v8M8 12l4 4 4-4"></path>
+          </svg>
+        </div>
+        <span class="item-name">Kurulum</span>
+      </div>
+
+      <!-- MAĞAZA -->
+      <div class="desktop-item" data-open="win-store" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M4 7V4h16v3M4 7l2 13h12l2-13M4 7h16"></path>
+            <path d="M9 11v4M15 11v4"></path>
+          </svg>
+        </div>
+        <span class="item-name">Mağaza</span>
+      </div>
+
+      <!-- TERMİNAL -->
+      <div class="desktop-item" data-open="win-terminal" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <polyline points="4 17 10 11 4 5"></polyline>
+            <line x1="12" y1="19" x2="20" y2="19"></line>
+          </svg>
+        </div>
+        <span class="item-name">Terminal</span>
+      </div>
+
+      <!-- AI ASİSTAN -->
+      <div class="desktop-item" data-open="win-ai" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+            <circle cx="12" cy="5" r="2"></circle>
+            <path d="M12 7v4M8 16h.01M16 16h.01"></path>
+          </svg>
+        </div>
+        <span class="item-name">AI Ajan</span>
+      </div>
+
+      <!-- BELGELER / NOTLAR -->
+      <div class="desktop-item" data-open="win-office" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+        <span class="item-name">Belgeler</span>
+      </div>
+
+      <!-- AYARLAR -->
+      <div class="desktop-item" data-open="win-settings" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </div>
+        <span class="item-name">Ayarlar</span>
+      </div>
+
+      <div id="dynamic-desktop-icons"></div>
+    </nav>
+
+    <!-- ======================================================================= -->
+    <!-- 1. ANKORA KARŞILAYICI (FIRST-RUN ONBOARDING WIZARD)                     -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-welcome" style="top: 40px; left: 160px; width: 820px; height: 560px;" aria-labelledby="welcome-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <img src="logo.svg" alt="Icon" class="meta-logo">
+          <span id="welcome-header-title">Ankora Karşılayıcı — Hoş Geldiniz</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="welcome-container">
+          <!-- Sol Menü -->
+          <div class="welcome-sidebar">
+            <div class="welcome-brand">
+              <img src="logo.svg" alt="Ankora Logo" class="welcome-logo">
+              <div class="welcome-brand-text">
+                <strong>ANKORA LINUX</strong>
+                <span>Devuan Daedalus 2.0</span>
+              </div>
+            </div>
+            <nav class="welcome-nav">
+              <button class="welcome-tab active" data-tab="tab-welcome-home">Hoş Geldiniz</button>
+              <button class="welcome-tab" data-tab="tab-welcome-theme">Duvar Kağıdı & Tema</button>
+              <button class="welcome-tab" data-tab="tab-welcome-keyboard">Klavye & Dil</button>
+              <button class="welcome-tab" data-tab="tab-welcome-apps">Hızlı Paketler</button>
+            </nav>
+            <div class="welcome-footer-toggle">
+              <label class="check-container">
+                <input type="checkbox" id="chk-show-on-startup" checked>
+                <span>Başlangıçta Göster</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Sağ İçerik Alanı -->
+          <div class="welcome-content">
+            <!-- TAB 1: GİRİŞ -->
+            <div class="welcome-pane active" id="tab-welcome-home">
+              <h2>Minimalist. Endüstriyel. Hızlı.</h2>
+              <p>Ankora Linux; gereksiz arka plan servislerinden ve systemd kirliliğinden arındırılmış, doğrudan donanım verimliliğine odaklanan bağımsız bir Devuan sistemidir.</p>
+              
+              <div class="welcome-feature-cards">
+                <div class="feat-card">
+                  <strong>Tauri + Rust Çekirdeği</strong>
+                  <span>Hafif WebKitGTK motoru ve native Rust süreçleri ile sıfır bellek sızıntısı.</span>
+                </div>
+                <div class="feat-card">
+                  <strong>SysVinit Tabanı</strong>
+                  <span>Geleneksel UNIX hafifliği ve saniyeler içinde açılan kararlı masaüstü.</span>
+                </div>
+                <div class="feat-card">
+                  <strong>Yerel Donanım Kontrolü</strong>
+                  <span>Kiosk uyumlu tam ekran modu, donanım parlaklığı ve gerçek disk kurulumu.</span>
+                </div>
+              </div>
+
+              <div class="welcome-actions">
+                <button class="btn-pkg next-tab-btn" data-target="tab-welcome-theme">Görünümü Özelleştir →</button>
+              </div>
+            </div>
+
+            <!-- TAB 2: DUVAR KAĞIDI & TEMA -->
+            <div class="welcome-pane" id="tab-welcome-theme">
+              <h3>Duvar Kağıdı ve Masaüstü Teması</h3>
+              <p>Monokrom endüstriyel felsefeye uygun minimalist vektörel arka planınızı seçin:</p>
+              
+              <div class="wallpaper-grid">
+                <div class="wp-card active" data-wp="wallpaper.svg">
+                  <div class="wp-thumb" style="background-image: url('wallpaper.svg');"></div>
+                  <span>Siyah-Beyaz Dağlar (Varsayılan)</span>
+                </div>
+                <div class="wp-card" data-wp="wallpaper-obsidian.svg">
+                  <div class="wp-thumb" style="background-image: url('wallpaper-obsidian.svg');"></div>
+                  <span>Obsidyen Mat Siyah (İnce Izgara)</span>
+                </div>
+                <div class="wp-card" data-wp="wallpaper-topo.svg">
+                  <div class="wp-thumb" style="background-image: url('wallpaper-topo.svg');"></div>
+                  <span>Topoğrafik Kontur (Zirve)</span>
+                </div>
+                <div class="wp-card" data-wp="wallpaper-nordic.svg">
+                  <div class="wp-thumb" style="background-image: url('wallpaper-nordic.svg');"></div>
+                  <span>Nordik Grafit (Kuzey Silsilesi)</span>
+                </div>
+              </div>
+
+              <div class="welcome-actions">
+                <button class="btn-pkg next-tab-btn" data-target="tab-welcome-keyboard">Klavye Ayarlarına Geç →</button>
+              </div>
+            </div>
+
+            <!-- TAB 3: KLAVYE & DİL -->
+            <div class="welcome-pane" id="tab-welcome-keyboard">
+              <h3>Klavye Düzeni</h3>
+              <p>Sistem genelinde kullanılacak klavye haritasını seçin. Değişiklikler anında X11 oturumuna ve donanıma uygulanır:</p>
+
+              <div class="choice-group">
+                <label class="radio-card active">
+                  <input type="radio" name="kb-layout" value="tr" checked>
+                  <div>
+                    <strong>Türkçe Q Klavye</strong>
+                    <span>Standart Türkiye Q klavye haritası (setxkbmap tr)</span>
+                  </div>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="kb-layout" value="tr_f">
+                  <div>
+                    <strong>Türkçe F Klavye</strong>
+                    <span>Ergonomik Türkçe F düzeni (setxkbmap tr -variant f)</span>
+                  </div>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="kb-layout" value="us">
+                  <div>
+                    <strong>English (US)</strong>
+                    <span>Standard United States ANSI keyboard layout</span>
+                  </div>
+                </label>
+              </div>
+
+              <div class="welcome-actions">
+                <button class="btn-pkg next-tab-btn" data-target="tab-welcome-apps">Paket Seçimine Geç →</button>
+              </div>
+            </div>
+
+            <!-- TAB 4: HIZLI PAKETLER -->
+            <div class="welcome-pane" id="tab-welcome-apps">
+              <h3>Hızlı Uygulama Kurulumu</h3>
+              <p>İhtiyaç duyduğunuz temel araçları tek tıkla sisteminize dahil edebilirsiniz:</p>
+
+              <div class="quick-app-list">
+                <label class="app-check-item">
+                  <input type="checkbox" value="firefox-esr" checked>
+                  <div class="app-info">
+                    <strong>Firefox ESR</strong>
+                    <span>Gizlilik odaklı, kararlı web tarayıcısı</span>
+                  </div>
+                  <span class="app-size">78 MB</span>
+                </label>
+                <label class="app-check-item">
+                  <input type="checkbox" value="code">
+                  <div class="app-info">
+                    <strong>Visual Studio Code</strong>
+                    <span>Endüstriyel kaynak kod editörü</span>
+                  </div>
+                  <span class="app-size">90 MB</span>
+                </label>
+                <label class="app-check-item">
+                  <input type="checkbox" value="vlc">
+                  <div class="app-info">
+                    <strong>VLC Medya Oynatıcı</strong>
+                    <span>Evrensel video ve ses yürütücü</span>
+                  </div>
+                  <span class="app-size">64 MB</span>
+                </label>
+                <label class="app-check-item">
+                  <input type="checkbox" value="gimp">
+                  <div class="app-info">
+                    <strong>GIMP</strong>
+                    <span>Açık kaynak görsel düzenleyici</span>
+                  </div>
+                  <span class="app-size">112 MB</span>
+                </label>
+              </div>
+
+              <div class="welcome-actions">
+                <button class="btn-pkg" id="btn-welcome-install-apps">Seçilenleri Kur</button>
+                <button class="btn-pkg finish-btn" id="btn-welcome-finish">Masaüstüne Başla ✕</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 2. ANKORA KURULUM ARACI (MODERN OS TARGET INSTALLER)                    -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-installer" style="top: 50px; left: 200px; width: 780px; height: 540px;" aria-labelledby="installer-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <img src="logo.svg" alt="Icon" class="meta-logo">
+          <span id="installer-header-title">Ankora Linux Kurulum Aracı (OS Installer)</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="installer-wizard">
+          
+          <!-- Adım İlerleme Başlığı -->
+          <div class="wizard-stepper">
+            <div class="step-node active" id="step-node-1">1. Hedef Disk</div>
+            <div class="step-node" id="step-node-2">2. Kullanıcı Hesabı</div>
+            <div class="step-node" id="step-node-3">3. Kurulum Onayı</div>
+            <div class="step-node" id="step-node-4">4. Kurulum Süreci</div>
+          </div>
+
+          <!-- Adım 1: Disk Seçimi -->
+          <div class="wizard-pane active" id="wizard-pane-1">
+            <h3>Hedef Sabit Diski veya SSD'yi Seçin</h3>
+            <p>Ankora Linux, seçilen diski GPT biçiminde bölümlendirip EFI ve ext4 kök bölümü oluşturacaktır.</p>
+
+            <div class="disk-selection-box" id="disk-selection-box">
+              <!-- JS get_storage_devices ile doldurulacak -->
+              <div class="disk-loading">Sürücüler taranıyor (lsblk)...</div>
+            </div>
+
+            <div class="wizard-nav">
+              <button class="btn-pkg next-step-btn" id="btn-step1-next">İleri: Kullanıcı Bilgileri →</button>
+            </div>
+          </div>
+
+          <!-- Adım 2: Kullanıcı ve Sistem Adı -->
+          <div class="wizard-pane" id="wizard-pane-2">
+            <h3>Kullanıcı ve Bilgisayar Bilgileri</h3>
+            <p>Sisteminize giriş yapacağınız ana yönetici hesabını oluşturun:</p>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Tam Adınız:</label>
+                <input type="text" id="inst-fullname" class="input-mono" value="Pars Özkan">
+              </div>
+              <div class="form-group">
+                <label>Kullanıcı Adı (sudo):</label>
+                <input type="text" id="inst-username" class="input-mono" value="pars">
+              </div>
+              <div class="form-group">
+                <label>Bilgisayar Adı (Hostname):</label>
+                <input type="text" id="inst-hostname" class="input-mono" value="ankora-pc">
+              </div>
+              <div class="form-group">
+                <label>Kullanıcı Parolası:</label>
+                <input type="password" id="inst-password" class="input-mono" value="ankora">
+              </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <label class="check-container">
+                <input type="checkbox" id="inst-autologin" checked>
+                <span>Açılışta otomatik oturum aç (nodm Kiosk modu)</span>
+              </label>
+            </div>
+
+            <div class="wizard-nav">
+              <button class="btn-pkg prev-step-btn" id="btn-step2-prev">← Geri</button>
+              <button class="btn-pkg next-step-btn" id="btn-step2-next">İleri: Onay →</button>
+            </div>
+          </div>
+
+          <!-- Adım 3: Kurulum Onayı -->
+          <div class="wizard-pane" id="wizard-pane-3">
+            <h3>Kurulumu Başlatmaya Hazır</h3>
+            <div class="alert-box-mono">
+              <strong>DİKKAT:</strong> Seçilen disk üzerindeki tüm mevcut veriler silinecektir!
+            </div>
+
+            <div class="summary-card">
+              <div><span>Hedef Disk:</span> <strong id="sum-disk">/dev/sda</strong></div>
+              <div><span>Kullanıcı Hesabı:</span> <strong id="sum-user">pars</strong></div>
+              <div><span>Bilgisayar Adı:</span> <strong id="sum-host">ankora-pc</strong></div>
+              <div><span>Taban Çekirdek:</span> <strong>Devuan Daedalus (SysVinit)</strong></div>
+              <div><span>Önyükleyici:</span> <strong>GRUB x86_64-efi</strong></div>
+            </div>
+
+            <div class="wizard-nav">
+              <button class="btn-pkg prev-step-btn" id="btn-step3-prev">← Geri</button>
+              <button class="btn-pkg" id="btn-start-real-install" style="background: var(--text-primary); color: var(--bg-deep);">Diske Kurulumu Başlat</button>
+            </div>
+          </div>
+
+          <!-- Adım 4: Kurulum Süreci -->
+          <div class="wizard-pane" id="wizard-pane-4">
+            <h3 id="inst-exec-title">Ankora Linux Kuruluyor...</h3>
+            <p id="inst-exec-desc">Lütfen bekleyin, canlı imaj hedef diske kopyalanıyor.</p>
+
+            <div class="progress-mono-track" style="height: 6px; margin: 16px 0;">
+              <div class="progress-mono-fill" id="inst-wizard-progress" style="width: 5%;"></div>
+            </div>
+
+            <div class="term-viewport" style="height: 180px; font-size: 11px;" id="installer-logs-view">
+              <div class="term-row muted">[1/6] Disk GPT olarak bölümlendiriliyor...</div>
+            </div>
+
+            <div class="wizard-nav" id="installer-finish-nav" style="display: none;">
+              <button class="btn-pkg" id="btn-installer-reboot" style="background: var(--text-primary); color: var(--bg-deep);">Sistemi Yeniden Başlat</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 3. ANKORA MAĞAZA                                                        -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-store" style="top: 70px; left: 90px; width: 840px; height: 500px;" aria-labelledby="store-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <span id="store-header-title">Paket Yöneticisi — Ankora Deposu</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="store-container">
+          <div class="store-toolbar">
+            <input type="text" id="store-search" class="store-search" placeholder="Paket adı veya açıklama ara...">
+            <div class="store-nav">
+              <button class="store-filter-btn active" data-cat="all">Tümü</button>
+              <button class="store-filter-btn" data-cat="dev">Geliştirici</button>
+              <button class="store-filter-btn" data-cat="media">Medya</button>
+              <button class="store-filter-btn" data-cat="graphics">Grafik</button>
+              <button class="store-filter-btn" data-cat="sys">Sistem</button>
+            </div>
+          </div>
+          <div class="store-table-wrap">
+            <table class="store-table">
+              <thead>
+                <tr>
+                  <th style="width: 220px;">Uygulama</th>
+                  <th>Açıklama</th>
+                  <th style="width: 90px;">Boyut</th>
+                  <th style="width: 120px; text-align: right;">Durum</th>
+                </tr>
+              </thead>
+              <tbody id="store-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 4. TERMİNAL                                                             -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-terminal" style="top: 90px; left: 180px; width: 780px; height: 460px;" aria-labelledby="term-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <span id="term-header-title">pars@ankora-os: ~ (bash / tauri-ipc)</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="term-viewport" id="term-viewport">
+          <div class="term-logs" id="term-logs">
+            <div class="term-row muted">Ankora Linux 2.0 (Devuan Daedalus) x86_64 - Tauri Rust Native Core</div>
+            <div class="term-row muted">Komut rehberi için 'help' yazabilirsiniz. Komutlar doğrudan sistem kabuğuna iletilir.</div>
+          </div>
+          <div class="term-cmdline">
+            <span class="term-lead">pars@ankora-os:~$</span>
+            <input type="text" id="term-input" class="term-input" autocomplete="off" spellcheck="false" autofocus>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 5. AI AJAN                                                              -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-ai" style="top: 60px; left: 140px; width: 720px; height: 500px;" aria-labelledby="ai-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <span id="ai-header-title">Ankora AI Sistem Asistanı</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="ai-layout">
+          <div class="ai-status-bar">
+            <span>Bağlantı: Tauri IPC (Native Rust Engine)</span>
+            <span id="ai-status-indicator">Aktif</span>
+          </div>
+          <div class="ai-feed" id="ai-feed">
+            <div class="ai-entry bot">
+              <span class="ai-author">Ankora AI</span>
+              <p>Sistem yönetim asistanı devrede. Sistem paketlerini yönetebilir ve komut yürütebilirim. Kritik değişiklikler öncesinde sistem onayınızı isteyeceğim.</p>
+            </div>
+          </div>
+          <div class="ai-quick-row">
+            <button class="ai-tag-btn" data-query="Sistem durumunu ve telemetriyi raporla">Sistem Durumu</button>
+            <button class="ai-tag-btn" data-query="Gereksiz paket önbelleklerini temizle">Önbellek Temizliği</button>
+            <button class="ai-tag-btn" data-query="Disk doluluk oranını denetle">Disk Raporu</button>
+          </div>
+          <div class="ai-prompt-box">
+            <input type="text" id="ai-prompt-input" placeholder="Komut veya sistem görevi iletin...">
+            <button class="btn-pkg" id="btn-ai-submit">Çalıştır</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 6. BELGELER / NOTLAR                                                    -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-office" style="top: 80px; left: 160px; width: 700px; height: 480px;" aria-labelledby="office-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <span id="office-header-title">Metin Düzenleyici — notlar.txt</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="office-layout">
+          <div class="office-bar">
+            <button class="office-btn" data-cmd="bold"><b>B</b></button>
+            <button class="office-btn" data-cmd="italic"><i>I</i></button>
+            <button class="office-btn" id="btn-office-clear">Temizle</button>
+            <button class="office-btn" id="btn-office-save" style="margin-left: auto;">Kaydet</button>
+          </div>
+          <div class="office-pad" id="office-pad" contenteditable="true">
+            <h2>Ankora Linux Notları</h2>
+            <p>Tauri + Rust çekirdeği ile güçlendirilmiş hafif Kiosk Desktop Environment.</p>
+            <p>- WebKitGTK ve Rust IPC ile native performans.</p>
+            <p>- Tamamen bağımsız, systemd gereksinimi olmayan Devuan mimarisi.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 7. AYARLAR                                                              -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-settings" style="top: 70px; left: 200px; width: 680px; height: 480px;" aria-labelledby="settings-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <span id="settings-header-title">Sistem Tercihleri</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="settings-layout">
+          <div class="settings-group">
+            <span class="group-title">Görüntü ve Panel</span>
+            <div class="setting-item">
+              <div class="setting-desc">
+                <strong>Ekran Parlaklığı</strong>
+                <span>xrandr donanım parlaklık çarpanı</span>
+              </div>
+              <input type="range" id="ctrl-brightness" min="20" max="100" value="100" class="slider-mono">
+            </div>
+            <div class="setting-item">
+              <div class="setting-desc">
+                <strong>Gece Işığı Modu</strong>
+                <span>Mavi ışık azaltma filtresi</span>
+              </div>
+              <input type="checkbox" id="ctrl-night" class="check-mono">
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <span class="group-title">Donanım Telemetrisi</span>
+            <div class="telemetry-grid">
+              <div class="telemetry-cell"><span>İşletim Sistemi:</span><strong id="tele-os">Devuan Daedalus</strong></div>
+              <div class="telemetry-cell"><span>İnit Sistemi:</span><strong id="tele-init">SysVinit</strong></div>
+              <div class="telemetry-cell"><span>Çekirdek:</span><strong id="tele-kernel">Linux 6.1 LTS</strong></div>
+              <div class="telemetry-cell"><span>Bellek Durumu:</span><strong id="tele-mem">1.2 / 8.0 GB</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SİSTEM ONAY MODALI -->
+  <div class="modal-backdrop" id="confirm-modal">
+    <div class="modal-sheet">
+      <div class="modal-title">Sistem Eylemi Onayı</div>
+      <p style="font-size: 12px; color: var(--text-secondary);" id="confirm-desc">Aşağıdaki kabuk komutu çalıştırılacaktır:</p>
+      <code class="modal-code" id="confirm-cmd">apt-get clean</code>
+      <div class="modal-actions">
+        <button class="btn-pkg" id="btn-modal-cancel">İptal</button>
+        <button class="btn-pkg" id="btn-modal-confirm" style="background: var(--text-primary); color: var(--bg-deep);">Onayla</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAŞLAT MENÜSÜ -->
+  <aside class="start-flyout" id="start-flyout">
+    <div class="start-header-bar">
+      <div class="start-brand">
+        <img src="logo.svg" alt="Ankora" style="width: 22px; height: 22px;">
+        <span style="font-weight: 600; font-size: 12px;">ANKORA LINUX</span>
+      </div>
+      <input type="text" class="start-search-mono" id="start-search" placeholder="Uygulama ara...">
+    </div>
+    <div class="start-app-list">
+      <div class="start-row" data-open="win-welcome">
+        <span class="start-row-icon">⚓</span>
+        <span>Ankora Karşılayıcı</span>
+      </div>
+      <div class="start-row" data-open="win-installer">
+        <span class="start-row-icon">💿</span>
+        <span>Diske Kurulum Aracı</span>
+      </div>
+      <div class="start-row" data-open="win-store">
+        <span class="start-row-icon">📦</span>
+        <span>Yazılım Mağazası</span>
+      </div>
+      <div class="start-row" data-open="win-terminal">
+        <span class="start-row-icon">💻</span>
+        <span>Bash Terminali</span>
+      </div>
+      <div class="start-row" data-open="win-ai">
+        <span class="start-row-icon">🤖</span>
+        <span>AI Sistem Ajanı</span>
+      </div>
+      <div class="start-row" data-open="win-office">
+        <span class="start-row-icon">📄</span>
+        <span>Belgeler & Notlar</span>
+      </div>
+      <div class="start-row" data-open="win-settings">
+        <span class="start-row-icon">⚙️</span>
+        <span>Sistem Ayarları</span>
+      </div>
+    </div>
+    <div class="start-footer-bar">
+      <span class="start-user-label">pars (devuan)</span>
+      <button class="btn-power-mono" id="btn-restart">Yeniden Başlat</button>
+    </div>
+  </aside>
+
+  <!-- GÖREV ÇUBUĞU -->
+  <footer class="taskbar">
+    <div class="taskbar-start-group">
+      <button class="start-btn" id="start-btn">
+        <img src="logo.svg" alt="Ankora" class="start-glyph-logo">
+        <span>Ankora</span>
+      </button>
+      <div class="taskbar-running-tabs" id="running-tabs"></div>
+    </div>
+
+    <div class="taskbar-tray">
+      <div class="tray-cell" id="tray-bridge">Tauri Core: Aktif</div>
+      <div class="tray-cell tray-clock" id="tray-clock">12:00</div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

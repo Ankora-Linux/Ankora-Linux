@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Matte Dark Background -->
+  <rect width="512" height="512" rx="96" fill="#060608"/>
+  <rect x="8" y="8" width="496" height="496" rx="88" stroke="#1f1f26" stroke-width="2"/>
+
+  <!-- Geometric Anchor & Apex 'A' Monogram -->
+  <g transform="translate(0, -10)">
+    <!-- Top Anchor Ring -->
+    <circle cx="256" cy="110" r="38" stroke="#f0f0f4" stroke-width="14" fill="none"/>
+    <circle cx="256" cy="110" r="18" fill="#141418"/>
+
+    <!-- Crossbar -->
+    <path d="M190 156 H322" stroke="#f0f0f4" stroke-width="14" stroke-linecap="square"/>
+
+    <!-- Central Shaft -->
+    <line x1="256" y1="148" x2="256" y2="380" stroke="#f0f0f4" stroke-width="14"/>
+
+    <!-- Outer Apex Legs ('A' shape) -->
+    <path d="M256 156 L150 360" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
+    <path d="M256 156 L362 360" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
+
+    <!-- 'A' Horizontal Bridge -->
+    <path d="M188 280 H324" stroke="#ffffff" stroke-width="16"/>
+
+    <!-- Anchor Curved Flukes -->
+    <path d="M130 250 C130 380 382 380 382 250" stroke="#ffffff" stroke-width="20" fill="none" stroke-linecap="round"/>
+
+    <!-- Left & Right Arrow Tips -->
+    <polygon points="130,225 105,275 155,275" fill="#f0f0f4"/>
+    <polygon points="382,225 357,275 407,275" fill="#f0f0f4"/>
+
+    <!-- Anchor Bottom Center Keel -->
+    <polygon points="256,410 236,365 276,365" fill="#f0f0f4"/>
+  </g>
+
+  <!-- Typography -->
+  <text x="256" y="455" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="800" letter-spacing="9" fill="#f0f0f4">ANKORA</text>
+  <text x="256" y="482" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" letter-spacing="12" fill="#757582">LINUX</text>
+</svg>

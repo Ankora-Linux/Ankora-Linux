@@ -1,17 +1,18 @@
-<img width="500" height="500" alt="Ankora Güncel Logo" src="https://github.com/user-attachments/assets/4645e22e-59e6-4afe-85c7-4f8bd8144067" />
 <div align="center">
-  <img src="Ankora%20G%C3%BCncel%20Logo.jpg" alt="Ankora OS Logo" width="220" style="border-radius: 50%;">
-  
-<p align="left">
-  <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-2.0_(Z%C3%9CMR%C3%9CT)-0085d1?style=for-the-badge&labelColor=383838" alt="Sürüm">
-  <img src="https://img.shields.io/badge/TABAN-DEBIAN_13_%2F_ARCH-a61c1c?style=for-the-badge&labelColor=383838" alt="Taban">
-  <img src="https://img.shields.io/badge/MASA%C3%9CST%C3%9C-XFCE_%7C_KDE-0085d1?style=for-the-badge&labelColor=383838" alt="Masaüstü">
-  <img src="https://img.shields.io/badge/L%C3%B0SANS-A%C3%87IK_KAYNAK-41a013?style=for-the-badge&labelColor=383838" alt="Lisans">
-</p>
+  <img src="assets/logo.png" alt="Ankora OS Logo" width="240" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+  <br><br>
+  <h1>Ankora Linux (Ankora OS)</h1>
+  <p><b>Devuan Linux Tabanlı, Systemd-Free Hafif Çekirdekli, Modern Kiosk Masaüstü Ortamı (Tauri + Rust)</b></p>
 
-# Ankora Linux (Ankora OS)
+  <p>
+    <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-2.0_(DEVUAN)-ffffff?style=for-the-badge&labelColor=111111" alt="Sürüm">
+    <img src="https://img.shields.io/badge/TABAN-DEVUAN_DAEDALUS-d1d1d1?style=for-the-badge&labelColor=111111" alt="Taban">
+    <img src="https://img.shields.io/badge/MASA%C3%9CST%C3%9C-ANKORA_DE_(TAURI)-ffffff?style=for-the-badge&labelColor=111111" alt="Masaüstü">
+    <img src="https://img.shields.io/badge/L%C3%B0SANS-MIT-41a013?style=for-the-badge&labelColor=111111" alt="Lisans">
+  </p>
+</div>
 
-Ankora OS; düşük donanım kaynaklarına sahip sistemlerde yüksek tepkisellik ve kararılık sunmak üzere tasarlanmış, arka plan yüklerinden arındırılmış Debian ve Arch tabanlı bağımsız bir Linux dağıtımı projesidir. Sistem, doğrudan terminale entegre çalışan çevrimdışı (lokal) bir AI asistanı ve özelleştirilmiş bellek yönetim katmanıyla gelir.
+Ankora OS; düşük donanım kaynaklarına sahip sistemlerde Chrome OS Flex kararlılığı ve yüksek tepkisellik sunmak üzere tasarlanmış, systemd kirliliğinden arındırılmış Devuan Linux tabanlı bağımsız bir dağıtımdır. Masaüstü ortamı (Ankora DE), Rust ve WebKitGTK (Tauri) üzerinde sıfır çökme ve ultra hafif bellek ayak izi ile çalışır.
 
 ---
 

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <defs>
+    <linearGradient id="nordicSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#020203"/>
+      <stop offset="60%" stop-color="#070709"/>
+      <stop offset="100%" stop-color="#141418"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#nordicSky)"/>
+  
+  <!-- High Contrast Sharp Peaks -->
+  <polygon points="120,1080 380,480 620,1080" fill="#1b1b22"/>
+  <polygon points="380,480 620,1080 480,1080" fill="#24242d"/>
+  
+  <polygon points="480,1080 820,360 1140,1080" fill="#14141a"/>
+  <polygon points="820,360 1140,1080 960,1080" fill="#202028"/>
+  
+  <polygon points="980,1080 1340,420 1700,1080" fill="#181820"/>
+  <polygon points="1340,420 1700,1080 1520,1080" fill="#262632"/>
+  
+  <!-- Crest Lines -->
+  <line x1="380" y1="480" x2="480" y2="1080" stroke="#484856" stroke-width="1.5"/>
+  <line x1="820" y1="360" x2="960" y2="1080" stroke="#525262" stroke-width="1.5"/>
+  <line x1="1340" y1="420" x2="1520" y2="1080" stroke="#484856" stroke-width="1.5"/>
+  
+  <!-- Stars -->
+  <circle cx="280" cy="180" r="1.5" fill="#888898"/>
+  <circle cx="680" cy="120" r="1" fill="#666675"/>
+  <circle cx="1120" cy="190" r="1.25" fill="#888898"/>
+  <circle cx="1580" cy="140" r="1.5" fill="#aaaaaa"/>
+</svg>

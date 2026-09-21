@@ -1,0 +1,66 @@
+{
+  "$schema": "https://raw.githubusercontent.com/tauri-apps/tauri/tauri-v1/tooling/cli/schema.json",
+  "build": {
+    "beforeBuildCommand": "",
+    "beforeDevCommand": "",
+    "devPath": "../src",
+    "distDir": "../src"
+  },
+  "package": {
+    "productName": "Ankora DE",
+    "version": "2.0.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "window": {
+        "all": false,
+        "startDragging": true,
+        "close": true,
+        "minimize": true,
+        "maximize": true,
+        "unmaximize": true,
+        "show": true,
+        "hide": true
+      },
+      "shell": {
+        "all": false,
+        "open": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "category": "Utility",
+      "copyright": "2026 Ankora Linux Project",
+      "deb": {
+        "depends": [
+          "libwebkit2gtk-4.0-37 | libwebkit2gtk-4.1-0",
+          "libgtk-3-0",
+          "libayatana-appindicator3-1"
+        ]
+      },
+      "icon": [
+        "icons/icon.png"
+      ],
+      "identifier": "org.ankora.de",
+      "targets": ["deb", "appimage"]
+    },
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "title": "Ankora Linux",
+        "fullscreen": true,
+        "decorations": false,
+        "resizable": false,
+        "transparent": false,
+        "alwaysOnTop": false,
+        "skipTaskbar": false,
+        "center": true,
+        "width": 1920,
+        "height": 1080
+      }
+    ]
+  }
+}
