@@ -1,11 +1,57 @@
 ﻿================================================================================
-ANKORA LINUX 2.0 (DAEDALUS KIOSK) - TAM PROJE KAYNAK KODLARI
-Oluşturulma Tarihi: 2026-09-21 23:27:13
+                 ANKORA LINUX 2.0 (DAEDALUS KIOSK DE)
+               TAM PROJE KAYNAK KODLARI VE YAPILANDIRMASI
+                   Oluşturulma Tarihi: 2026-09-21 23:28:51
 ================================================================================
 
-################################################################################
-# DOSYA: package.json
-################################################################################
+BU DOSYA HAKKINDA:
+Bu metin dosyası, Ankora Linux'un hem Tauri (Rust) arka yüz çekirdeğini, hem
+WebKit/HTML/CSS/JS masaüstü ortamını (Ankora DE), SVG vektörel tasarım varlıklarını,
+hem de Devuan GNU/Linux Live ISO (Calamares & Refracta) yapılandırma dosyalarını
+içeren eksiksiz ve tek parça bir kaynak kod dökümüdür.
+
+--------------------------------------------------------------------------------
+İÇİNDEKİLER DİZİNİ:
+--------------------------------------------------------------------------------
+ 1. package.json                                                      (     305 bayt)
+ 2. src-tauri/Cargo.toml                                              (     613 bayt)
+ 3. src-tauri/tauri.conf.json                                         (    1442 bayt)
+ 4. src-tauri/build.rs                                                (      39 bayt)
+ 5. src-tauri/src/main.rs                                             (   25872 bayt)
+ 6. src/index.html                                                    (   67056 bayt)
+ 7. src/style.css                                                     (   53428 bayt)
+ 8. src/app.js                                                        (   50194 bayt)
+ 9. src/logo.svg                                                      (    1930 bayt)
+10. src/wallpaper.svg                                                 (    3004 bayt)
+11. src/wallpaper-nordic.svg                                          (    1371 bayt)
+12. src/wallpaper-obsidian.svg                                        (     926 bayt)
+13. src/wallpaper-topo.svg                                            (    1190 bayt)
+14. README.md                                                         (    6182 bayt)
+15. README_EN.md                                                      (    3390 bayt)
+16. LICENSE                                                           (    1086 bayt)
+17. Ankora2-SourceCode/scripts/yardimci                               (     243 bayt)
+18. Ankora2-SourceCode/etc/refractasnapshot.conf                      (   10787 bayt)
+19. Ankora2-SourceCode/etc/calamares/settings.conf                    (    4051 bayt)
+20. Ankora2-SourceCode/etc/calamares/branding/debian/branding.desc    (    1107 bayt)
+21. Ankora2-SourceCode/etc/calamares/branding/debian/show.qml         (    1692 bayt)
+22. Ankora2-SourceCode/etc/calamares/modules/bootloader.conf          (    2280 bayt)
+23. Ankora2-SourceCode/etc/calamares/modules/displaymanager.conf      (    1077 bayt)
+24. Ankora2-SourceCode/etc/calamares/modules/finished.conf            (      97 bayt)
+25. Ankora2-SourceCode/etc/calamares/modules/fstab.conf               (     252 bayt)
+26. Ankora2-SourceCode/etc/calamares/modules/luksopenswaphookcfg.conf (     180 bayt)
+27. Ankora2-SourceCode/etc/calamares/modules/machineid.conf           (     504 bayt)
+28. Ankora2-SourceCode/etc/calamares/modules/mount.conf               (    1446 bayt)
+29. Ankora2-SourceCode/etc/calamares/modules/packages.conf            (     326 bayt)
+30. Ankora2-SourceCode/etc/calamares/modules/shellprocess_removelive.conf (     195 bayt)
+31. Ankora2-SourceCode/etc/calamares/modules/unpackfs.conf            (     130 bayt)
+32. Ankora2-SourceCode/etc/calamares/modules/users.conf               (     351 bayt)
+33. Ankora2-SourceCode/etc/calamares/modules/welcome.conf             (     313 bayt)
+--------------------------------------------------------------------------------
+
+
+================================================================================
+>>> BAŞLANGIÇ: package.json
+================================================================================
 {
   "name": "ankora-de",
   "version": "2.0.0",
@@ -21,11 +67,12 @@ Oluşturulma Tarihi: 2026-09-21 23:27:13
   }
 }
 
+<<< BİTİŞ: package.json
 
 
-################################################################################
-# DOSYA: src-tauri/Cargo.toml
-################################################################################
+================================================================================
+>>> BAŞLANGIÇ: src-tauri/Cargo.toml
+================================================================================
 [package]
 name = "ankora-de"
 version = "2.0.0"
@@ -49,11 +96,12 @@ reqwest = { version = "0.11", features = ["json"] }
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
 
+<<< BİTİŞ: src-tauri/Cargo.toml
 
 
-################################################################################
-# DOSYA: src-tauri/tauri.conf.json
-################################################################################
+================================================================================
+>>> BAŞLANGIÇ: src-tauri/tauri.conf.json
+================================================================================
 {
   "$schema": "https://raw.githubusercontent.com/tauri-apps/tauri/tauri-v1/tooling/cli/schema.json",
   "build": {
@@ -121,11 +169,22 @@ custom-protocol = ["tauri/custom-protocol"]
   }
 }
 
+<<< BİTİŞ: src-tauri/tauri.conf.json
 
 
-################################################################################
-# DOSYA: src-tauri/src/main.rs
-################################################################################
+================================================================================
+>>> BAŞLANGIÇ: src-tauri/build.rs
+================================================================================
+fn main() {
+    tauri_build::build()
+}
+
+<<< BİTİŞ: src-tauri/build.rs
+
+
+================================================================================
+>>> BAŞLANGIÇ: src-tauri/src/main.rs
+================================================================================
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use base64::Engine;
@@ -829,11 +888,12 @@ fn main() {
         .expect("Ankora DE başlatılırken hata oluştu");
 }
 
+<<< BİTİŞ: src-tauri/src/main.rs
 
 
-################################################################################
-# DOSYA: src/index.html
-################################################################################
+================================================================================
+>>> BAŞLANGIÇ: src/index.html
+================================================================================
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -2120,11 +2180,12 @@ fn main() {
 </body>
 </html>
 
+<<< BİTİŞ: src/index.html
 
 
-################################################################################
-# DOSYA: src/style.css
-################################################################################
+================================================================================
+>>> BAŞLANGIÇ: src/style.css
+================================================================================
 /* ==============================================================================
    ANKORA LINUX - ULTRA-MINIMALIST MONOCHROME TAURI DESKTOP ENVIRONMENT
    Endüstriyel, Düz (Flat), Koyu Antrasit ve Mat Siyah Tasarım Dili
@@ -4881,11 +4942,12 @@ html, body {
   margin-bottom: 8px;
 }
 
+<<< BİTİŞ: src/style.css
 
 
-################################################################################
-# DOSYA: src/app.js
-################################################################################
+================================================================================
+>>> BAŞLANGIÇ: src/app.js
+================================================================================
 (() => {
   'use strict';
 
@@ -6211,11 +6273,201 @@ html, body {
 })();
 
 
+<<< BİTİŞ: src/app.js
 
 
-################################################################################
-# DOSYA: README.md
-################################################################################
+================================================================================
+>>> BAŞLANGIÇ: src/logo.svg
+================================================================================
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Matte Dark Background -->
+  <rect width="512" height="512" rx="96" fill="#060608"/>
+  <rect x="8" y="8" width="496" height="496" rx="88" stroke="#1f1f26" stroke-width="2"/>
+
+  <!-- Geometric Anchor & Apex 'A' Monogram -->
+  <g transform="translate(0, -10)">
+    <!-- Top Anchor Ring -->
+    <circle cx="256" cy="110" r="38" stroke="#f0f0f4" stroke-width="14" fill="none"/>
+    <circle cx="256" cy="110" r="18" fill="#141418"/>
+
+    <!-- Crossbar -->
+    <path d="M190 156 H322" stroke="#f0f0f4" stroke-width="14" stroke-linecap="square"/>
+
+    <!-- Central Shaft -->
+    <line x1="256" y1="148" x2="256" y2="380" stroke="#f0f0f4" stroke-width="14"/>
+
+    <!-- Outer Apex Legs ('A' shape) -->
+    <path d="M256 156 L150 360" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
+    <path d="M256 156 L362 360" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
+
+    <!-- 'A' Horizontal Bridge -->
+    <path d="M188 280 H324" stroke="#ffffff" stroke-width="16"/>
+
+    <!-- Anchor Curved Flukes -->
+    <path d="M130 250 C130 380 382 380 382 250" stroke="#ffffff" stroke-width="20" fill="none" stroke-linecap="round"/>
+
+    <!-- Left & Right Arrow Tips -->
+    <polygon points="130,225 105,275 155,275" fill="#f0f0f4"/>
+    <polygon points="382,225 357,275 407,275" fill="#f0f0f4"/>
+
+    <!-- Anchor Bottom Center Keel -->
+    <polygon points="256,410 236,365 276,365" fill="#f0f0f4"/>
+  </g>
+
+  <!-- Typography -->
+  <text x="256" y="455" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="800" letter-spacing="9" fill="#f0f0f4">ANKORA</text>
+  <text x="256" y="482" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" letter-spacing="12" fill="#757582">LINUX</text>
+</svg>
+
+<<< BİTİŞ: src/logo.svg
+
+
+================================================================================
+>>> BAŞLANGIÇ: src/wallpaper.svg
+================================================================================
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#040404"/>
+      <stop offset="50%" stop-color="#08080a"/>
+      <stop offset="100%" stop-color="#101013"/>
+    </linearGradient>
+    <linearGradient id="mtnGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#242428"/>
+      <stop offset="100%" stop-color="#0d0d0f"/>
+    </linearGradient>
+    <linearGradient id="mtnGrad2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#19191d"/>
+      <stop offset="100%" stop-color="#08080a"/>
+    </linearGradient>
+    <linearGradient id="mtnGrad3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#111114"/>
+      <stop offset="100%" stop-color="#040405"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#skyGrad)"/>
+
+  <circle cx="1380" cy="340" r="160" stroke="#282830" stroke-width="1" stroke-dasharray="6 6" fill="none" opacity="0.6"/>
+  <circle cx="1380" cy="340" r="100" stroke="#3b3b44" stroke-width="1.25" fill="#141418" fill-opacity="0.4"/>
+  <circle cx="1380" cy="340" r="40" stroke="#52525e" stroke-width="1" fill="#1a1a20" fill-opacity="0.6"/>
+
+  <circle cx="220" cy="160" r="1.5" fill="#666670"/>
+  <circle cx="480" cy="90" r="1" fill="#4a4a52"/>
+  <circle cx="740" cy="210" r="1.25" fill="#555560"/>
+  <circle cx="980" cy="130" r="1" fill="#44444c"/>
+  <circle cx="1180" cy="220" r="1.5" fill="#666670"/>
+  <circle cx="1660" cy="180" r="1.25" fill="#555560"/>
+  <circle cx="1780" cy="90" r="1" fill="#44444c"/>
+
+  <path d="M0 1080 L0 720 L160 590 L340 680 L540 500 L720 620 L940 450 L1120 590 L1320 420 L1540 560 L1740 460 L1920 530 L1920 1080 Z" fill="url(#mtnGrad1)"/>
+  <path d="M0 720 L160 590 L340 680 L540 500 L720 620 L940 450 L1120 590 L1320 420 L1540 560 L1740 460 L1920 530" stroke="#44444e" stroke-width="1.5" fill="none"/>
+
+  <path d="M0 1080 L0 810 L130 760 L290 660 L460 740 L670 580 L860 700 L1050 560 L1230 680 L1450 540 L1650 670 L1820 600 L1920 640 L1920 1080 Z" fill="url(#mtnGrad2)"/>
+  <path d="M0 810 L130 760 L290 660 L460 740 L670 580 L860 700 L1050 560 L1230 680 L1450 540 L1650 670 L1820 600 L1920 640" stroke="#32323a" stroke-width="1.5" fill="none"/>
+
+  <path d="M0 1080 L0 880 L200 800 L390 870 L580 730 L780 830 L980 700 L1180 810 L1380 680 L1580 790 L1790 710 L1920 770 L1920 1080 Z" fill="url(#mtnGrad3)"/>
+  <path d="M0 880 L200 800 L390 870 L580 730 L780 830 L980 700 L1180 810 L1380 680 L1580 790 L1790 710 L1920 770" stroke="#25252d" stroke-width="1.5" fill="none"/>
+
+  <path d="M0 940 Q480 910 960 950 T1920 920" stroke="#1c1c22" stroke-width="1" stroke-dasharray="6 6" fill="none"/>
+  <path d="M0 990 Q480 965 960 1000 T1920 970" stroke="#16161b" stroke-width="1" stroke-dasharray="8 8" fill="none"/>
+  <path d="M0 1040 Q480 1015 960 1045 T1920 1020" stroke="#0f0f13" stroke-width="1" fill="none"/>
+</svg>
+
+<<< BİTİŞ: src/wallpaper.svg
+
+
+================================================================================
+>>> BAŞLANGIÇ: src/wallpaper-nordic.svg
+================================================================================
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <defs>
+    <linearGradient id="nordicSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#020203"/>
+      <stop offset="60%" stop-color="#070709"/>
+      <stop offset="100%" stop-color="#141418"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#nordicSky)"/>
+  
+  <!-- High Contrast Sharp Peaks -->
+  <polygon points="120,1080 380,480 620,1080" fill="#1b1b22"/>
+  <polygon points="380,480 620,1080 480,1080" fill="#24242d"/>
+  
+  <polygon points="480,1080 820,360 1140,1080" fill="#14141a"/>
+  <polygon points="820,360 1140,1080 960,1080" fill="#202028"/>
+  
+  <polygon points="980,1080 1340,420 1700,1080" fill="#181820"/>
+  <polygon points="1340,420 1700,1080 1520,1080" fill="#262632"/>
+  
+  <!-- Crest Lines -->
+  <line x1="380" y1="480" x2="480" y2="1080" stroke="#484856" stroke-width="1.5"/>
+  <line x1="820" y1="360" x2="960" y2="1080" stroke="#525262" stroke-width="1.5"/>
+  <line x1="1340" y1="420" x2="1520" y2="1080" stroke="#484856" stroke-width="1.5"/>
+  
+  <!-- Stars -->
+  <circle cx="280" cy="180" r="1.5" fill="#888898"/>
+  <circle cx="680" cy="120" r="1" fill="#666675"/>
+  <circle cx="1120" cy="190" r="1.25" fill="#888898"/>
+  <circle cx="1580" cy="140" r="1.5" fill="#aaaaaa"/>
+</svg>
+
+<<< BİTİŞ: src/wallpaper-nordic.svg
+
+
+================================================================================
+>>> BAŞLANGIÇ: src/wallpaper-obsidian.svg
+================================================================================
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <rect width="1920" height="1080" fill="#040405"/>
+  <defs>
+    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="0.85" fill="#22222a"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#gridPattern)"/>
+  
+  <circle cx="960" cy="540" r="280" stroke="#16161b" stroke-width="1.5" stroke-dasharray="6 6" fill="none"/>
+  <circle cx="960" cy="540" r="180" stroke="#1f1f26" stroke-width="1" fill="none"/>
+  <circle cx="960" cy="540" r="80" stroke="#2b2b34" stroke-width="1" fill="#09090c"/>
+  <circle cx="960" cy="540" r="12" fill="#ffffff" fill-opacity="0.8"/>
+  
+  <line x1="960" y1="220" x2="960" y2="860" stroke="#181820" stroke-width="1"/>
+  <line x1="640" y1="540" x2="1280" y2="540" stroke="#181820" stroke-width="1"/>
+</svg>
+
+<<< BİTİŞ: src/wallpaper-obsidian.svg
+
+
+================================================================================
+>>> BAŞLANGIÇ: src/wallpaper-topo.svg
+================================================================================
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <rect width="1920" height="1080" fill="#060608"/>
+  <g stroke="#1a1a22" stroke-width="1.25" fill="none">
+    <path d="M-100 200 Q400 120 960 220 T1920 180" />
+    <path d="M-100 280 Q350 200 960 300 T1920 250" stroke="#22222d"/>
+    <path d="M-100 360 Q300 280 960 380 T1920 330" />
+    <path d="M-100 440 Q250 360 960 460 T1920 410" stroke="#282834"/>
+    <path d="M-100 520 Q200 440 960 540 T1920 490" />
+    <path d="M-100 600 Q150 520 960 620 T1920 570" stroke="#2e2e3a"/>
+    <path d="M-100 680 Q200 600 960 700 T1920 650" />
+    <path d="M-100 760 Q250 680 960 780 T1920 730" stroke="#22222d"/>
+    <path d="M-100 840 Q300 760 960 860 T1920 810" />
+    <path d="M-100 920 Q350 840 960 940 T1920 890" stroke="#1c1c24"/>
+    <path d="M-100 1000 Q400 920 960 1020 T1920 970" />
+  </g>
+  <circle cx="1480" cy="420" r="140" stroke="#333340" stroke-width="1" stroke-dasharray="4 4" fill="none"/>
+  <circle cx="1480" cy="420" r="4" fill="#ffffff"/>
+  <text x="1480" y="450" fill="#666675" font-family="monospace" font-size="10" text-anchor="middle">PEAK 4,120M</text>
+</svg>
+
+<<< BİTİŞ: src/wallpaper-topo.svg
+
+
+================================================================================
+>>> BAŞLANGIÇ: README.md
+================================================================================
 <div align="center">
   <img src="assets/logo.png" alt="Ankora OS Logo" width="240" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
   <br><br>
@@ -6312,5 +6564,966 @@ Ankora OS is built on top of **Debian 12 (Bookworm)**. The base system, Linux Ke
 
 All custom configurations, boot parameters (GRUB/ISOLinux), UI artwork, and build scripts specific to Ankora OS provided in this repository are licensed under the **MIT License**.
 
+<<< BİTİŞ: README.md
+
+
+================================================================================
+>>> BAŞLANGIÇ: README_EN.md
+================================================================================
+# 💎 Ankora OS 1.0 (Emerald)
+
+[![Base](https://img.shields.io/badge/Base-Debian%2012%20(Bookworm)-A80030?logo=debian&logoColor=white)](#)
+[![Desktop](https://img.shields.io/badge/Desktop-XFCE-2284F2?logo=xfce&logoColor=white)](#)
+[![Status](https://img.shields.io/badge/Status-Stable-10B981)](#)
+
+> **A Debian-based Linux distribution tailored for gamers and developers, ready out-of-the-box.**
+
+[🇹🇷 Türkçe README için tıklayın (Click here for Turkish)](README.md) 
+## 📖 About Ankora OS
+Ankora OS is not about reinventing the wheel. It is built on the rock-solid foundation of **Debian 12 (Bookworm)** but eliminates the tedious post-installation setup. Designed for developers and gamers, Ankora OS comes pre-configured with essential performance tweaks, modern command-line tools, and a beautifully customized lightweight XFCE desktop environment. 
+
+Whether you want to compile code without running out of memory or jump straight into gaming, Ankora OS respects your time by providing a ready-to-use environment.
+
+## ✨ Key Features
+
+### 🚀 Performance & System
+* **Optimized Memory Management:** Pre-configured **ZRAM** (zstd algorithm at 100% capacity) and **EarlyOOM** to prevent system freezes during heavy workloads or gaming.
+* **Hardware Efficiency:** `irqbalance` and `NetworkManager` are enabled by default for optimal CPU and network routing.
+* **Bloat-Free Desktop:** A deeply customized, lightweight XFCE desktop featuring a modern Dark & Emerald Green aesthetic (`#1e1e2e` / `#10B981`).
+
+### 🛠️ Developer & Gamer Ready
+* **Containers & Packages:** **Docker** and **Flatpak** (with Flathub repo) are integrated and ready to use.
+* **Gaming:** **GameMode** is pre-installed for instant FPS boosts and system optimization during gameplay.
+* **Modern CLI Experience:** Legacy tools are symlinked to their modern, Rust-based alternatives out of the box:
+  * `eza` (replaces `ls`)
+  * `bat` (replaces `cat`)
+  * `fd` (replaces `find`)
+* **Customized Terminal:** A pre-configured `.bashrc` loaded with useful aliases and a beautiful boot ASCII art.
+
+### 💿 Seamless Installation
+* Replaced the standard Debian installer with the user-friendly **Calamares Installer**, fully branded with Ankora OS assets for a smooth setup experience.
+
+## 📸 Screenshots
+
+<img width="1366" height="768" alt="Screenshot_20260822_124753" src="https://github.com/user-attachments/assets/0949fcdc-31d4-4eb2-beaf-f1b1eb99a975" />
+(It was run from a live ISO on an old computer.)
+## 📥 Download & Installation
+
+1. Go to the [Releases](../../releases) page and download the latest `Ankora-OS-1.0-amd64.iso` file.
+2. Flash the ISO to a USB drive using [Ventoy](https://www.ventoy.net/), [Rufus](https://rufus.ie/), or [BalenaEtcher](https://balena.io/etcher/).
+3. Boot your PC from the USB drive.
+4. You can test the system in **Live Mode** or click the **"Install Ankora OS"** icon on the desktop to start the Calamares installer.
+
+## 🤝 Contributing
+Feedback, bug reports, and pull requests are always welcome! If you are a distro-hopper or a developer, feel free to test the ISO and open an issue if you encounter any bugs.
+
+## 📝 License
+Ankora OS is an open-source project and follows the free software guidelines. The base system is Debian, and all respective licenses of the pre-installed open-source software apply.
+
+<<< BİTİŞ: README_EN.md
+
+
+================================================================================
+>>> BAŞLANGIÇ: LICENSE
+================================================================================
+MIT License
+
+Copyright (c) 2026 Parsozkn
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+<<< BİTİŞ: LICENSE
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/scripts/yardimci
+================================================================================
+#!/bin/bash
+read -p "Ankora AI Asistanına Sorun: " SORU
+if [ -n "$SORU" ]; then
+    ollama run qwen2.5:0.5b "System: Sen Ankora Linux masaüstü yardımcı asistanısın. Sadece Türkçe yanıt ver, komut çalıştırma. Soru: $SORU"
+fi
+
+<<< BİTİŞ: Ankora2-SourceCode/scripts/yardimci
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/refractasnapshot.conf
+================================================================================
+# This file contains some configuration variables for Refracta Snapshot
+# (version 10.2.x GUI and CLI versions). If you want to change
+# the defaults, this is the place to do it.
+#
+# Put this file in /etc or edit the configfile variable found at the
+# top of refractasnapshot to reflect its true location. If the 
+# script can't find this config file, it'll use the default values.
+# Copyright 2011-2018 fsmithred@gmail.com
+
+
+
+# Some laptops overheat when running rsync or mksquashfs. If limit_cpu
+# is "yes", cpu activity will be limited on those two commands.
+# limit is percentage of cpu allowed for command, up to 100% per core.
+
+limit_cpu="no"
+limit="50"
+
+
+# Default location for error log is /var/log/refractasnashot.log
+
+error_log="/var/log/refractasnapshot.log"
+
+
+# You can change the location of $work_dir (location of system copy) and
+# $snapshot_dir (location of final iso file) in case you don't have enough
+# space on the system. (Defaults are "/home/work" and "/home/snapshot")
+#
+# Hints:
+#   Be sure to use separate directories for these two variables. If you
+# use the same location for both (e.g. /media/disk) and if $save_work
+# is set to "no", your CD image will get deleted when the program
+# finishes. Instead, use something like /media/disk/snapshot and 
+# /media/disk/work, or even /media/disk/snapshot/work.
+#   These directories will be created by the script, and they are 
+# already set to be excluded from the rsync copy of the system (so you
+# don't end up with an extra copy of your system or old snapshots in the
+# final CD image.)
+#   Any filesystems mounted in /mnt or /media will be excluded from the
+# system copy. Filesystems mounted elsewhere will be included and will
+# increase the size of the final CD image. To avoid that, you can either
+# unmount those filesystems before running refractasnapshot, or you can
+# add them to the excludes file. (See snapshot_excludes below.)
+
+snapshot_dir="/mnt/ankora_iso"
+work_dir="/home/work"
+efi_work="${work_dir}/efi-files"
+
+
+# Set to yes to create boot files for uefi.
+
+make_efi="yes"
+
+
+# Set to force xorriso to use $uefi_opt (for testing only)
+
+force_efi="no"
+
+
+# Change $save_work to "yes" if you want the temporary copy of your
+# filesystem to be saved. This will make subsequent snapshot creation
+# go faster.
+# (Default is "no")
+
+save_work="no"
+
+
+# rsync delete options (or any others you want to add)
+# This is only for copy_filesystem() and only if $save_work is "yes"
+# Use only one option per variable!
+# Default options are --delete-before and --delete-excluded
+# Full command in the script is:
+# rsync -av / myfs/ ${rsync_option1} ${rsync_option12} ${rsync_option3} \
+#	--exclude="$work_dir" --exclude="$snapshot_dir" --exclude="$efi_work" --exclude-from="$snapshot_excludes"
+
+rsync_option1="--delete-before"
+rsync_option2=" --delete-excluded"
+rsync_option3=""
+
+# You can change the default rsync excludes file here if you know what
+# you're doing. Be sure to use the full path to the file.
+#
+# It's also possible to edit the excludes file by choosing "Setup"
+# during the execution of the script. 
+#
+# Default is "/usr/lib/refractasnapshot/snapshot_exclude.list"
+
+snapshot_excludes="/usr/lib/refractasnapshot/snapshot_exclude.list"
+
+
+# Change this if you want the live system to use other than the default
+# kernel and initrd. You may need to edit the isolinux boot menu to
+# match the filenames. (Also see custom boot menu section below.)
+#
+# Examples:
+# For kernel_image="/boot/vmlinuz-3.16.0-4-amd64" then the kernel
+# line in the boot menu would contain:
+#	 kernel /live/vmlinuz-3.16.0-4-amd64
+#
+# For Ubuntu:
+#	kernel_image="/boot/vmlinuz"
+#	initrd_image="/boot/vmlinuz"
+#
+# (Defaults are /vmlinuz and /initrd.img)
+
+kernel_image="/vmlinuz"
+initrd_image="/initrd.img"
+
+
+# Multiple snapshots (iso files) are named with the date and time of
+# creation. If you prefer to have them numbered sequentially, comment
+# out the next line. Default is to keep the line uncommented.
+
+stamp="datetime"
+
+
+# The name of the snapshot file will be snapshot-{date or number}.iso.
+# If you'd like to replace "snapshot" with something more memorable,
+# change it here. (example: snapshot_basename="refracta-nox-wheezy")
+# volid is the volume label on the finished (burned) CD, DVD or USB.
+
+snapshot_basename="snapshot"
+volid="liveiso"
+
+
+# Change to "no" if you don't want the sha256sum file created with the iso.
+# (Default is "yes")
+
+make_sha256sum="yes"
+
+
+# Change to "no" if you want a plain iso image instead of isohybrid.
+# (Default is "yes")
+
+make_isohybrid="yes"
+
+
+# Uncomment one of the lines below to use xz or zstd compression for smaller iso. 
+
+# small and slow
+#mksq_opt="-comp xz"
+
+# smaller and slower:
+#mksq_opt="-comp xz -Xbcj x86"
+
+# not as small but faster
+#mksq_opt="-comp zstd -Xcompression-level 22"
+
+####################################
+# Turn stuff on and off section
+
+# Allow users to mount all fixed drives with pmount for live iso.
+# Refractainstaller removes this upon installation.
+# (Default is "yes")
+
+pmount_fixed="yes"
+
+
+# update the mlocate database before copying filesystem.
+
+update_mlocate="yes"
+
+
+# Clear list of recently used files in geany for primary user.
+# Default is "yes"
+
+clear_geany="yes"
+
+
+# Allow password login to ssh for users (not root).
+# If ssh_pass="no", then PasswordAuthentication will be set to "yes"
+# If ssh_pass="no", then PasswordAuthentication will be set to "no"
+# In either of the above cases, if PermitRootLogin was set to "yes",
+# it will be changed to "prohibit-password" (meaning with auth keys only)
+# If ssh_pass is null or set to anything other than "yes" or "no", then
+# /etc/ssh/sshd_config will not be altered.
+
+ssh_pass="no"
+
+########################################################
+# Custom boot menu and help files section. 
+
+# If you're running refractasnapshot on some linux distribution other
+# than Refracta, You might also want to edit or remove some of the help
+# files in the isolinux directory. (f1.txt, f2.txt...)
+# If you want those changes to persist between runs, you should create
+# a custom iso/isolinux directory, and set iso_dir (below) to point
+# to that directory.
+
+
+
+# If the primary user's name is not "user", then live-boot needs to see
+# the user's name in the boot command. In that case, the script will
+# automatically add the correct option. If you set a user name here, it
+# will override that process. Use this if you want to log into the live
+# media as someone other than the primary user (i.e. any user whose
+# uid:gid are not 1000:1000.)
+# Under most circumstances, leave this blank or commented out.
+
+#username=""
+
+
+# Change to "yes" if you want to be able to view or edit the boot menu
+# or any other config files before the final image is made.
+# Note2: For SolusOS and possibly others, boot entries should contain
+# "union=unionfs" in place of "union=aufs".
+# Note3: For anything later than jessie, union=aufs should be removed
+# or possibly replaced with union=overlay
+
+edit_boot_menu="no"
+
+
+
+# EDITOR SETTINGS
+# This gets used if you set edit_boot_menu="yes" or if you run setup
+# and choose to edit the config file or the excludes file.
+# Use an absolute path here.
+# (example: text_editor="/usr/bin/nano)"
+
+# Command-line editor (for refractasnapshot)
+text_editor="$(command -v nano)"
+
+# Graphical editor (for refractasnapshot-gui)
+# Program tests for geany, gedit, kate, kwrite, leafpad, medit, mousepad, pluma
+# You can specify an editor here if needed. 
+# other_editor_option is used to force a new instance of the editor.
+# Example:
+# other_editor="/usr/bin/featherpad"
+# other_editor_option="-w"
+
+other_editor=""
+other_editor_option=""
+
+
+
+# You can change iso_dir if you want to use customized files for the
+# boot menu and boot help pages on the live-cd.
+# Note: 
+# If you're using custom versions (different from what's installed
+# on your system) of isolinux.bin and vesamenu.c32, you'll need to edit
+# or comment out the rsync commands in the script that copy these two
+# files from your system to the work directory. To find the lines, see 
+# /usr/bin/refractasnapshot or /usr/bin/refractsnapshot-gui for the
+# copy_isolinux function, around line 520 or 630, respectively.
+# (Default is "/usr/lib/refractasnapshot/iso")
+# DO NOT USE A TRAILING SLASH HERE!!!"
+
+iso_dir="/usr/lib/refractasnapshot/iso"
+
+
+# Change this if you're using customized boot menu files, AND your
+# menu file is other than the default, live.cfg, AND you set
+# $edit_boot_menu to "yes".
+
+boot_menu="live.cfg"
+
+# grub_template gets used for uefi live boot menu.
+
+grub_template="/usr/lib/refractasnapshot/grub.cfg.template"
+
+
+# Uncomment this to add boot help files specific to the Refracta distribution.
+# Otherwise, generic help files, mostly empty, will be used. If you want
+# to use your own customized files, see iso_dir settings above.
+
+#refracta_boot_help="yes"
+
+
+# Change this to "no" (or comment it) to turn off all initrd checks. 
+# In Bookworm/Daedalus use this instead of initrd_crypt=yes 
+# if you want encrypted persistence. Make sure to have all necessary
+# cryptsetup packages installed.
+initramfs_checks="yes"
+
+# Prepare the initrd to support encrypted volumes. Uncomment this
+# if you plan to use the snapshot on a live usb with an encrypted
+# persistent volume. This will edit /etc/cryptsetup-initramfs/conf-hook
+# to set CRYPTSETUP=y (This does not work right in Bookworm/Daedalus)
+
+#initrd_crypt="yes"
+
+
+# Uncomment to include your network configuration in the snapshot.
+# This will preserve your /etc/network/interfaces and any saved wireless
+# configurations. This works for NetworkManager, simple-netaid/netman
+# and wicd.  
+# It will also add "ip=frommedia" to the boot command, so that the saved
+# configuration will be used.
+# Default is commented; interfaces file in $work_dir/myfs gets replaced
+# and only contains the loopback interface.
+#
+# NOTE!!! If you're using some other network manager, and you don't want
+# your configs to be copied, you need to add the appropriate files to
+# the excludes list. (Tell me what those files are, and I'll fix 
+# refractasnapshot to handle it.)
+
+#netconfig_opt="ip=frommedia"
+
+
+# Uncomment to use old or new style interface names.
+# Use net.ifnames=0 to force old interface names with udev. (eth0)
+# Use net.ifnames=1 to force new interface names with eudev. (enp0s1)
+
+#ifnames_opt="net.ifnames=0"
+
+
+# Snapshot Help text
+
+snapshot_help="/usr/share/doc/refractasnapshot-base/readme.refractasnapshot.txt.gz"
+/usr/share/ollama/.ollama/models
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/refractasnapshot.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/settings.conf
+================================================================================
+# Configuration file for Calamares
+# Syntax is YAML 1.2
+---
+
+# "local" is LIBDIR/calamares/modules with settings in SHARE/calamares/modules
+modules-search: [ local, /usr/lib/calamares/modules ]
+
+# If this is set to true, Calamares refers to itself as a "setup program"
+# rather than an "installer". Defaults to the value of dont-chroot, but
+# Calamares will complain if this is not explicitly set.
+oem-setup: false
+
+# If this is set to true, the "Cancel" button will be disabled entirely.
+# The button is also hidden from view.
+#
+# This can be useful if when e.g. Calamares is used as a post-install
+# configuration tool and you require the user to go through all the
+# configuration steps.
+#
+# Default is false, but Calamares will complain if this is not explicitly set.
+#
+# YAML: boolean.
+disable-cancel: false
+
+# If this is set to true, the "Cancel" button will be disabled once
+# you start the 'Installation', meaning there won't be a way to cancel
+# the Installation until it has finished or installation has failed.
+#
+# Default is false, but Calamares will complain if this is not explicitly set.
+#
+# YAML: boolean.
+disable-cancel-during-exec: false
+
+# If this is set to true, then once the end of the sequence has
+# been reached, the quit (done) button is clicked automatically
+# and Calamares will close. Default is false: the user will see
+# that the end of installation has been reached, and that things are ok.
+#
+#
+quit-at-end: false
+
+sequence:
+# Phase 1 - prepare.
+# View modules are shown as UI pages, jobs from job modules
+# are executed immediately in the background.
+# Jobs should be executed sparingly (if at all) in this phase.
+- show:
+  - welcome
+  - locale
+  - keyboard
+  - partition
+  - users
+  - summary
+
+# Phase 2 - install.
+# View modules are not shown. Only the view modules shown
+# in the previous phase are allowed, their names should be
+# added here as placeholders to specify the order in which
+# view module jobs should be enqueued. Job modules are
+# also allowed.
+- exec:
+  - partition
+  - mount
+  - unpackfs
+  - luksbootkeyfile
+  - dpkg-unsafe-io
+  - sources-media
+  - machineid
+  - fstab
+  - locale
+  - keyboard
+  - localecfg
+  - users
+  - displaymanager
+  - networkcfg
+  - hwclock
+  - services-systemd
+  - bootloader-config
+  - grubcfg
+  - bootloader
+  - packages
+  - shellprocess@removelive
+  - plymouthcfg
+  - initramfscfg
+  - initramfs
+  - dpkg-unsafe-io-undo
+  - sources-media-unmount
+  - sources-final
+  - umount
+
+# Phase 3 - postinstall.
+# View modules are shown as UI pages, jobs from job modules are
+# executed immediately in the background.
+# Jobs should be executed sparingly (if at all) in this phase.
+- show:
+  - finished
+
+# A branding component is a directory, either in
+# SHARE/calamares/branding or in /etc/calamares/branding
+# (the latter takes precedence). The directory must contain a
+# YAML file branding.desc which may reference additional resources
+# (such as images) as paths relative to the current directory.
+# Only the name of the branding component (directory) should be
+# specified here, Calamares then takes care of finding it and
+# loading the contents.
+branding: debian
+
+# If this is set to true, Calamares will show an "Are you sure?" prompt right
+# before each execution phase, i.e. at points of no return. If this is set to
+# false, no prompt is shown. Default is false.
+#
+# YAML: boolean.
+prompt-install: false
+
+# If this is set to true, Calamares will execute all target environment
+# commands in the current environment, without chroot. This setting should
+# only be used when setting up Calamares as a post-install configuration tool,
+# as opposed to a full operating system installer.
+#
+# Some official Calamares modules are not expected to function with this
+# setting. (e.g. partitioning seems like a bad idea, since that is expected to
+# have been done already)
+#
+# Default is false (for a normal installer).
+#
+# YAML: boolean.
+dont-chroot: false
+
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/settings.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/branding/debian/branding.desc
+================================================================================
+---
+componentName:   debian
+welcomeStyleCalamares: true
+welcomeExpandingLogo: true
+windowExpanding: normal
+windowSize: 800px,580px
+windowPlacement: center
+
+strings:
+    productName:         "Ankora OS"
+    shortProductName:    "Ankora"
+    version:             "2.0"
+    shortVersion:        "2.0"
+    versionedName:       "Ankora OS 2.0"
+    shortVersionedName:  "Ankora 2.0"
+    bootloaderEntryName: "Ankora"
+    productUrl:          https://ankora-linux.github.io/
+    supportUrl:          https://ankalab.flarum.cloud/
+    knownIssuesUrl:      https://ankalab.flarum.cloud/
+    releaseNotesUrl:     https://ankora-linux.github.io/
+    donateUrl:           https://ankalab.flarum.cloud/
+
+
+sidebar: widget
+navigation: widget
+
+images:
+    productLogo:         "debian-logo.png"
+    productIcon:         "debian-logo.png"
+    productWelcome:      "welcome.png"
+
+slideshow:               "show.qml"
+
+style:
+   SidebarBackground:    "#26475b"
+   SidebarText:          "#FFFFFF"
+   SidebarTextCurrent:   "#fbfbfb"
+   SidebarBackgroundCurrent: "#265370"
+
+slideshowAPI: 2
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/branding/debian/branding.desc
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/branding/debian/show.qml
+================================================================================
+/* === This file is part of Calamares - <http://github.com/calamares> ===
+ *
+ *   Copyright 2015, Teo Mrnjavac <teo@kde.org>
+ *   Copyright 2018-2019, Jonathan Carter <jcc@debian.org>
+ *
+ *   Calamares is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, or (at your option) any later version.
+ *
+ *   Calamares is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import QtQuick 2.0;
+import calamares.slideshow 1.0;
+
+Presentation
+{
+    id: presentation
+
+    Timer {
+        interval: 20000
+        repeat: true
+        onTriggered: presentation.goToNextSlide()
+    }
+
+    Slide {
+        Image {
+            id: background1
+            source: "slide1.png"
+            width: 467; height: 280
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+        }
+        Text {
+            anchors.horizontalCenter: background1.horizontalCenter
+            anchors.top: background1.bottom
+            text: qsTr("Welcome to Debian GNU/Linux.<br/>"+
+                  "The rest of the installation is automated and should complete in a few minutes.")
+            wrapMode: Text.WordWrap
+            width: 600
+            horizontalAlignment: Text.Center
+        }
+    }
+
+}
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/branding/debian/show.qml
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/bootloader.conf
+================================================================================
+# Bootloader configuration. The bootloader is installed to allow
+# the system to start (and pick one of the installed operating
+# systems to run).
+---
+# Define which bootloader you want to use for EFI installations
+# Possible options are 'grub', 'sb-shim' and 'systemd-boot'.
+efiBootLoader: "grub"
+
+# systemd-boot configuration files settings, set kernel and initramfs file names
+# and amount of time before default selection boots
+kernel: "/vmlinuz-linux"
+img: "/initramfs-linux.img"
+fallback: "/initramfs-linux-fallback.img"
+timeout: "10"
+
+# Optionally set the menu entry name and kernel name to use in systemd-boot.
+# If not specified here, these settings will be taken from branding.desc.
+#
+# bootloaderEntryName: "Generic GNU/Linux"
+# kernelLine: ", with Stable-Kernel"
+# fallbackKernelLine:  ", with Stable-Kernel (fallback initramfs)"
+
+# GRUB 2 binary names and boot directory
+# Some distributions (e.g. Fedora) use grub2-* (resp. /boot/grub2/) names.
+# These names are also used when using sb-shim, since that needs some
+# GRUB functionality (notably grub-probe) to work. As needed, you may use
+# complete paths like `/usr/bin/efibootmgr` for the executables.
+#
+grubInstall: "grub-install"
+grubMkconfig: "grub-mkconfig"
+grubCfg: "/boot/grub/grub.cfg"
+grubProbe: "grub-probe"
+efiBootMgr: "efibootmgr"
+
+# Optionally set the bootloader ID to use for EFI. This is passed to
+# grub-install --bootloader-id.
+#
+# If not set here, the value from bootloaderEntryName from branding.desc
+# is used, with problematic characters (space and slash) replaced.
+#
+# The ID is also used as a directory name within the EFI environment,
+# and the bootloader is copied from /boot/efi/EFI/<dirname>/ . When
+# setting the option here, keep in mind that the name is sanitized
+# (problematic characters, see above, are replaced).
+#
+# efiBootloaderId: "dirname"
+
+# Optionally install a copy of the GRUB EFI bootloader as the EFI
+# fallback loader (either bootia32.efi or bootx64.efi depending on
+# the system). This may be needed on certain systems (Intel DH87MC
+# seems to be the only one). If you set this to false, take care
+# to add another module to optionally install the fallback on those
+# boards that need it.
+installEFIFallback: true 
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/bootloader.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/displaymanager.conf
+================================================================================
+# Configure one or more display managers (e.g. SDDM)
+# with a "best effort" approach.
+---
+#The DM module attempts to set up all the DMs found in this list, in that precise order.
+#It also sets up autologin, if the feature is enabled in globalstorage.
+#The displaymanagers list can also be set in globalstorage, and in that case it overrides anything set up here.
+displaymanagers:
+  - slim
+  - sddm
+  - lightdm
+  - gdm
+  - mdm
+  - lxdm
+  - kdm
+
+#Enable the following settings to force a desktop environment in your displaymanager configuration file:
+#defaultDesktopEnvironment:
+#    executable: "startkde"
+#    desktopFile: "plasma"
+
+#If true, try to ensure that the user, group, /var directory etc. for the
+#display manager are set up correctly. This is normally done by the distribution
+#packages, and best left to them. Therefore, it is disabled by default.
+basicSetup: false
+
+#If true, setup autologin for openSUSE. This only makes sense on openSUSE
+#derivatives or other systems where /etc/sysconfig/displaymanager exists.
+sysconfigSetup: false
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/displaymanager.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/finished.conf
+================================================================================
+---
+restartNowEnabled: true
+restartNowChecked: true
+restartNowCommand: "systemctl -i reboot"
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/finished.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/fstab.conf
+================================================================================
+---
+mountOptions:
+    default: defaults,noatime
+    btrfs: defaults,noatime
+ssdExtraMountOptions:
+    ext4: discard
+    jfs: discard
+    xfs: discard
+    swap: discard
+    btrfs: discard,compress=lzo
+crypttabOptions: luks,keyscript=/bin/cat
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/fstab.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/luksopenswaphookcfg.conf
+================================================================================
+# Writes an openswap configuration with LUKS settings to the given path
+---
+# Path of the configuration file to write (in the target system)
+configFilePath: /etc/openswap.conf
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/luksopenswaphookcfg.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/machineid.conf
+================================================================================
+---
+# Whether to create /etc/machine-id for systemd.
+systemd: true
+# Whether to create /var/lib/dbus/machine-id for D-Bus.
+dbus: true
+# Whether /var/lib/dbus/machine-id should be a symlink to /etc/machine-id
+# (ignored if dbus is false, or if there is no /etc/machine-id to point to).
+symlink: true
+# Whether to copy entropy from the host
+entropy-copy: true
+# Which files to write (paths in the target)
+entropy-files:
+    - /var/lib/urandom/random-seed
+    - /var/lib/systemd/random-seed
+
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/machineid.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/mount.conf
+================================================================================
+# SPDX-FileCopyrightText: no
+# SPDX-License-Identifier: CC0-1.0
+#
+# Mount filesystems in the target (generally, before treating the
+# target as a usable chroot / "live" system). Filesystems are
+# automatically mounted from the partitioning module. Filesystems
+# listed here are **extra**. The filesystems listed in *extraMounts*
+# are mounted in all target systems.
+---
+# Extra filesystems to mount. The key's value is a list of entries; each
+# entry has five keys:
+#   - device    The device node to mount
+#   - fs (optional) The filesystem type to use
+#   - mountPoint Where to mount the filesystem
+#   - options (optional) An array of options to pass to mount
+#   - efi (optional) A boolean that when true is only mounted for UEFI installs
+#
+# The device is not mounted if the mountPoint is unset or if the fs is
+# set to unformatted.
+#
+extraMounts:
+    - device: proc
+      fs: proc
+      mountPoint: /proc
+    - device: sys
+      fs: sysfs
+      mountPoint: /sys
+    - device: /dev
+      mountPoint: /dev
+      options: [ bind ]
+    - device: tmpfs
+      fs: tmpfs
+      mountPoint: /run
+    - device: /run/udev
+      mountPoint: /run/udev
+      options: [ bind ]
+    - device: efivarfs
+      fs: efivarfs
+      mountPoint: /sys/firmware/efi/efivars
+      efi: true
+    - device: /dev/pts
+      mountPoint: /dev/pts
+      options: [ bind ]
+      # /dev/pts is required by apt for storing the logs
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/mount.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/packages.conf
+================================================================================
+backend: apt
+
+operations:
+  - remove:
+      - 'live-boot'
+      - 'live-boot-doc'
+      - 'live-config'
+      - 'live-config-doc'
+      - 'live-config-systemd'
+      - 'live-config-systemd'
+      - 'live-tools'
+      - 'live-task-localisation'
+      - 'live-task-recommended'
+      - 'calamares-settings-debian'
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/packages.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/shellprocess_removelive.conf
+================================================================================
+---
+dontChroot: false
+timeout: 10
+script:
+    - "rm -f /etc/lightdm/lightdm.conf.d/*autologin*.conf"
+    - "rm -f /etc/sddm.conf.d/*autologin*.conf"
+    - "rm -f /etc/sudoers.d/live-user"
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/shellprocess_removelive.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/unpackfs.conf
+================================================================================
+---
+unpack:
+    -   source: "/run/live/medium/live/filesystem.squashfs"
+        sourcefs: "squashfs"
+        destination: ""
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/unpackfs.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/users.conf
+================================================================================
+---
+userGroup:       users
+defaultGroups:
+    - sudo
+    - cdrom
+    - dip
+autologinGroup:  autologin
+sudoersGroup:    sudo
+setRootPassword: false
+
+passwordRequirements:
+    passwordRequirements:
+    nonempty: true
+    minLength: 8
+    maxLength: -1
+    libpwquality:
+        - minlen=8
+        - minclass=2
+        - maxrepeat=3
+
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/users.conf
+
+
+================================================================================
+>>> BAŞLANGIÇ: Ankora2-SourceCode/etc/calamares/modules/welcome.conf
+================================================================================
+---
+showSupportUrl:         true
+showKnownIssuesUrl:     true
+showReleaseNotesUrl:    true
+
+requirements:
+    requiredStorage:    15
+    requiredRam:        1.0
+    check:
+        - storage
+        - ram
+        - power
+        - root
+    required:
+        - storage
+        - ram
+        - root
+
+<<< BİTİŞ: Ankora2-SourceCode/etc/calamares/modules/welcome.conf
 
 
