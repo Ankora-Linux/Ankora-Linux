@@ -1,0 +1,3988 @@
+﻿================================================================================
+ANKORA LINUX (TAURI + RUST + WEBKITGTK) — TÜM PROJE KAYNAK KODLARI
+Tarih: 2026-09-21 22:19:39
+Mimari: Devuan Daedalus 2.0 (SysVinit, systemd-free)
+================================================================================
+
+
+================================================================================
+DOSYA: package.json
+================================================================================
+
+
+{
+  "name": "ankora-de",
+  "version": "2.0.0",
+  "description": "Ankora Linux Minimalist Kiosk Desktop Environment (Tauri + Rust)",
+  "private": true,
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.5.0"
+  }
+}
+
+
+
+================================================================================
+DOSYA: README.md
+================================================================================
+
+
+<div align="center">
+  <img src="assets/logo.png" alt="Ankora OS Logo" width="240" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+  <br><br>
+  <h1>Ankora Linux (Ankora OS)</h1>
+  <p><b>Devuan Linux Tabanlı, Systemd-Free Hafif Çekirdekli, Modern Kiosk Masaüstü Ortamı (Tauri + Rust)</b></p>
+
+  <p>
+    <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-2.0_(DEVUAN)-ffffff?style=for-the-badge&labelColor=111111" alt="Sürüm">
+    <img src="https://img.shields.io/badge/TABAN-DEVUAN_DAEDALUS-d1d1d1?style=for-the-badge&labelColor=111111" alt="Taban">
+    <img src="https://img.shields.io/badge/MASA%C3%9CST%C3%9C-ANKORA_DE_(TAURI)-ffffff?style=for-the-badge&labelColor=111111" alt="Masaüstü">
+    <img src="https://img.shields.io/badge/L%C3%B0SANS-MIT-41a013?style=for-the-badge&labelColor=111111" alt="Lisans">
+  </p>
+</div>
+
+Ankora OS; düşük donanım kaynaklarına sahip sistemlerde Chrome OS Flex kararlılığı ve yüksek tepkisellik sunmak üzere tasarlanmış, systemd kirliliğinden arındırılmış Devuan Linux tabanlı bağımsız bir dağıtımdır. Masaüstü ortamı (Ankora DE), Rust ve WebKitGTK (Tauri) üzerinde sıfır çökme ve ultra hafif bellek ayak izi ile çalışır.
+
+---
+
+## 📌 Ankora OS Nedir?
+
+Ankora OS, genel kullanım dağıtımlarında bulunan gereksiz servis kirliliğini (telemetri, kullanılmayan daemon'lar) engellemek ve donanım limitlerini en verimli şekilde kullanmak amacıyla geliştirilmiştir. Masaüstü ortamında görsel tutarlılık sağlarken arka planda Linux çekirdek parametrelerini (sysctl, zram) düşük gecikmeye göre optimize eder.
+
+Sistemde bulunan yerel AI bileşeni, uzak sunuculara veya API anahtarlarına bağımlı değildir. Makine üzerindeki yerel kaynakları kullanarak doğrudan terminal içinden teknik komut yardımı, hata ayıklama ve sistem analizi sunar.
+
+---
+
+## 🛠 Temel Mühendislik Tercihleri ve Mimarisi
+
+### 1. Kademeli Bellek Yönetimi (ZRAM + SWAP Hiyerarşisi)
+Düşük RAM kapasitesinde Out-Of-Memory (OOM) kilitlenmelerini engellemek için bellek mimarisi hiyerarşik olarak kurgulanmıştır:
+* **ZRAM:** RAM üzerinde sıkıştırılmış blok alanı oluşturarak disk I/O yükünü düşürür ve ilk bellek taşıntılarını karşılar.
+* **Disk SWAP:** ZRAM kapasitesi dolduğunda devreye giren ikincil yedek alandır.
+* **vm.swappiness & vm.vfs_cache_pressure:** Çekirdek parametreleri disk okuma/yazma gecikmesini minimize edecek değerlere çekilmiştir.
+
+### 2. Çevrimdışı Terminal AI Asistanı (`yardimci`)
+Terminalde `yardimci` komutuyla çağrılan bileşen, internet bağlantısı gerektirmeksizin çalışır:
+* Veriler harici sunuculara gönderilmez, tamamen yerel bellek üzerinde işlenir.
+* Shell komutları, paket bağımlılıkları ve sistem konfigürasyon dosyaları için hızlı referans sağlar.
+
+### 3. Çift Masaüstü Kirliliğini Önleme (Unified Desktop Stack)
+Hem KDE Plasma hem de XFCE masaüstü ortamlarında sistem üzerine aynı görevi yapan çift uygulama yüklenmez:
+* **Dosya Yöneticisi:** Her iki ortamda da çakışmaları engellemek için varsayılan olarak **Dolphin** kullanılır.
+* **Görsel Bütünlük:** Simge seti olarak **Fairy Wren** entegre edilmiştir.
+
+### 4. Şişkinlikten Arındırılmış Sistem (Bloat-Free)
+* ISO boyutunu ve sistem açılış süresini olumsuz etkileyen Office suitleri (LibreOffice vb.) imajdan çıkarılmıştır.
+* Kullanıcı ihtiyaç duyduğu paketi depo üzerinden tek komutla kurabilir.
+
+### 5. Dahili Oyun ve Grafik Katmanı
+* **GameMode:** Oyun başlatıldığında CPU valörünü performance moduna çeker.
+* **MangoHud:** Vulkan/OpenGL katmanında FPS, sıcaklık ve RAM kullanım değerlerini önceden yapılandırılmış olarak sunar.
+
+---
+
+## 📊 Sürüm Karşılaştırma Tablosu
+
+| Sürüm Adı | Sistem Tabanı | Yayın Tipi | Odak Noktası | Durum |
+| :--- | :--- | :--- | :--- | :--- |
+| **Ankora AI Debian** | Debian 13 (Trixie) | Sabit / Stable | Yüksek sistem stabilitesi, düşük kaynak kullanımı | **Aktif Sürüm** |
+| **Ankora Kurumsal** | Debian LTS | Sabit / LTS | Merkezi yönetim profilleri, sıkılaştırılmış güvenlik (AppArmor) | **Planlama** |
+| **Ankora Geliştirici** | Debian / Arch | Özel Derleme | Hazır derleyici araçları (GCC, Rust, Go, Python) ve Zsh terminal yapısı | **Özel Sürüm** |
+
+---
+
+## 📋 Sistem Gereksinimleri
+
+| Bileşen | Minimum Gereksinim | Önerilen Sistem |
+| :--- | :--- | :--- |
+| **İşlemci (CPU)** | 64-bit Çift Çekirdek (1.5 GHz) | 64-bit Dört Çekirdek (2.0 GHz+) |
+| **Bellek (RAM)** | 2 GB (ZRAM Aktif) | 4 GB ve üzeri |
+| **Depolama** | 15 GB Boş Disk Alanı | 25 GB SSD Depolama |
+| **Ekran Kartı** | KMS destekli herhangi bir GPU | Vulkan / OpenGL 4.5 destekli GPU |
+
+---
+
+## ⚡ Kurulum ve Kullanım Talimatları
+
+### 1. ISO İmajını Diske Yazdırma
+Linux ortamında terminal üzerinden `dd` komutunu kullanarak önyüklenebilir USB oluşturabilirsiniz:
+
+
+sudo dd if=ankora-2.0-debian-x86_64.iso of=/dev/sdX bs=4M status=progress conv=fsync
+
+
+## 🌐 Topluluk ve İletişim
+Bu proje tamamen açık kaynaklıdır ve topluluğun geri bildirimleriyle büyümektedir. Karşılaştığınız sorunlar, yeni özellik talepleri veya sadece selam vermek için bize katılın:
+
+* 💬 **Topluluk Forumu:** [Ankalab Flarum Cloud](https://ankalab.flarum.cloud)
+* 🌍 **Resmi Web Sitesi:** [Sitemiz](https://ankora-linux.github.io/#home) 
+* 🐞 **Hata Bildirimi:** GitHub üzerindeki [Issues](../../issues) sekmesini veya forumdan konu açarak kullanabilirsiniz.
+
+### License & Source Code
+Ankora OS is built on top of **Debian 12 (Bookworm)**. The base system, Linux Kernel, and upstream packages are distributed under the **GPL (GNU General Public License)** or their respective original licenses. You can find the source code for the base Debian packages in the official Debian repositories.
+
+All custom configurations, boot parameters (GRUB/ISOLinux), UI artwork, and build scripts specific to Ankora OS provided in this repository are licensed under the **MIT License**.
+
+
+
+================================================================================
+DOSYA: src-tauri/Cargo.toml
+================================================================================
+
+
+[package]
+name = "ankora-de"
+version = "2.0.0"
+description = "Ankora Linux Minimalist Kiosk Desktop Environment"
+authors = ["Ankora Linux Team"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "1.5", features = [] }
+
+[dependencies]
+tauri = { version = "1.5", features = ["window-start-dragging", "shell-open"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1", features = ["full"] }
+dirs = "5.0"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+
+
+================================================================================
+DOSYA: src-tauri/build.rs
+================================================================================
+
+
+fn main() {
+    tauri_build::build()
+}
+
+
+
+================================================================================
+DOSYA: src-tauri/tauri.conf.json
+================================================================================
+
+
+{
+  "$schema": "https://raw.githubusercontent.com/tauri-apps/tauri/tauri-v1/tooling/cli/schema.json",
+  "build": {
+    "beforeBuildCommand": "",
+    "beforeDevCommand": "",
+    "devPath": "../src",
+    "distDir": "../src"
+  },
+  "package": {
+    "productName": "Ankora DE",
+    "version": "2.0.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "window": {
+        "all": false,
+        "startDragging": true,
+        "close": true,
+        "minimize": true,
+        "maximize": true,
+        "unmaximize": true,
+        "show": true,
+        "hide": true
+      },
+      "shell": {
+        "all": false,
+        "open": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "category": "Utility",
+      "copyright": "2026 Ankora Linux Project",
+      "deb": {
+        "depends": [
+          "libwebkit2gtk-4.0-37 | libwebkit2gtk-4.1-0",
+          "libgtk-3-0",
+          "libayatana-appindicator3-1"
+        ]
+      },
+      "icon": [
+        "icons/icon.png"
+      ],
+      "identifier": "org.ankora.de",
+      "targets": ["deb", "appimage"]
+    },
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "title": "Ankora Linux",
+        "fullscreen": true,
+        "decorations": false,
+        "resizable": false,
+        "transparent": false,
+        "alwaysOnTop": false,
+        "skipTaskbar": false,
+        "center": true,
+        "width": 1920,
+        "height": 1080
+      }
+    ]
+  }
+}
+
+
+
+================================================================================
+DOSYA: src-tauri/src/main.rs
+================================================================================
+
+
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+use serde::{Deserialize, Serialize};
+use std::fs;
+use std::path::PathBuf;
+use std::process::Command;
+use tauri::Manager;
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SystemTelemetry {
+    pub os_name: String,
+    pub kernel: String,
+    pub init_system: String,
+    pub memory_used_mb: u64,
+    pub memory_total_mb: u64,
+    pub cpu_cores: usize,
+    pub uptime_seconds: u64,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct StorageDisk {
+    pub name: String,
+    pub path: String,
+    pub size_gb: f64,
+    pub model: String,
+    pub is_removable: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct InstallPayload {
+    pub target_disk: String,
+    pub fullname: String,
+    pub username: String,
+    pub hostname: String,
+    pub password: String,
+    pub autologin: bool,
+}
+
+fn get_ankora_config_dir() -> PathBuf {
+    let mut path = dirs::config_dir().unwrap_or_else(|| PathBuf::from("/root/.config"));
+    path.push("ankora");
+    let _ = fs::create_dir_all(&path);
+    path
+}
+
+#[tauri::command]
+async fn install_deb_package(package_name: String) -> Result<String, String> {
+    let clean_pkg = package_name.trim();
+    if clean_pkg.is_empty() {
+        return Err("Geçersiz paket adı.".to_string());
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        let output = if clean_pkg.ends_with(".deb") {
+            Command::new("dpkg")
+                .args(["-i", clean_pkg])
+                .output()
+        } else {
+            Command::new("apt-get")
+                .args(["install", "-y", clean_pkg])
+                .output()
+        };
+
+        match output {
+            Ok(res) => {
+                let stdout = String::from_utf8_lossy(&res.stdout).to_string();
+                let stderr = String::from_utf8_lossy(&res.stderr).to_string();
+                if res.status.success() {
+                    Ok(if stdout.trim().is_empty() {
+                        format!("Paket başarıyla kuruldu: {}", clean_pkg)
+                    } else {
+                        stdout
+                    })
+                } else {
+                    Err(if stderr.trim().is_empty() {
+                        format!("Paket kurulamadı (Çıkış kodu: {:?})", res.status.code())
+                    } else {
+                        stderr
+                    })
+                }
+            }
+            Err(err) => Err(format!("Paket yöneticisi yürütülemedi: {}", err)),
+        }
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    {
+        Ok(format!("[Simülasyon] Paket kuruldu: {}", clean_pkg))
+    }
+}
+
+#[tauri::command]
+async fn run_terminal_command(command: String) -> Result<String, String> {
+    let cmd_trimmed = command.trim();
+    if cmd_trimmed.is_empty() {
+        return Ok(String::new());
+    }
+
+    #[cfg(target_os = "windows")]
+    let res = Command::new("cmd").args(["/C", cmd_trimmed]).output();
+
+    #[cfg(not(target_os = "windows"))]
+    let res = Command::new("bash").args(["-c", cmd_trimmed]).output();
+
+    match res {
+        Ok(output) => {
+            let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+            let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+
+            if output.status.success() {
+                Ok(stdout)
+            } else if !stderr.trim().is_empty() {
+                Err(stderr)
+            } else {
+                Ok(stdout)
+            }
+        }
+        Err(err) => Err(format!("Kabuk başlatılamadı: {}", err)),
+    }
+}
+
+#[tauri::command]
+fn drag_window(window: tauri::Window) -> Result<(), String> {
+    window.start_dragging().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn get_system_telemetry() -> Result<SystemTelemetry, String> {
+    #[cfg(target_os = "linux")]
+    {
+        let mem_info = fs::read_to_string("/proc/meminfo").unwrap_or_default();
+        let mut total_kb: u64 = 8192000;
+        let mut avail_kb: u64 = 4096000;
+
+        for line in mem_info.lines() {
+            if line.starts_with("MemTotal:") {
+                if let Some(val) = line.split_whitespace().nth(1) {
+                    total_kb = val.parse().unwrap_or(8192000);
+                }
+            } else if line.starts_with("MemAvailable:") {
+                if let Some(val) = line.split_whitespace().nth(1) {
+                    avail_kb = val.parse().unwrap_or(4096000);
+                }
+            }
+        }
+
+        let uptime_str = fs::read_to_string("/proc/uptime").unwrap_or_default();
+        let uptime_sec = uptime_str
+            .split_whitespace()
+            .next()
+            .and_then(|s| s.parse::<f64>().ok())
+            .map(|f| f as u64)
+            .unwrap_or(0);
+
+        let os_release = fs::read_to_string("/etc/os-release").unwrap_or_default();
+        let mut os_name = "Devuan GNU/Linux 5 (daedalus)".to_string();
+        for line in os_release.lines() {
+            if line.starts_with("PRETTY_NAME=") {
+                os_name = line.trim_start_matches("PRETTY_NAME=").trim_matches('"').to_string();
+            }
+        }
+
+        let kernel_ver = fs::read_to_string("/proc/version")
+            .map(|s| s.split_whitespace().take(3).collect::<Vec<&str>>().join(" "))
+            .unwrap_or_else(|_| "Linux 6.1 LTS".to_string());
+
+        let cpu_count = std::thread::available_parallelism()
+            .map(|p| p.get())
+            .unwrap_or(4);
+
+        Ok(SystemTelemetry {
+            os_name,
+            kernel: kernel_ver,
+            init_system: "SysVinit".to_string(),
+            memory_used_mb: (total_kb.saturating_sub(avail_kb)) / 1024,
+            memory_total_mb: total_kb / 1024,
+            cpu_cores: cpu_count,
+            uptime_seconds: uptime_sec,
+        })
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    {
+        Ok(SystemTelemetry {
+            os_name: "Ankora Linux DE (Devuan Hedefli)".to_string(),
+            kernel: "Tauri Rust Engine (WebKitGTK-ready)".to_string(),
+            init_system: "SysVinit (systemd-free)".to_string(),
+            memory_used_mb: 1180,
+            memory_total_mb: 8192,
+            cpu_cores: std::thread::available_parallelism().map(|p| p.get()).unwrap_or(4),
+            uptime_seconds: 4320,
+        })
+    }
+}
+
+#[tauri::command]
+async fn set_brightness(level: u32) -> Result<String, String> {
+    let clamped = level.clamp(20, 100);
+    let ratio = clamped as f32 / 100.0;
+
+    #[cfg(target_os = "linux")]
+    {
+        let cmd = format!(
+            "xrandr --output $(xrandr | grep ' connected' | awk '{{print $1}}' | head -n1) --brightness {:.2}",
+            ratio
+        );
+        let _ = Command::new("sh").args(["-c", &cmd]).output();
+    }
+
+    Ok(format!("Parlaklık ayarlandı: %{}", clamped))
+}
+
+#[tauri::command]
+async fn launch_application(exec: String) -> Result<String, String> {
+    let app_exec = exec.trim();
+    if app_exec.is_empty() {
+        return Err("Geçersiz uygulama adı.".to_string());
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        let spawn_res = Command::new("sh")
+            .args(["-c", &format!("DISPLAY=:0 {} >/dev/null 2>&1 &", app_exec)])
+            .spawn();
+
+        match spawn_res {
+            Ok(_) => Ok(format!("Uygulama başlatıldı: {}", app_exec)),
+            Err(e) => Err(format!("Uygulama başlatılamadı: {}", e)),
+        }
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    {
+        Ok(format!("Uygulama başlatıldı: {}", app_exec))
+    }
+}
+
+// ============================================================================
+// ANKORA KURULUM VE DİSK YÖNETİMİ (REAL INSTALLER ENGINE)
+// ============================================================================
+
+#[tauri::command]
+async fn get_storage_devices() -> Result<Vec<StorageDisk>, String> {
+    #[cfg(target_os = "linux")]
+    {
+        let output = Command::new("lsblk")
+            .args(["-d", "-b", "-n", "-o", "NAME,SIZE,MODEL,RM,TYPE"])
+            .output();
+
+        match output {
+            Ok(out) => {
+                let stdout = String::from_utf8_lossy(&out.stdout);
+                let mut disks = Vec::new();
+
+                for line in stdout.lines() {
+                    let parts: Vec<&str> = line.split_whitespace().collect();
+                    if parts.len() >= 3 {
+                        let name = parts[0];
+                        let size_bytes: u64 = parts[1].parse().unwrap_or(0);
+                        let is_disk = line.contains("disk");
+
+                        if is_disk && !name.starts_with("loop") && !name.starts_with("zram") {
+                            let size_gb = (size_bytes as f64) / (1024.0 * 1024.0 * 1024.0);
+                            disks.push(StorageDisk {
+                                name: name.to_string(),
+                                path: format!("/dev/{}", name),
+                                size_gb: (size_gb * 10.0).round() / 10.0,
+                                model: if parts.len() >= 5 { parts[2..parts.len() - 2].join(" ") } else { "Dahili Sürücü".to_string() },
+                                is_removable: line.contains(" 1 "),
+                            });
+                        }
+                    }
+                }
+
+                if disks.is_empty() {
+                    disks.push(StorageDisk {
+                        name: "sda".to_string(),
+                        path: "/dev/sda".to_string(),
+                        size_gb: 256.0,
+                        model: "Standart Sabit Disk".to_string(),
+                        is_removable: false,
+                    });
+                }
+
+                Ok(disks)
+            }
+            Err(_) => Ok(vec![
+                StorageDisk {
+                    name: "sda".to_string(),
+                    path: "/dev/sda".to_string(),
+                    size_gb: 256.0,
+                    model: "SATA SSD".to_string(),
+                    is_removable: false,
+                },
+                StorageDisk {
+                    name: "nvme0n1".to_string(),
+                    path: "/dev/nvme0n1".to_string(),
+                    size_gb: 512.0,
+                    model: "NVMe M.2 SSD".to_string(),
+                    is_removable: false,
+                }
+            ]),
+        }
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    {
+        Ok(vec![
+            StorageDisk {
+                name: "sda".to_string(),
+                path: "/dev/sda".to_string(),
+                size_gb: 256.0,
+                model: "Dahili SATA SSD".to_string(),
+                is_removable: false,
+            },
+            StorageDisk {
+                name: "nvme0n1".to_string(),
+                path: "/dev/nvme0n1".to_string(),
+                size_gb: 512.0,
+                model: "Samsung NVMe SSD".to_string(),
+                is_removable: false,
+            }
+        ])
+    }
+}
+
+#[tauri::command]
+async fn execute_system_installation(payload: InstallPayload) -> Result<String, String> {
+    let target = payload.target_disk.trim();
+    if target.is_empty() || !target.starts_with("/dev/") {
+        return Err("Geçerli bir hedef disk seçilmedi.".to_string());
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        // Gerçek Devuan Linux Hedef Disk Format & Rsync Scripti
+        let script = format!(
+            r#"
+            set -e
+            echo "[1/6] Disk bölümlendiriliyor: {disk}"
+            parted -s {disk} mklabel gpt
+            parted -s {disk} mkpart ESP fat32 1MiB 513MiB
+            parted -s {disk} set 1 esp on
+            parted -s {disk} mkpart primary ext4 513MiB 100%
+
+            EFI_PART="{disk}1"
+            ROOT_PART="{disk}2"
+            if [[ "{disk}" =~ "nvme" ]]; then
+                EFI_PART="{disk}p1"
+                ROOT_PART="{disk}p2"
+            fi
+
+            echo "[2/6] Dosya sistemleri biçimlendiriliyor..."
+            mkfs.vfat -F32 "$EFI_PART"
+            mkfs.ext4 -F "$ROOT_PART"
+
+            echo "[3/6] Hedef dizin bağlanıyor..."
+            mkdir -p /target
+            mount "$ROOT_PART" /target
+            mkdir -p /target/boot/efi
+            mount "$EFI_PART" /target/boot/efi
+
+            echo "[4/6] Canlı sistem rsync ile kopyalanıyor..."
+            rsync -aAX --info=progress2 / /target/ \
+                --exclude=/proc/* --exclude=/sys/* --exclude=/dev/* \
+                --exclude=/tmp/* --exclude=/run/* --exclude=/mnt/* \
+                --exclude=/media/* --exclude=/target/* --exclude=/home/*
+
+            echo "[5/6] Kullanıcı ve ana makine yapılandırılıyor..."
+            echo "{hostname}" > /target/etc/hostname
+            chroot /target useradd -m -s /bin/bash -G sudo,audio,video,plugdev "{username}" || true
+            echo "{username}:{password}" | chroot /target chpasswd
+
+            echo "[6/6] GRUB EFI önyükleyici kuruluyor..."
+            chroot /target grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Ankora --recheck
+            chroot /target update-grub
+
+            umount -R /target
+            echo "Ankora Linux kurulumu başarıyla tamamlandı!"
+            "#,
+            disk = target,
+            hostname = payload.hostname,
+            username = payload.username,
+            password = payload.password
+        );
+
+        let out = Command::new("bash").args(["-c", &script]).output();
+        match out {
+            Ok(res) => {
+                if res.status.success() {
+                    Ok("Ankora Linux hedef diske başarıyla kuruldu. Sistemi yeniden başlatabilirsiniz.".to_string())
+                } else {
+                    let err = String::from_utf8_lossy(&res.stderr);
+                    Err(format!("Kurulum hatası: {}", err))
+                }
+            }
+            Err(e) => Err(format!("Kurulum komutu çalıştırılamadı: {}", e)),
+        }
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    {
+        Ok(format!(
+            "[Simülasyon] Ankora Linux başarıyla kuruldu: {} -> {} ({})",
+            payload.target_disk, payload.username, payload.hostname
+        ))
+    }
+}
+
+// ============================================================================
+// ANKORA KARŞILAYICI & İLK AÇILIŞ SİSTEMİ (FIRST-RUN ONBOARDING)
+// ============================================================================
+
+#[tauri::command]
+fn check_first_run() -> Result<bool, String> {
+    let path = get_ankora_config_dir().join("welcomed.lock");
+    Ok(!path.exists())
+}
+
+#[tauri::command]
+fn set_first_run_completed(dont_show_again: bool) -> Result<(), String> {
+    if dont_show_again {
+        let path = get_ankora_config_dir().join("welcomed.lock");
+        let _ = fs::write(path, "ankora-v2-welcomed");
+    }
+    Ok(())
+}
+
+#[tauri::command]
+async fn set_system_keyboard(layout: String) -> Result<String, String> {
+    let clean = layout.trim();
+    #[cfg(target_os = "linux")]
+    {
+        let _ = Command::new("setxkbmap").arg(clean).output();
+        let cfg = format!("XKBLAYOUT=\"{}\"\nXKBVARIANT=\"\"\nXKBOPTIONS=\"\"\n", clean);
+        let _ = fs::write("/etc/default/keyboard", cfg);
+    }
+    Ok(format!("Klavye düzeni uygulandı: {}", clean))
+}
+
+fn main() {
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![
+            install_deb_package,
+            run_terminal_command,
+            drag_window,
+            get_system_telemetry,
+            set_brightness,
+            launch_application,
+            get_storage_devices,
+            execute_system_installation,
+            check_first_run,
+            set_first_run_completed,
+            set_system_keyboard
+        ])
+        .setup(|app| {
+            let main_window = app.get_window("main");
+            if let Some(win) = main_window {
+                let _ = win.set_fullscreen(true);
+            }
+            Ok(())
+        })
+        .run(tauri::generate_context!())
+        .expect("Ankora DE başlatılırken hata oluştu");
+}
+
+
+
+================================================================================
+DOSYA: src/index.html
+================================================================================
+
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ankora Linux DE</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="desktop-body">
+
+  <!-- Minimalist Monokrom Duvar Kağıdı Katmanı -->
+  <div class="desktop-wallpaper" id="desktop-wallpaper"></div>
+
+  <!-- Donanım Parlaklık ve Gece Filtresi -->
+  <div id="screen-dimmer" class="screen-dimmer"></div>
+  <div id="screen-night" class="screen-night"></div>
+
+  <!-- MASAÜSTÜ ÇALIŞMA ALANI -->
+  <main class="desktop-workspace" id="desktop-workspace">
+
+    <!-- MASAÜSTÜ SİMGELERİ -->
+    <nav class="desktop-grid" id="desktop-grid" aria-label="Masaüstü Simgeleri">
+      
+      <!-- KARŞILAYICI -->
+      <div class="desktop-item" data-open="win-welcome" tabindex="0" role="button">
+        <div class="item-icon brand-icon">
+          <img src="logo.svg" alt="Ankora Logo" class="desktop-item-logo">
+        </div>
+        <span class="item-name">Karşılayıcı</span>
+      </div>
+
+      <!-- KURULUM ARACI -->
+      <div class="desktop-item highlight-item" data-open="win-installer" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 8v8M8 12l4 4 4-4"></path>
+          </svg>
+        </div>
+        <span class="item-name">Kurulum</span>
+      </div>
+
+      <!-- MAĞAZA -->
+      <div class="desktop-item" data-open="win-store" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M4 7V4h16v3M4 7l2 13h12l2-13M4 7h16"></path>
+            <path d="M9 11v4M15 11v4"></path>
+          </svg>
+        </div>
+        <span class="item-name">Mağaza</span>
+      </div>
+
+      <!-- TERMİNAL -->
+      <div class="desktop-item" data-open="win-terminal" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <polyline points="4 17 10 11 4 5"></polyline>
+            <line x1="12" y1="19" x2="20" y2="19"></line>
+          </svg>
+        </div>
+        <span class="item-name">Terminal</span>
+      </div>
+
+      <!-- AI ASİSTAN -->
+      <div class="desktop-item" data-open="win-ai" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+            <circle cx="12" cy="5" r="2"></circle>
+            <path d="M12 7v4M8 16h.01M16 16h.01"></path>
+          </svg>
+        </div>
+        <span class="item-name">AI Ajan</span>
+      </div>
+
+      <!-- BELGELER / NOTLAR -->
+      <div class="desktop-item" data-open="win-office" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+        <span class="item-name">Belgeler</span>
+      </div>
+
+      <!-- AYARLAR -->
+      <div class="desktop-item" data-open="win-settings" tabindex="0" role="button">
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </div>
+        <span class="item-name">Ayarlar</span>
+      </div>
+
+      <div id="dynamic-desktop-icons"></div>
+    </nav>
+
+    <!-- ======================================================================= -->
+    <!-- 1. ANKORA KARŞILAYICI (FIRST-RUN ONBOARDING WIZARD)                     -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-welcome" style="top: 40px; left: 160px; width: 820px; height: 560px;" aria-labelledby="welcome-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <img src="logo.svg" alt="Icon" class="meta-logo">
+          <span id="welcome-header-title">Ankora Karşılayıcı — Hoş Geldiniz</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="welcome-container">
+          <!-- Sol Menü -->
+          <div class="welcome-sidebar">
+            <div class="welcome-brand">
+              <img src="logo.svg" alt="Ankora Logo" class="welcome-logo">
+              <div class="welcome-brand-text">
+                <strong>ANKORA LINUX</strong>
+                <span>Devuan Daedalus 2.0</span>
+              </div>
+            </div>
+            <nav class="welcome-nav">
+              <button class="welcome-tab active" data-tab="tab-welcome-home">Hoş Geldiniz</button>
+              <button class="welcome-tab" data-tab="tab-welcome-theme">Duvar Kağıdı & Tema</button>
+              <button class="welcome-tab" data-tab="tab-welcome-keyboard">Klavye & Dil</button>
+              <button class="welcome-tab" data-tab="tab-welcome-apps">Hızlı Paketler</button>
+            </nav>
+            <div class="welcome-footer-toggle">
+              <label class="check-container">
+                <input type="checkbox" id="chk-show-on-startup" checked>
+                <span>Başlangıçta Göster</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Sağ İçerik Alanı -->
+          <div class="welcome-content">
+            <!-- TAB 1: GİRİŞ -->
+            <div class="welcome-pane active" id="tab-welcome-home">
+              <h2>Minimalist. Endüstriyel. Hızlı.</h2>
+              <p>Ankora Linux; gereksiz arka plan servislerinden ve systemd kirliliğinden arındırılmış, doğrudan donanım verimliliğine odaklanan bağımsız bir Devuan sistemidir.</p>
+              
+              <div class="welcome-feature-cards">
+                <div class="feat-card">
+                  <strong>Tauri + Rust Çekirdeği</strong>
+                  <span>Hafif WebKitGTK motoru ve native Rust süreçleri ile sıfır bellek sızıntısı.</span>
+                </div>
+                <div class="feat-card">
+                  <strong>SysVinit Tabanı</strong>
+                  <span>Geleneksel UNIX hafifliği ve saniyeler içinde açılan kararlı masaüstü.</span>
+                </div>
+                <div class="feat-card">
+                  <strong>Yerel Donanım Kontrolü</strong>
+                  <span>Kiosk uyumlu tam ekran modu, donanım parlaklığı ve gerçek disk kurulumu.</span>
+                </div>
+              </div>
+
+              <div class="welcome-actions">
+                <button class="btn-pkg next-tab-btn" data-target="tab-welcome-theme">Görünümü Özelleştir →</button>
+              </div>
+            </div>
+
+            <!-- TAB 2: DUVAR KAĞIDI & TEMA -->
+            <div class="welcome-pane" id="tab-welcome-theme">
+              <h3>Duvar Kağıdı ve Masaüstü Teması</h3>
+              <p>Monokrom endüstriyel felsefeye uygun minimalist vektörel arka planınızı seçin:</p>
+              
+              <div class="wallpaper-grid">
+                <div class="wp-card active" data-wp="wallpaper.svg">
+                  <div class="wp-thumb" style="background-image: url('wallpaper.svg');"></div>
+                  <span>Siyah-Beyaz Dağlar (Varsayılan)</span>
+                </div>
+                <div class="wp-card" data-wp="wallpaper-obsidian.svg">
+                  <div class="wp-thumb" style="background-image: url('wallpaper-obsidian.svg');"></div>
+                  <span>Obsidyen Mat Siyah (İnce Izgara)</span>
+                </div>
+                <div class="wp-card" data-wp="wallpaper-topo.svg">
+                  <div class="wp-thumb" style="background-image: url('wallpaper-topo.svg');"></div>
+                  <span>Topoğrafik Kontur (Zirve)</span>
+                </div>
+                <div class="wp-card" data-wp="wallpaper-nordic.svg">
+                  <div class="wp-thumb" style="background-image: url('wallpaper-nordic.svg');"></div>
+                  <span>Nordik Grafit (Kuzey Silsilesi)</span>
+                </div>
+              </div>
+
+              <div class="welcome-actions">
+                <button class="btn-pkg next-tab-btn" data-target="tab-welcome-keyboard">Klavye Ayarlarına Geç →</button>
+              </div>
+            </div>
+
+            <!-- TAB 3: KLAVYE & DİL -->
+            <div class="welcome-pane" id="tab-welcome-keyboard">
+              <h3>Klavye Düzeni</h3>
+              <p>Sistem genelinde kullanılacak klavye haritasını seçin. Değişiklikler anında X11 oturumuna ve donanıma uygulanır:</p>
+
+              <div class="choice-group">
+                <label class="radio-card active">
+                  <input type="radio" name="kb-layout" value="tr" checked>
+                  <div>
+                    <strong>Türkçe Q Klavye</strong>
+                    <span>Standart Türkiye Q klavye haritası (setxkbmap tr)</span>
+                  </div>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="kb-layout" value="tr_f">
+                  <div>
+                    <strong>Türkçe F Klavye</strong>
+                    <span>Ergonomik Türkçe F düzeni (setxkbmap tr -variant f)</span>
+                  </div>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="kb-layout" value="us">
+                  <div>
+                    <strong>English (US)</strong>
+                    <span>Standard United States ANSI keyboard layout</span>
+                  </div>
+                </label>
+              </div>
+
+              <div class="welcome-actions">
+                <button class="btn-pkg next-tab-btn" data-target="tab-welcome-apps">Paket Seçimine Geç →</button>
+              </div>
+            </div>
+
+            <!-- TAB 4: HIZLI PAKETLER -->
+            <div class="welcome-pane" id="tab-welcome-apps">
+              <h3>Hızlı Uygulama Kurulumu</h3>
+              <p>İhtiyaç duyduğunuz temel araçları tek tıkla sisteminize dahil edebilirsiniz:</p>
+
+              <div class="quick-app-list">
+                <label class="app-check-item">
+                  <input type="checkbox" value="firefox-esr" checked>
+                  <div class="app-info">
+                    <strong>Firefox ESR</strong>
+                    <span>Gizlilik odaklı, kararlı web tarayıcısı</span>
+                  </div>
+                  <span class="app-size">78 MB</span>
+                </label>
+                <label class="app-check-item">
+                  <input type="checkbox" value="code">
+                  <div class="app-info">
+                    <strong>Visual Studio Code</strong>
+                    <span>Endüstriyel kaynak kod editörü</span>
+                  </div>
+                  <span class="app-size">90 MB</span>
+                </label>
+                <label class="app-check-item">
+                  <input type="checkbox" value="vlc">
+                  <div class="app-info">
+                    <strong>VLC Medya Oynatıcı</strong>
+                    <span>Evrensel video ve ses yürütücü</span>
+                  </div>
+                  <span class="app-size">64 MB</span>
+                </label>
+                <label class="app-check-item">
+                  <input type="checkbox" value="gimp">
+                  <div class="app-info">
+                    <strong>GIMP</strong>
+                    <span>Açık kaynak görsel düzenleyici</span>
+                  </div>
+                  <span class="app-size">112 MB</span>
+                </label>
+              </div>
+
+              <div class="welcome-actions">
+                <button class="btn-pkg" id="btn-welcome-install-apps">Seçilenleri Kur</button>
+                <button class="btn-pkg finish-btn" id="btn-welcome-finish">Masaüstüne Başla ✕</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 2. ANKORA KURULUM ARACI (MODERN OS TARGET INSTALLER)                    -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-installer" style="top: 50px; left: 200px; width: 780px; height: 540px;" aria-labelledby="installer-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <img src="logo.svg" alt="Icon" class="meta-logo">
+          <span id="installer-header-title">Ankora Linux Kurulum Aracı (OS Installer)</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="installer-wizard">
+          
+          <!-- Adım İlerleme Başlığı -->
+          <div class="wizard-stepper">
+            <div class="step-node active" id="step-node-1">1. Hedef Disk</div>
+            <div class="step-node" id="step-node-2">2. Kullanıcı Hesabı</div>
+            <div class="step-node" id="step-node-3">3. Kurulum Onayı</div>
+            <div class="step-node" id="step-node-4">4. Kurulum Süreci</div>
+          </div>
+
+          <!-- Adım 1: Disk Seçimi -->
+          <div class="wizard-pane active" id="wizard-pane-1">
+            <h3>Hedef Sabit Diski veya SSD'yi Seçin</h3>
+            <p>Ankora Linux, seçilen diski GPT biçiminde bölümlendirip EFI ve ext4 kök bölümü oluşturacaktır.</p>
+
+            <div class="disk-selection-box" id="disk-selection-box">
+              <!-- JS get_storage_devices ile doldurulacak -->
+              <div class="disk-loading">Sürücüler taranıyor (lsblk)...</div>
+            </div>
+
+            <div class="wizard-nav">
+              <button class="btn-pkg next-step-btn" id="btn-step1-next">İleri: Kullanıcı Bilgileri →</button>
+            </div>
+          </div>
+
+          <!-- Adım 2: Kullanıcı ve Sistem Adı -->
+          <div class="wizard-pane" id="wizard-pane-2">
+            <h3>Kullanıcı ve Bilgisayar Bilgileri</h3>
+            <p>Sisteminize giriş yapacağınız ana yönetici hesabını oluşturun:</p>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Tam Adınız:</label>
+                <input type="text" id="inst-fullname" class="input-mono" value="Pars Özkan">
+              </div>
+              <div class="form-group">
+                <label>Kullanıcı Adı (sudo):</label>
+                <input type="text" id="inst-username" class="input-mono" value="pars">
+              </div>
+              <div class="form-group">
+                <label>Bilgisayar Adı (Hostname):</label>
+                <input type="text" id="inst-hostname" class="input-mono" value="ankora-pc">
+              </div>
+              <div class="form-group">
+                <label>Kullanıcı Parolası:</label>
+                <input type="password" id="inst-password" class="input-mono" value="ankora">
+              </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <label class="check-container">
+                <input type="checkbox" id="inst-autologin" checked>
+                <span>Açılışta otomatik oturum aç (nodm Kiosk modu)</span>
+              </label>
+            </div>
+
+            <div class="wizard-nav">
+              <button class="btn-pkg prev-step-btn" id="btn-step2-prev">← Geri</button>
+              <button class="btn-pkg next-step-btn" id="btn-step2-next">İleri: Onay →</button>
+            </div>
+          </div>
+
+          <!-- Adım 3: Kurulum Onayı -->
+          <div class="wizard-pane" id="wizard-pane-3">
+            <h3>Kurulumu Başlatmaya Hazır</h3>
+            <div class="alert-box-mono">
+              <strong>DİKKAT:</strong> Seçilen disk üzerindeki tüm mevcut veriler silinecektir!
+            </div>
+
+            <div class="summary-card">
+              <div><span>Hedef Disk:</span> <strong id="sum-disk">/dev/sda</strong></div>
+              <div><span>Kullanıcı Hesabı:</span> <strong id="sum-user">pars</strong></div>
+              <div><span>Bilgisayar Adı:</span> <strong id="sum-host">ankora-pc</strong></div>
+              <div><span>Taban Çekirdek:</span> <strong>Devuan Daedalus (SysVinit)</strong></div>
+              <div><span>Önyükleyici:</span> <strong>GRUB x86_64-efi</strong></div>
+            </div>
+
+            <div class="wizard-nav">
+              <button class="btn-pkg prev-step-btn" id="btn-step3-prev">← Geri</button>
+              <button class="btn-pkg" id="btn-start-real-install" style="background: var(--text-primary); color: var(--bg-deep);">Diske Kurulumu Başlat</button>
+            </div>
+          </div>
+
+          <!-- Adım 4: Kurulum Süreci -->
+          <div class="wizard-pane" id="wizard-pane-4">
+            <h3 id="inst-exec-title">Ankora Linux Kuruluyor...</h3>
+            <p id="inst-exec-desc">Lütfen bekleyin, canlı imaj hedef diske kopyalanıyor.</p>
+
+            <div class="progress-mono-track" style="height: 6px; margin: 16px 0;">
+              <div class="progress-mono-fill" id="inst-wizard-progress" style="width: 5%;"></div>
+            </div>
+
+            <div class="term-viewport" style="height: 180px; font-size: 11px;" id="installer-logs-view">
+              <div class="term-row muted">[1/6] Disk GPT olarak bölümlendiriliyor...</div>
+            </div>
+
+            <div class="wizard-nav" id="installer-finish-nav" style="display: none;">
+              <button class="btn-pkg" id="btn-installer-reboot" style="background: var(--text-primary); color: var(--bg-deep);">Sistemi Yeniden Başlat</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 3. ANKORA MAĞAZA                                                        -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-store" style="top: 70px; left: 90px; width: 840px; height: 500px;" aria-labelledby="store-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <span id="store-header-title">Paket Yöneticisi — Ankora Deposu</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="store-container">
+          <div class="store-toolbar">
+            <input type="text" id="store-search" class="store-search" placeholder="Paket adı veya açıklama ara...">
+            <div class="store-nav">
+              <button class="store-filter-btn active" data-cat="all">Tümü</button>
+              <button class="store-filter-btn" data-cat="dev">Geliştirici</button>
+              <button class="store-filter-btn" data-cat="media">Medya</button>
+              <button class="store-filter-btn" data-cat="graphics">Grafik</button>
+              <button class="store-filter-btn" data-cat="sys">Sistem</button>
+            </div>
+          </div>
+          <div class="store-table-wrap">
+            <table class="store-table">
+              <thead>
+                <tr>
+                  <th style="width: 220px;">Uygulama</th>
+                  <th>Açıklama</th>
+                  <th style="width: 90px;">Boyut</th>
+                  <th style="width: 120px; text-align: right;">Durum</th>
+                </tr>
+              </thead>
+              <tbody id="store-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 4. TERMİNAL                                                             -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-terminal" style="top: 90px; left: 180px; width: 780px; height: 460px;" aria-labelledby="term-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <span id="term-header-title">pars@ankora-os: ~ (bash / tauri-ipc)</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="term-viewport" id="term-viewport">
+          <div class="term-logs" id="term-logs">
+            <div class="term-row muted">Ankora Linux 2.0 (Devuan Daedalus) x86_64 - Tauri Rust Native Core</div>
+            <div class="term-row muted">Komut rehberi için 'help' yazabilirsiniz. Komutlar doğrudan sistem kabuğuna iletilir.</div>
+          </div>
+          <div class="term-cmdline">
+            <span class="term-lead">pars@ankora-os:~$</span>
+            <input type="text" id="term-input" class="term-input" autocomplete="off" spellcheck="false" autofocus>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 5. AI AJAN                                                              -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-ai" style="top: 60px; left: 140px; width: 720px; height: 500px;" aria-labelledby="ai-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <span id="ai-header-title">Ankora AI Sistem Asistanı</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="ai-layout">
+          <div class="ai-status-bar">
+            <span>Bağlantı: Tauri IPC (Native Rust Engine)</span>
+            <span id="ai-status-indicator">Aktif</span>
+          </div>
+          <div class="ai-feed" id="ai-feed">
+            <div class="ai-entry bot">
+              <span class="ai-author">Ankora AI</span>
+              <p>Sistem yönetim asistanı devrede. Sistem paketlerini yönetebilir ve komut yürütebilirim. Kritik değişiklikler öncesinde sistem onayınızı isteyeceğim.</p>
+            </div>
+          </div>
+          <div class="ai-quick-row">
+            <button class="ai-tag-btn" data-query="Sistem durumunu ve telemetriyi raporla">Sistem Durumu</button>
+            <button class="ai-tag-btn" data-query="Gereksiz paket önbelleklerini temizle">Önbellek Temizliği</button>
+            <button class="ai-tag-btn" data-query="Disk doluluk oranını denetle">Disk Raporu</button>
+          </div>
+          <div class="ai-prompt-box">
+            <input type="text" id="ai-prompt-input" placeholder="Komut veya sistem görevi iletin...">
+            <button class="btn-pkg" id="btn-ai-submit">Çalıştır</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 6. BELGELER / NOTLAR                                                    -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-office" style="top: 80px; left: 160px; width: 700px; height: 480px;" aria-labelledby="office-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <span id="office-header-title">Metin Düzenleyici — notlar.txt</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="office-layout">
+          <div class="office-bar">
+            <button class="office-btn" data-cmd="bold"><b>B</b></button>
+            <button class="office-btn" data-cmd="italic"><i>I</i></button>
+            <button class="office-btn" id="btn-office-clear">Temizle</button>
+            <button class="office-btn" id="btn-office-save" style="margin-left: auto;">Kaydet</button>
+          </div>
+          <div class="office-pad" id="office-pad" contenteditable="true">
+            <h2>Ankora Linux Notları</h2>
+            <p>Tauri + Rust çekirdeği ile güçlendirilmiş hafif Kiosk Desktop Environment.</p>
+            <p>- WebKitGTK ve Rust IPC ile native performans.</p>
+            <p>- Tamamen bağımsız, systemd gereksinimi olmayan Devuan mimarisi.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 7. AYARLAR                                                              -->
+    <!-- ======================================================================= -->
+    <section class="window" id="win-settings" style="top: 70px; left: 200px; width: 680px; height: 480px;" aria-labelledby="settings-header-title">
+      <div class="window-header" data-tauri-drag-region>
+        <div class="window-meta">
+          <span id="settings-header-title">Sistem Tercihleri</span>
+        </div>
+        <div class="window-controls">
+          <button class="ctrl-btn min" title="Küçült">−</button>
+          <button class="ctrl-btn max" title="Büyüt">□</button>
+          <button class="ctrl-btn close" title="Kapat">✕</button>
+        </div>
+      </div>
+      <div class="window-view">
+        <div class="settings-layout">
+          <div class="settings-group">
+            <span class="group-title">Görüntü ve Panel</span>
+            <div class="setting-item">
+              <div class="setting-desc">
+                <strong>Ekran Parlaklığı</strong>
+                <span>xrandr donanım parlaklık çarpanı</span>
+              </div>
+              <input type="range" id="ctrl-brightness" min="20" max="100" value="100" class="slider-mono">
+            </div>
+            <div class="setting-item">
+              <div class="setting-desc">
+                <strong>Gece Işığı Modu</strong>
+                <span>Mavi ışık azaltma filtresi</span>
+              </div>
+              <input type="checkbox" id="ctrl-night" class="check-mono">
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <span class="group-title">Donanım Telemetrisi</span>
+            <div class="telemetry-grid">
+              <div class="telemetry-cell"><span>İşletim Sistemi:</span><strong id="tele-os">Devuan Daedalus</strong></div>
+              <div class="telemetry-cell"><span>İnit Sistemi:</span><strong id="tele-init">SysVinit</strong></div>
+              <div class="telemetry-cell"><span>Çekirdek:</span><strong id="tele-kernel">Linux 6.1 LTS</strong></div>
+              <div class="telemetry-cell"><span>Bellek Durumu:</span><strong id="tele-mem">1.2 / 8.0 GB</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SİSTEM ONAY MODALI -->
+  <div class="modal-backdrop" id="confirm-modal">
+    <div class="modal-sheet">
+      <div class="modal-title">Sistem Eylemi Onayı</div>
+      <p style="font-size: 12px; color: var(--text-secondary);" id="confirm-desc">Aşağıdaki kabuk komutu çalıştırılacaktır:</p>
+      <code class="modal-code" id="confirm-cmd">apt-get clean</code>
+      <div class="modal-actions">
+        <button class="btn-pkg" id="btn-modal-cancel">İptal</button>
+        <button class="btn-pkg" id="btn-modal-confirm" style="background: var(--text-primary); color: var(--bg-deep);">Onayla</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAŞLAT MENÜSÜ -->
+  <aside class="start-flyout" id="start-flyout">
+    <div class="start-header-bar">
+      <div class="start-brand">
+        <img src="logo.svg" alt="Ankora" style="width: 22px; height: 22px;">
+        <span style="font-weight: 600; font-size: 12px;">ANKORA LINUX</span>
+      </div>
+      <input type="text" class="start-search-mono" id="start-search" placeholder="Uygulama ara...">
+    </div>
+    <div class="start-app-list">
+      <div class="start-row" data-open="win-welcome">
+        <span class="start-row-icon">⚓</span>
+        <span>Ankora Karşılayıcı</span>
+      </div>
+      <div class="start-row" data-open="win-installer">
+        <span class="start-row-icon">💿</span>
+        <span>Diske Kurulum Aracı</span>
+      </div>
+      <div class="start-row" data-open="win-store">
+        <span class="start-row-icon">📦</span>
+        <span>Yazılım Mağazası</span>
+      </div>
+      <div class="start-row" data-open="win-terminal">
+        <span class="start-row-icon">💻</span>
+        <span>Bash Terminali</span>
+      </div>
+      <div class="start-row" data-open="win-ai">
+        <span class="start-row-icon">🤖</span>
+        <span>AI Sistem Ajanı</span>
+      </div>
+      <div class="start-row" data-open="win-office">
+        <span class="start-row-icon">📄</span>
+        <span>Belgeler & Notlar</span>
+      </div>
+      <div class="start-row" data-open="win-settings">
+        <span class="start-row-icon">⚙️</span>
+        <span>Sistem Ayarları</span>
+      </div>
+    </div>
+    <div class="start-footer-bar">
+      <span class="start-user-label">pars (devuan)</span>
+      <button class="btn-power-mono" id="btn-restart">Yeniden Başlat</button>
+    </div>
+  </aside>
+
+  <!-- GÖREV ÇUBUĞU -->
+  <footer class="taskbar">
+    <div class="taskbar-start-group">
+      <button class="start-btn" id="start-btn">
+        <img src="logo.svg" alt="Ankora" class="start-glyph-logo">
+        <span>Ankora</span>
+      </button>
+      <div class="taskbar-running-tabs" id="running-tabs"></div>
+    </div>
+
+    <div class="taskbar-tray">
+      <div class="tray-cell" id="tray-bridge">Tauri Core: Aktif</div>
+      <div class="tray-cell tray-clock" id="tray-clock">12:00</div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+
+
+================================================================================
+DOSYA: src/style.css
+================================================================================
+
+
+/* ==============================================================================
+   ANKORA LINUX - ULTRA-MINIMALIST MONOCHROME TAURI DESKTOP ENVIRONMENT
+   Endüstriyel, Düz (Flat), Koyu Antrasit ve Mat Siyah Tasarım Dili
+   ============================================================================== */
+
+:root {
+  --bg-deep: #040405;
+  --bg-base: #0a0a0d;
+  --bg-panel: #111115;
+  --bg-surface: #17171c;
+  --bg-surface-hover: #222228;
+  --bg-surface-active: #2a2a32;
+
+  --border-subtle: #1f1f26;
+  --border-medium: #2b2b34;
+  --border-focus: #555562;
+  --border-highlight: #ffffff;
+
+  --text-primary: #f2f2f5;
+  --text-secondary: #9999a3;
+  --text-muted: #565662;
+  --text-inverse: #050505;
+
+  --accent-white: #ffffff;
+  --accent-gray: #7a7a85;
+
+  --taskbar-height: 40px;
+  --radius-window: 6px;
+  --radius-ui: 4px;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Consolas, monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==============================================================================
+   DUVAR KAĞIDI (MONOCHROME MOUNTAIN WALLPAPER)
+   ============================================================================== */
+.desktop-body {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: #040405;
+}
+
+.desktop-wallpaper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("wallpaper.svg");
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+/* EKRAN KONTROLLERİ */
+.screen-dimmer {
+  position: fixed;
+  inset: 0;
+  background: black;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 99998;
+}
+
+.screen-night {
+  position: fixed;
+  inset: 0;
+  background: #ffaa33;
+  mix-blend-mode: multiply;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 99999;
+}
+
+/* ==============================================================================
+   MASAÜSTÜ ALANI & MİNİMALİST İKONLAR
+   ============================================================================== */
+.desktop-workspace {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: var(--taskbar-height);
+  overflow: hidden;
+  z-index: 10;
+}
+
+.desktop-grid {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-height: calc(100vh - var(--taskbar-height) - 32px);
+  gap: 8px;
+  z-index: 15;
+}
+
+.desktop-item {
+  width: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+  border-radius: var(--radius-ui);
+  cursor: pointer;
+  outline: none;
+  border: 1px solid transparent;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.desktop-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--border-subtle);
+}
+
+.desktop-item:focus, .desktop-item.selected {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-medium);
+}
+
+.item-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 4px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+}
+
+.item-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--text-primary);
+}
+
+.item-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
+  max-width: 72px;
+}
+
+/* ==============================================================================
+   PENCERE YÖNETİCİSİ (WINDOW MANAGER)
+   ============================================================================== */
+.window {
+  position: absolute;
+  background: var(--bg-base);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-window);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 20;
+}
+
+.window.open { display: flex; }
+
+.window.active {
+  border-color: var(--border-focus);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.9);
+}
+
+.window.maximized {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+  border: none !important;
+}
+
+.window.minimized { display: none !important; }
+
+.window-header {
+  height: 34px;
+  padding: 0 10px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: grab;
+}
+
+.window-header:active { cursor: grabbing; }
+
+.window-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.window.active .window-meta {
+  color: var(--text-primary);
+}
+
+.window-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.ctrl-btn {
+  width: 26px;
+  height: 22px;
+  border-radius: 3px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+}
+
+.ctrl-btn:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+.ctrl-btn.close:hover {
+  background: #351515;
+  color: #ff8888;
+}
+
+.window-view {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background: var(--bg-base);
+}
+
+/* ==============================================================================
+   UYGULAMA: ANKORA MAĞAZA (TABULAR DENSE LIST)
+   ============================================================================== */
+.store-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.store-toolbar {
+  padding: 10px 14px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.store-search {
+  flex: 1;
+  max-width: 320px;
+  background: var(--bg-base);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-ui);
+  padding: 6px 10px;
+  color: var(--text-primary);
+  font-size: 12px;
+  outline: none;
+}
+
+.store-search:focus {
+  border-color: var(--border-focus);
+}
+
+.store-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.store-filter-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: var(--radius-ui);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.store-filter-btn:hover {
+  color: var(--text-primary);
+}
+
+.store-filter-btn.active {
+  background: var(--bg-surface);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+.store-table-wrap {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.store-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.store-table th {
+  padding: 8px 14px;
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.store-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.store-table tr:hover td {
+  background: var(--bg-surface);
+}
+
+.pkg-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+}
+
+.pkg-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.pkg-desc {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.btn-pkg {
+  padding: 5px 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  color: var(--text-primary);
+  border-radius: var(--radius-ui);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.btn-pkg:hover {
+  background: var(--text-primary);
+  color: var(--bg-deep);
+  border-color: var(--text-primary);
+}
+
+.btn-pkg.installed {
+  background: transparent;
+  border-color: var(--border-medium);
+  color: var(--text-muted);
+}
+
+.btn-pkg.installed:hover {
+  border-color: #772222;
+  color: #ff7777;
+  background: transparent;
+}
+
+.pkg-progress-bar {
+  height: 2px;
+  background: var(--accent-white);
+  width: 0%;
+  transition: width 0.15s ease;
+  margin-top: 4px;
+}
+
+/* ==============================================================================
+   UYGULAMA: ANKORA TERMİNAL (VS CODE TARZI)
+   ============================================================================== */
+.term-viewport {
+  height: 100%;
+  background: #070709;
+  color: #d4d4d8;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.term-logs {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.term-row {
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.term-row.cmd { color: #ffffff; font-weight: 600; }
+.term-row.muted { color: #6e6e78; }
+.term-row.success { color: #a3e635; }
+.term-row.error { color: #f87171; }
+
+.term-cmdline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.term-lead {
+  color: #8e8e98;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.term-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
+
+/* ==============================================================================
+   UYGULAMA: ANKORA AI AJAN (CURSOR / COPILOT TARZI)
+   ============================================================================== */
+.ai-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-base);
+}
+
+.ai-status-bar {
+  padding: 8px 14px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.ai-feed {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 85%;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.ai-entry.bot {
+  align-self: flex-start;
+  color: var(--text-primary);
+}
+
+.ai-entry.user {
+  align-self: flex-end;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 8px 12px;
+  border-radius: var(--radius-ui);
+}
+
+.ai-author {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.ai-quick-row {
+  display: flex;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.ai-tag-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: var(--radius-ui);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.ai-tag-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+.ai-prompt-box {
+  padding: 10px 14px;
+  display: flex;
+  gap: 8px;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.ai-prompt-box input {
+  flex: 1;
+  background: var(--bg-base);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-ui);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 12px;
+  outline: none;
+}
+
+.ai-prompt-box input:focus {
+  border-color: var(--border-focus);
+}
+
+/* ==============================================================================
+   UYGULAMA: ANKORA OFİS / NOTLAR
+   ============================================================================== */
+.office-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.office-bar {
+  padding: 6px 12px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.office-btn {
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  border-radius: var(--radius-ui);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.office-btn:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.office-pad {
+  flex: 1;
+  padding: 24px 32px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #cccccc;
+  outline: none;
+}
+
+.office-pad h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+/* ==============================================================================
+   UYGULAMA: AYARLAR (SETTINGS)
+   ============================================================================== */
+.settings-layout {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.group-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+}
+
+.setting-desc strong {
+  display: block;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.setting-desc span {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.slider-mono {
+  width: 120px;
+  accent-color: #ffffff;
+  cursor: pointer;
+}
+
+.check-mono {
+  width: 16px;
+  height: 16px;
+  accent-color: #ffffff;
+  cursor: pointer;
+}
+
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.telemetry-cell {
+  padding: 8px 12px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.telemetry-cell span { color: var(--text-muted); }
+.telemetry-cell strong { font-family: var(--font-mono); color: var(--text-primary); }
+
+/* ==============================================================================
+   ANKORA LOGO VE BRAND BİLEŞENLERİ
+   ============================================================================== */
+.meta-logo {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+}
+
+.desktop-item-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.brand-icon {
+  background: #111116 !important;
+  border-color: #3b3b48 !important;
+}
+
+.start-glyph-logo {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.start-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* ==============================================================================
+   ANKORA KARŞILAYICI (WELCOME WIZARD)
+   ============================================================================== */
+.welcome-container {
+  display: flex;
+  height: 100%;
+  background: var(--bg-base);
+}
+
+.welcome-sidebar {
+  width: 230px;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+}
+
+.welcome-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 12px;
+}
+
+.welcome-logo {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.welcome-brand-text strong {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+}
+
+.welcome-brand-text span {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.welcome-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.welcome-tab {
+  text-align: left;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-ui);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.welcome-tab:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.welcome-tab.active {
+  background: var(--bg-surface);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.welcome-footer-toggle {
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 11px;
+}
+
+.welcome-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+}
+
+.welcome-pane {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.welcome-pane.active {
+  display: flex;
+}
+
+.welcome-pane h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.welcome-pane h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.welcome-pane p {
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.welcome-feature-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.feat-card {
+  padding: 12px 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+}
+
+.feat-card strong {
+  display: block;
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.feat-card span {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.wallpaper-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.wp-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  padding: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.wp-card:hover {
+  border-color: var(--border-focus);
+}
+
+.wp-card.active {
+  border-color: var(--border-highlight);
+  background: var(--bg-surface);
+}
+
+.wp-thumb {
+  width: 100%;
+  height: 90px;
+  border-radius: 3px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 6px;
+}
+
+.wp-card span {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: block;
+  text-align: center;
+}
+
+.choice-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.radio-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  cursor: pointer;
+}
+
+.radio-card input {
+  accent-color: #ffffff;
+}
+
+.radio-card strong {
+  display: block;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.radio-card span {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.radio-card.active {
+  border-color: var(--border-focus);
+}
+
+.quick-app-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.app-check-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  cursor: pointer;
+}
+
+.app-check-item input {
+  accent-color: #ffffff;
+}
+
+.app-info {
+  flex: 1;
+}
+
+.app-info strong {
+  display: block;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.app-info span {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.app-size {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.welcome-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* ==============================================================================
+   ANKORA KURULUM ARACI (MODERN INSTALLER WIZARD)
+   ============================================================================== */
+.installer-wizard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px 24px;
+  gap: 16px;
+}
+
+.wizard-stepper {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 10px;
+  gap: 12px;
+}
+
+.step-node {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  border-radius: var(--radius-ui);
+}
+
+.step-node.active {
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+}
+
+.wizard-pane {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.wizard-pane.active {
+  display: flex;
+}
+
+.wizard-pane h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.wizard-pane p {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.disk-selection-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.disk-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  cursor: pointer;
+}
+
+.disk-card:hover {
+  border-color: var(--border-medium);
+}
+
+.disk-card.active {
+  border-color: var(--border-highlight);
+  background: var(--bg-surface);
+}
+
+.disk-meta strong {
+  display: block;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.disk-meta span {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.disk-capacity {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.input-mono {
+  background: var(--bg-base);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-ui);
+  padding: 8px 10px;
+  color: var(--text-primary);
+  font-size: 12px;
+  outline: none;
+}
+
+.input-mono:focus {
+  border-color: var(--border-focus);
+}
+
+.alert-box-mono {
+  padding: 12px 14px;
+  background: #1c1111;
+  border: 1px solid #4a2222;
+  border-radius: var(--radius-ui);
+  color: #ff9999;
+  font-size: 12px;
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  font-size: 12px;
+}
+
+.summary-card div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.summary-card span { color: var(--text-secondary); }
+.summary-card strong { color: var(--text-primary); font-family: var(--font-mono); }
+
+.wizard-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.progress-mono-track {
+  width: 100%;
+  height: 4px;
+  background: var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-mono-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent-white);
+  transition: width 0.15s ease;
+}
+
+/* ==============================================================================
+   AI ONAY MODALI
+   ============================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 999990;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-backdrop.open { display: flex; }
+
+.modal-sheet {
+  width: 90%;
+  max-width: 440px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-window);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.9);
+}
+
+.modal-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.modal-code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: #000000;
+  padding: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  color: #dddddd;
+  word-break: break-all;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ==============================================================================
+   GÖREV ÇUBUĞU (TASKBAR)
+   ============================================================================== */
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--taskbar-height);
+  background: #0b0b0e;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  z-index: 99995;
+}
+
+.taskbar-start-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.start-btn {
+  height: 30px;
+  padding: 0 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-ui);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.start-btn:hover, .start-btn.active {
+  background: var(--bg-surface);
+  border-color: var(--border-subtle);
+}
+
+.start-glyph {
+  width: 14px;
+  height: 14px;
+}
+
+.taskbar-running-tabs {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 6px;
+}
+
+.task-tab {
+  height: 28px;
+  padding: 0 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-radius: var(--radius-ui);
+  font-size: 11px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-tab:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.task-tab.active {
+  background: var(--bg-surface);
+  border-color: var(--border-subtle);
+  border-bottom-color: var(--accent-white);
+  color: var(--text-primary);
+}
+
+.taskbar-tray {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tray-cell {
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  border-radius: var(--radius-ui);
+}
+
+.tray-cell:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.tray-clock {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* ==============================================================================
+   BAŞLAT MENÜSÜ
+   ============================================================================== */
+.start-flyout {
+  position: fixed;
+  bottom: calc(var(--taskbar-height) + 6px);
+  left: 8px;
+  width: 320px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-window);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  z-index: 99990;
+  transform: translateY(10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.start-flyout.open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.start-header-bar {
+  padding: 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.start-search-mono {
+  width: 100%;
+  background: var(--bg-base);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-ui);
+  padding: 6px 10px;
+  color: var(--text-primary);
+  font-size: 11.5px;
+  outline: none;
+}
+
+.start-search-mono:focus {
+  border-color: var(--border-focus);
+}
+
+.start-app-list {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.start-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: var(--radius-ui);
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
+.start-row:hover {
+  background: var(--bg-surface-hover);
+}
+
+.start-row-icon {
+  width: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.start-footer-bar {
+  padding: 8px 10px;
+  background: var(--bg-base);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.start-user-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.btn-power-mono {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: var(--radius-ui);
+  cursor: pointer;
+}
+
+.btn-power-mono:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+
+
+================================================================================
+DOSYA: src/app.js
+================================================================================
+
+
+(() => {
+  'use strict';
+
+  // ============================================================================
+  // TAURI IPC KÖPRÜSÜ
+  // ============================================================================
+  const TauriBridge = {
+    isAvailable: typeof window !== 'undefined' && Boolean(window.__TAURI__),
+
+    async invoke(cmd, args = {}) {
+      if (this.isAvailable && window.__TAURI__.invoke) {
+        try {
+          return await window.__TAURI__.invoke(cmd, args);
+        } catch (err) {
+          throw err;
+        }
+      }
+      return this.fallback(cmd, args);
+    },
+
+    async fallback(cmd, args) {
+      switch (cmd) {
+        case 'check_first_run':
+          return true; // İlk çalıştırmada Karşılayıcı'yı aç
+        case 'set_first_run_completed':
+          return null;
+        case 'get_storage_devices':
+          return [
+            { name: 'sda', path: '/dev/sda', size_gb: 256.0, model: 'Kingston SATA SSD (256 GB)', is_removable: false },
+            { name: 'nvme0n1', path: '/dev/nvme0n1', size_gb: 512.0, model: 'Samsung 980 NVMe SSD (512 GB)', is_removable: false }
+          ];
+        case 'execute_system_installation':
+          return `Ankora Linux başarıyla kuruldu: ${args.payload?.target_disk || '/dev/sda'} (${args.payload?.username || 'pars'})`;
+        case 'set_system_keyboard':
+          return `Klavye düzeni uygulandı: ${args.layout}`;
+        case 'install_deb_package':
+          return `[Tauri] Paket yüklendi: ${args.packageName || args.package_name}`;
+        case 'run_terminal_command':
+          const c = (args.command || '').trim();
+          if (c === 'uname -a') return 'Linux ankora-os 6.1.0-22-amd64 #1 SMP PREEMPT Devuan x86_64 GNU/Linux';
+          if (c === 'whoami') return 'pars (uid=1000 gid=1000 groups=sudo,audio,video)';
+          if (c === 'uptime') return 'up 18 hours, 2 users, load average: 0.08, 0.04, 0.01';
+          if (c === 'ls') return 'Masaüstü/   Belgeler/   src-tauri/   src/   Cargo.toml   logo.svg';
+          if (c === 'help') return 'Tauri Native Shell Köprüsü devrede. Tüm bash komutları doğrudan Linux çekirdeğine iletilir.';
+          return `[Tauri Bash] Komut çalıştırıldı: ${c}`;
+        case 'get_system_telemetry':
+          return {
+            os_name: 'Devuan GNU/Linux 5 (daedalus)',
+            kernel: 'Linux 6.1 LTS (Tauri Native)',
+            init_system: 'SysVinit (systemd-free)',
+            memory_used_mb: 1120,
+            memory_total_mb: 8192,
+            cpu_cores: 4,
+            uptime_seconds: 7200
+          };
+        case 'set_brightness':
+          return `Parlaklık: %${args.level}`;
+        case 'launch_application':
+          return `Uygulama başlatıldı: ${args.exec}`;
+        default:
+          return null;
+      }
+    }
+  };
+
+  // ============================================================================
+  // PENCERE YÖNETİCİSİ (WINDOW MANAGER)
+  // ============================================================================
+  const WindowManager = {
+    highestZ: 30,
+    windows: [],
+    tabsContainer: null,
+
+    init() {
+      this.windows = Array.from(document.querySelectorAll('.window'));
+      this.tabsContainer = document.getElementById('running-tabs');
+
+      this.windows.forEach(win => {
+        win.addEventListener('mousedown', () => this.bringToFront(win));
+
+        const btnClose = win.querySelector('.ctrl-btn.close');
+        const btnMin = win.querySelector('.ctrl-btn.min');
+        const btnMax = win.querySelector('.ctrl-btn.max');
+
+        if (btnClose) btnClose.addEventListener('click', (e) => { e.stopPropagation(); this.close(win); });
+        if (btnMin) btnMin.addEventListener('click', (e) => { e.stopPropagation(); this.minimize(win); });
+        if (btnMax) btnMax.addEventListener('click', (e) => { e.stopPropagation(); this.toggleMaximize(win); });
+
+        // Tauri Sürükleme Başlığı
+        const header = win.querySelector('.window-header');
+        if (header) {
+          let isDragging = false;
+          let startX, startY, initLeft, initTop;
+
+          const onStart = (e) => {
+            if (e.target.closest('.window-controls')) return;
+            if (win.classList.contains('maximized')) return;
+
+            if (TauriBridge.isAvailable && window.__TAURI__.window) {
+              try {
+                window.__TAURI__.invoke('drag_window').catch(() => {});
+              } catch (err) {}
+            }
+
+            isDragging = true;
+            this.bringToFront(win);
+
+            const pt = e.type.includes('touch') ? e.touches[0] : e;
+            startX = pt.clientX;
+            startY = pt.clientY;
+            initLeft = win.offsetLeft;
+            initTop = win.offsetTop;
+
+            document.addEventListener('mousemove', onMove, { passive: false });
+            document.addEventListener('mouseup', onEnd);
+            document.addEventListener('touchmove', onMove, { passive: false });
+            document.addEventListener('touchend', onEnd);
+          };
+
+          const onMove = (e) => {
+            if (!isDragging) return;
+            if (e.cancelable) e.preventDefault();
+
+            requestAnimationFrame(() => {
+              const pt = e.type.includes('touch') ? e.touches[0] : e;
+              const newLeft = initLeft + (pt.clientX - startX);
+              const newTop = Math.max(0, Math.min(window.innerHeight - 50, initTop + (pt.clientY - startY)));
+
+              win.style.left = `${newLeft}px`;
+              win.style.top = `${newTop}px`;
+            });
+          };
+
+          const onEnd = () => {
+            isDragging = false;
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onEnd);
+            document.removeEventListener('touchmove', onMove);
+            document.removeEventListener('touchend', onEnd);
+          };
+
+          header.addEventListener('mousedown', onStart);
+          header.addEventListener('touchstart', onStart, { passive: true });
+        }
+      });
+    },
+
+    bringToFront(win) {
+      this.highestZ++;
+      win.style.zIndex = this.highestZ;
+      this.windows.forEach(w => w.classList.remove('active'));
+      win.classList.add('active');
+      this.syncTabs();
+    },
+
+    open(winId) {
+      const win = document.getElementById(winId);
+      if (!win) return;
+
+      win.classList.remove('minimized');
+      win.classList.add('open');
+      this.bringToFront(win);
+      this.syncTabs();
+    },
+
+    close(win) {
+      win.classList.remove('open');
+      win.classList.remove('active');
+      this.syncTabs();
+    },
+
+    minimize(win) {
+      win.classList.add('minimized');
+      win.classList.remove('active');
+      this.syncTabs();
+    },
+
+    toggleMaximize(win) {
+      win.classList.toggle('maximized');
+      this.bringToFront(win);
+    },
+
+    syncTabs() {
+      if (!this.tabsContainer) return;
+      this.tabsContainer.innerHTML = '';
+
+      this.windows.forEach(win => {
+        if (win.classList.contains('open')) {
+          const tab = document.createElement('div');
+          tab.className = `task-tab ${win.classList.contains('active') && !win.classList.contains('minimized') ? 'active' : ''}`;
+
+          const titleSpan = win.querySelector('.window-meta span');
+          const title = titleSpan ? titleSpan.textContent.split('—')[0].trim() : 'Pencere';
+          tab.textContent = title;
+
+          tab.addEventListener('click', () => {
+            if (win.classList.contains('minimized')) {
+              win.classList.remove('minimized');
+              this.bringToFront(win);
+            } else if (win.classList.contains('active')) {
+              this.minimize(win);
+            } else {
+              this.bringToFront(win);
+            }
+          });
+
+          this.tabsContainer.appendChild(tab);
+        }
+      });
+    }
+  };
+
+  // ============================================================================
+  // ANKORA KARŞILAYICI (WELCOME & ONBOARDING WIZARD)
+  // ============================================================================
+  const WelcomeManager = {
+    async init() {
+      const tabs = document.querySelectorAll('.welcome-tab');
+      const panes = document.querySelectorAll('.welcome-pane');
+
+      // Tab değiştirme
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const targetId = tab.getAttribute('data-tab');
+          this.switchTab(targetId);
+        });
+      });
+
+      // İleri butonları
+      document.querySelectorAll('.next-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          this.switchTab(targetId);
+        });
+      });
+
+      // Duvar Kağıdı Değiştirme
+      const wpCards = document.querySelectorAll('.wp-card');
+      const desktopWp = document.getElementById('desktop-wallpaper');
+      wpCards.forEach(card => {
+        card.addEventListener('click', () => {
+          wpCards.forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          const wpFile = card.getAttribute('data-wp');
+          if (desktopWp && wpFile) {
+            desktopWp.style.backgroundImage = `url('${wpFile}')`;
+            Terminal.log(`[TEMA] Duvar kağıdı uygulandı: ${wpFile}`, 'cmd');
+          }
+        });
+      });
+
+      // Klavye Düzeni Değiştirme
+      const kbRadios = document.querySelectorAll('input[name="kb-layout"]');
+      kbRadios.forEach(radio => {
+        radio.addEventListener('change', async (e) => {
+          document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
+          e.target.closest('.radio-card')?.classList.add('active');
+          try {
+            const res = await TauriBridge.invoke('set_system_keyboard', { layout: e.target.value });
+            Terminal.log(`[KLAVYE] ${res}`, 'success');
+          } catch (err) {}
+        });
+      });
+
+      // Hızlı Paketleri Kur
+      const btnInstallApps = document.getElementById('btn-welcome-install-apps');
+      if (btnInstallApps) {
+        btnInstallApps.addEventListener('click', async () => {
+          btnInstallApps.disabled = true;
+          btnInstallApps.textContent = 'Kuruluyor...';
+          const checked = document.querySelectorAll('.app-check-item input:checked');
+          for (const box of checked) {
+            Terminal.log(`[APT] Kuruluyor: ${box.value}`, 'cmd');
+            try {
+              await TauriBridge.invoke('install_deb_package', { packageName: box.value });
+              Terminal.log(`[OK] ${box.value} sisteme eklendi.`, 'success');
+            } catch (err) {}
+          }
+          btnInstallApps.textContent = 'Tamamlandı';
+          setTimeout(() => { btnInstallApps.disabled = false; btnInstallApps.textContent = 'Seçilenleri Kur'; }, 2000);
+        });
+      }
+
+      // Karşılayıcıyı Bitir ve Kapat
+      const btnFinish = document.getElementById('btn-welcome-finish');
+      if (btnFinish) {
+        btnFinish.addEventListener('click', async () => {
+          const chk = document.getElementById('chk-show-on-startup');
+          const dontShowAgain = chk ? !chk.checked : false;
+          try {
+            await TauriBridge.invoke('set_first_run_completed', { dontShowAgain });
+          } catch (e) {}
+          WindowManager.close(document.getElementById('win-welcome'));
+        });
+      }
+
+      // İlk çalıştırma kontrolü
+      try {
+        const isFirst = await TauriBridge.invoke('check_first_run');
+        if (isFirst) {
+          setTimeout(() => WindowManager.open('win-welcome'), 300);
+        }
+      } catch (e) {
+        WindowManager.open('win-welcome');
+      }
+    },
+
+    switchTab(targetId) {
+      document.querySelectorAll('.welcome-tab').forEach(t => {
+        t.classList.toggle('active', t.getAttribute('data-tab') === targetId);
+      });
+      document.querySelectorAll('.welcome-pane').forEach(p => {
+        p.classList.toggle('active', p.id === targetId);
+      });
+    }
+  };
+
+  // ============================================================================
+  // ANKORA KURULUM ARACI (MODERN OS TARGET INSTALLER WIZARD)
+  // ============================================================================
+  const InstallerWizard = {
+    selectedDisk: '/dev/sda',
+    disks: [],
+
+    async init() {
+      // Adım Geçişleri
+      const step1Next = document.getElementById('btn-step1-next');
+      const step2Prev = document.getElementById('btn-step2-prev');
+      const step2Next = document.getElementById('btn-step2-next');
+      const step3Prev = document.getElementById('btn-step3-prev');
+      const btnStart = document.getElementById('btn-start-real-install');
+      const btnReboot = document.getElementById('btn-installer-reboot');
+
+      if (step1Next) step1Next.addEventListener('click', () => this.goToStep(2));
+      if (step2Prev) step2Prev.addEventListener('click', () => this.goToStep(1));
+      if (step2Next) step2Next.addEventListener('click', () => {
+        this.updateSummary();
+        this.goToStep(3);
+      });
+      if (step3Prev) step3Prev.addEventListener('click', () => this.goToStep(2));
+
+      // Kurulumu Başlat
+      if (btnStart) {
+        btnStart.addEventListener('click', () => this.runInstall());
+      }
+
+      if (btnReboot) {
+        btnReboot.addEventListener('click', async () => {
+          Terminal.log('[SİSTEM] Yeniden başlatılıyor...', 'cmd');
+          await TauriBridge.invoke('run_terminal_command', { command: 'reboot' });
+        });
+      }
+
+      // Canlı Diskleri Yükle
+      await this.loadDisks();
+    },
+
+    async loadDisks() {
+      const container = document.getElementById('disk-selection-box');
+      if (!container) return;
+
+      try {
+        this.disks = await TauriBridge.invoke('get_storage_devices');
+      } catch (err) {
+        this.disks = [
+          { name: 'sda', path: '/dev/sda', size_gb: 256.0, model: 'Standart Sabit Disk', is_removable: false }
+        ];
+      }
+
+      container.innerHTML = '';
+      if (!this.disks || this.disks.length === 0) {
+        container.innerHTML = '<div class="alert-box-mono">Hiçbir hedef disk tespit edilemedi!</div>';
+        return;
+      }
+
+      this.disks.forEach((disk, idx) => {
+        const card = document.createElement('div');
+        card.className = `disk-card ${idx === 0 ? 'active' : ''}`;
+        card.innerHTML = `
+          <div class="disk-meta">
+            <strong>${disk.path} — ${disk.model}</strong>
+            <span>Cihaz: ${disk.name} | Tür: Sabit Disk / NVMe</span>
+          </div>
+          <div class="disk-capacity">${disk.size_gb} GB</div>
+        `;
+
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.disk-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          this.selectedDisk = disk.path;
+          this.updateSummary();
+        });
+
+        container.appendChild(card);
+      });
+
+      this.selectedDisk = this.disks[0].path;
+      this.updateSummary();
+    },
+
+    updateSummary() {
+      const elDisk = document.getElementById('sum-disk');
+      const elUser = document.getElementById('sum-user');
+      const elHost = document.getElementById('sum-host');
+      const valUser = document.getElementById('inst-username')?.value || 'pars';
+      const valHost = document.getElementById('inst-hostname')?.value || 'ankora-pc';
+
+      if (elDisk) elDisk.textContent = this.selectedDisk;
+      if (elUser) elUser.textContent = valUser;
+      if (elHost) elHost.textContent = valHost;
+    },
+
+    goToStep(stepNum) {
+      document.querySelectorAll('.step-node').forEach((node, idx) => {
+        node.classList.toggle('active', idx + 1 === stepNum);
+      });
+      document.querySelectorAll('.wizard-pane').forEach((pane, idx) => {
+        pane.classList.toggle('active', idx + 1 === stepNum);
+      });
+    },
+
+    async runInstall() {
+      this.goToStep(4);
+      const progress = document.getElementById('inst-wizard-progress');
+      const logs = document.getElementById('installer-logs-view');
+      const title = document.getElementById('inst-exec-title');
+      const finishNav = document.getElementById('installer-finish-nav');
+
+      const appendLog = (msg) => {
+        if (!logs) return;
+        const row = document.createElement('div');
+        row.className = 'term-row muted';
+        row.textContent = msg;
+        logs.appendChild(row);
+        logs.scrollTop = logs.scrollHeight;
+      };
+
+      const payload = {
+        target_disk: this.selectedDisk,
+        fullname: document.getElementById('inst-fullname')?.value || 'Pars',
+        username: document.getElementById('inst-username')?.value || 'pars',
+        hostname: document.getElementById('inst-hostname')?.value || 'ankora-pc',
+        password: document.getElementById('inst-password')?.value || 'ankora',
+        autologin: document.getElementById('inst-autologin')?.checked || true
+      };
+
+      appendLog(`[BAŞLANGIÇ] Hedef sürücü: ${payload.target_disk}`);
+      appendLog(`[HESAP] Kullanıcı: ${payload.username}@${payload.hostname}`);
+
+      let p = 10;
+      const timer = setInterval(() => {
+        if (p < 85) {
+          p += 15;
+          if (progress) progress.style.width = `${p}%`;
+          if (p === 25) appendLog('[DISK] GPT tablosu yazıldı, EFI ve root bölümleri oluşturuldu.');
+          if (p === 55) appendLog('[DOSYA] ext4 ve vfat dosya sistemleri biçimlendirildi.');
+          if (p === 70) appendLog('[RSYNC] Canlı sistem hedef diske kopyalanıyor...');
+        }
+      }, 400);
+
+      try {
+        const res = await TauriBridge.invoke('execute_system_installation', { payload });
+        clearInterval(timer);
+        if (progress) progress.style.width = '100%';
+        appendLog(`[BAŞARILI] ${res}`);
+        if (title) title.textContent = 'Kurulum Başarıyla Tamamlandı!';
+        if (finishNav) finishNav.style.display = 'flex';
+        Terminal.log('[KURULUM] Sistem diske başarıyla kuruldu.', 'success');
+      } catch (err) {
+        clearInterval(timer);
+        appendLog(`[HATA] ${err}`);
+        if (title) title.textContent = 'Kurulum Hatası Oluştu';
+      }
+    }
+  };
+
+  // ============================================================================
+  // YAZILIM MAĞAZASI (STORE MODULE)
+  // ============================================================================
+  const StoreManager = {
+    packages: [
+      { id: 'vlc', name: 'VLC Medya Oynatıcı', deb: 'vlc_3.0.20-1_amd64.deb', desc: 'Evrensel video ve ortam oynatıcı', cat: 'media', size: '64 MB', installed: false, exec: 'vlc' },
+      { id: 'code', name: 'VS Code', deb: 'code_1.92.0_amd64.deb', desc: 'Gelişmiş kaynak kod editörü', cat: 'dev', size: '90 MB', installed: false, exec: 'code' },
+      { id: 'gimp', name: 'GIMP', deb: 'gimp_2.10.34_amd64.deb', desc: 'Açık kaynak görsel düzenleyici', cat: 'graphics', size: '112 MB', installed: false, exec: 'gimp' },
+      { id: 'firefox-esr', name: 'Firefox ESR', deb: 'firefox-esr_115.15_amd64.deb', desc: 'Gizlilik odaklı web tarayıcısı', cat: 'dev', size: '78 MB', installed: true, exec: 'firefox-esr' },
+      { id: 'blender', name: 'Blender 3D', deb: 'blender_4.2.0_amd64.deb', desc: '3D modelleme ve animasyon paketi', cat: 'graphics', size: '310 MB', installed: false, exec: 'blender' },
+      { id: 'htop', name: 'Htop Monitör', deb: 'htop_3.2.2-1_amd64.deb', desc: 'Terminal süreç ve bellek yöneticisi', cat: 'sys', size: '2 MB', installed: true, exec: 'htop' }
+    ],
+    tableBody: null,
+    currentCat: 'all',
+
+    init() {
+      this.tableBody = document.getElementById('store-table-body');
+      const searchInput = document.getElementById('store-search');
+      const filterBtns = document.querySelectorAll('.store-filter-btn');
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          this.currentCat = btn.getAttribute('data-cat');
+          this.render(searchInput ? searchInput.value : '');
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => this.render(e.target.value));
+      }
+
+      this.render();
+    },
+
+    render(query = '') {
+      if (!this.tableBody) return;
+      this.tableBody.innerHTML = '';
+
+      const q = query.toLowerCase();
+      const filtered = this.packages.filter(p => {
+        const matchCat = this.currentCat === 'all' || p.cat === this.currentCat;
+        const matchQ = p.name.toLowerCase().includes(q) || p.deb.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+
+      filtered.forEach(pkg => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <span class="pkg-title">${pkg.name}</span>
+            <span class="pkg-name">${pkg.deb}</span>
+            <div class="pkg-progress-bar" id="prog-${pkg.id}"></div>
+          </td>
+          <td><span class="pkg-desc">${pkg.desc}</span></td>
+          <td><span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 11px;">${pkg.size}</span></td>
+          <td style="text-align: right;">
+            <button class="btn-pkg ${pkg.installed ? 'installed' : ''}" id="btn-pkg-${pkg.id}">
+              ${pkg.installed ? 'Kaldır' : 'Kur'}
+            </button>
+          </td>
+        `;
+
+        const btn = tr.querySelector(`#btn-pkg-${pkg.id}`);
+        btn.addEventListener('click', () => this.togglePackage(pkg));
+
+        this.tableBody.appendChild(tr);
+      });
+    },
+
+    async togglePackage(pkg) {
+      const btn = document.getElementById(`btn-pkg-${pkg.id}`);
+      const prog = document.getElementById(`prog-${pkg.id}`);
+
+      if (pkg.installed) {
+        pkg.installed = false;
+        btn.classList.remove('installed');
+        btn.textContent = 'Kur';
+        this.removeDesktopIcon(pkg.id);
+        Terminal.log(`[APT] Paket kaldırıldı: ${pkg.deb}`, 'muted');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Kuruluyor...';
+      Terminal.log(`[APT] install_deb_package("${pkg.deb}") yürütülüyor`, 'cmd');
+
+      let val = 0;
+      const interval = setInterval(() => {
+        val += 25;
+        if (prog) prog.style.width = `${val}%`;
+        if (val >= 100) clearInterval(interval);
+      }, 120);
+
+      try {
+        const result = await TauriBridge.invoke('install_deb_package', { packageName: pkg.deb });
+        pkg.installed = true;
+        btn.disabled = false;
+        btn.classList.add('installed');
+        btn.textContent = 'Kaldır';
+        if (prog) prog.style.width = '0%';
+
+        this.addDesktopIcon(pkg);
+        Terminal.log(`[OK] ${result}`, 'success');
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Hata';
+        if (prog) prog.style.width = '0%';
+        Terminal.log(`[ERR] ${err}`, 'error');
+      }
+    },
+
+    addDesktopIcon(pkg) {
+      const grid = document.getElementById('dynamic-desktop-icons');
+      if (!grid || document.getElementById(`dyn-${pkg.id}`)) return;
+
+      const item = document.createElement('div');
+      item.className = 'desktop-item';
+      item.id = `dyn-${pkg.id}`;
+      item.tabIndex = 0;
+      item.innerHTML = `
+        <div class="item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+        <span class="item-name">${pkg.name}</span>
+      `;
+
+      item.addEventListener('click', async () => {
+        Terminal.log(`[EXEC] Başlatılıyor: ${pkg.exec}`, 'cmd');
+        try {
+          const res = await TauriBridge.invoke('launch_application', { exec: pkg.exec });
+          Terminal.log(`[OK] ${res}`, 'success');
+        } catch (e) {
+          Terminal.log(`[ERR] ${e}`, 'error');
+        }
+      });
+
+      grid.appendChild(item);
+    },
+
+    removeDesktopIcon(pkgId) {
+      const el = document.getElementById(`dyn-${pkgId}`);
+      if (el) el.remove();
+    }
+  };
+
+  // ============================================================================
+  // TERMİNAL (TERMINAL MODULE - TAURI BASH)
+  // ============================================================================
+  const Terminal = {
+    input: null,
+    logs: null,
+    viewport: null,
+    history: [],
+    hIndex: -1,
+
+    init() {
+      this.input = document.getElementById('term-input');
+      this.logs = document.getElementById('term-logs');
+      this.viewport = document.getElementById('term-viewport');
+
+      if (!this.input) return;
+
+      this.input.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter') {
+          const raw = this.input.value.trim();
+          if (!raw) return;
+
+          this.log(`pars@ankora-os:~$ ${raw}`, 'cmd');
+          this.history.push(raw);
+          this.hIndex = this.history.length;
+          this.input.value = '';
+
+          if (raw.toLowerCase() === 'clear') {
+            if (this.logs) this.logs.innerHTML = '';
+            return;
+          }
+
+          try {
+            const out = await TauriBridge.invoke('run_terminal_command', { command: raw });
+            if (out) this.log(out, 'muted');
+          } catch (err) {
+            this.log(String(err), 'error');
+          }
+        } else if (e.key === 'ArrowUp') {
+          if (this.hIndex > 0) {
+            this.hIndex--;
+            this.input.value = this.history[this.hIndex];
+          }
+        } else if (e.key === 'ArrowDown') {
+          if (this.hIndex < this.history.length - 1) {
+            this.hIndex++;
+            this.input.value = this.history[this.hIndex];
+          } else {
+            this.hIndex = this.history.length;
+            this.input.value = '';
+          }
+        }
+      });
+    },
+
+    log(text, type = 'muted') {
+      if (!this.logs) return;
+      const row = document.createElement('div');
+      row.className = `term-row ${type}`;
+      row.textContent = text;
+      this.logs.appendChild(row);
+      if (this.viewport) this.viewport.scrollTop = this.viewport.scrollHeight;
+    }
+  };
+
+  // ============================================================================
+  // AI ASİSTAN (AI MODULE)
+  // ============================================================================
+  const AIAgent = {
+    feed: null,
+    input: null,
+    pendingAction: null,
+
+    init() {
+      this.feed = document.getElementById('ai-feed');
+      this.input = document.getElementById('ai-prompt-input');
+      const btnSend = document.getElementById('btn-ai-submit');
+      const quickBtns = document.querySelectorAll('.ai-tag-btn');
+
+      if (btnSend && this.input) {
+        btnSend.addEventListener('click', () => this.submit());
+        this.input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') this.submit();
+        });
+      }
+
+      quickBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const q = btn.getAttribute('data-query');
+          if (q) this.handleQuery(q);
+        });
+      });
+
+      const modal = document.getElementById('confirm-modal');
+      const btnApprove = document.getElementById('btn-modal-confirm');
+      const btnCancel = document.getElementById('btn-modal-cancel');
+
+      if (btnApprove && modal) {
+        btnApprove.addEventListener('click', () => {
+          modal.classList.remove('open');
+          if (this.pendingAction) this.pendingAction(true);
+        });
+      }
+      if (btnCancel && modal) {
+        btnCancel.addEventListener('click', () => {
+          modal.classList.remove('open');
+          if (this.pendingAction) this.pendingAction(false);
+        });
+      }
+    },
+
+    submit() {
+      if (!this.input) return;
+      const text = this.input.value.trim();
+      if (!text) return;
+      this.input.value = '';
+      this.handleQuery(text);
+    },
+
+    appendMsg(role, text) {
+      if (!this.feed) return;
+      const entry = document.createElement('div');
+      entry.className = `ai-entry ${role === 'user' ? 'user' : 'bot'}`;
+      entry.innerHTML = `
+        <span class="ai-author">${role === 'user' ? 'Kullanıcı' : 'Ankora AI'}</span>
+        <p>${text}</p>
+      `;
+      this.feed.appendChild(entry);
+      this.feed.scrollTop = this.feed.scrollHeight;
+    },
+
+    handleQuery(text) {
+      this.appendMsg('user', text);
+      const lower = text.toLowerCase();
+
+      if (lower.includes('temizle') || lower.includes('önbellek')) {
+        this.promptConfirm('apt-get clean', async (ok) => {
+          if (ok) {
+            try {
+              const res = await TauriBridge.invoke('run_terminal_command', { command: 'apt-get clean' });
+              this.appendMsg('bot', 'İşlem tamamlandı. Paket önbelleği temizlendi.');
+              Terminal.log(`[AI-IPC] apt-get clean: ${res || 'Başarılı'}`, 'success');
+            } catch (err) {
+              this.appendMsg('bot', `İşlem hatası: ${err}`);
+            }
+          } else {
+            this.appendMsg('bot', 'İşlem kullanıcı tarafından iptal edildi.');
+          }
+        });
+      } else if (lower.includes('durum') || lower.includes('telemetri') || lower.includes('disk')) {
+        TauriBridge.invoke('get_system_telemetry').then(data => {
+          this.appendMsg('bot', `Sistem: ${data.os_name} | Çekirdek: ${data.kernel} | Bellek: ${data.memory_used_mb}MB / ${data.memory_total_mb}MB | Çekirdek Sayısı: ${data.cpu_cores}`);
+        });
+      } else {
+        this.appendMsg('bot', `Talebiniz incelendi: "${text}". Sistem yapılandırmasında değişiklik gerekirse onayınızı isteyeceğim.`);
+      }
+    },
+
+    promptConfirm(cmd, callback) {
+      const modal = document.getElementById('confirm-modal');
+      const cmdEl = document.getElementById('confirm-cmd');
+      if (!modal || !cmdEl) return;
+
+      this.pendingAction = callback;
+      cmdEl.textContent = cmd;
+      modal.classList.add('open');
+    }
+  };
+
+  // ============================================================================
+  // AYARLAR VE TELEMETRİ (SETTINGS & TELEMETRY MODULE)
+  // ============================================================================
+  const SettingsManager = {
+    async init() {
+      const slider = document.getElementById('ctrl-brightness');
+      const dimmer = document.getElementById('screen-dimmer');
+      const nightToggle = document.getElementById('ctrl-night');
+      const nightOverlay = document.getElementById('screen-night');
+
+      if (slider && dimmer) {
+        slider.addEventListener('input', async (e) => {
+          const val = parseInt(e.target.value);
+          dimmer.style.opacity = ((100 - val) / 100 * 0.75).toString();
+          await TauriBridge.invoke('set_brightness', { level: val });
+        });
+      }
+
+      if (nightToggle && nightOverlay) {
+        nightToggle.addEventListener('change', (e) => {
+          nightOverlay.style.opacity = e.target.checked ? '0.25' : '0';
+        });
+      }
+
+      try {
+        const tele = await TauriBridge.invoke('get_system_telemetry');
+        if (tele) {
+          const elOs = document.getElementById('tele-os');
+          const elInit = document.getElementById('tele-init');
+          const elKernel = document.getElementById('tele-kernel');
+          const elMem = document.getElementById('tele-mem');
+
+          if (elOs) elOs.textContent = tele.os_name;
+          if (elInit) elInit.textContent = tele.init_system;
+          if (elKernel) elKernel.textContent = tele.kernel;
+          if (elMem) elMem.textContent = `${(tele.memory_used_mb / 1024).toFixed(1)} / ${(tele.memory_total_mb / 1024).toFixed(1)} GB`;
+        }
+      } catch (err) {}
+    }
+  };
+
+  // ============================================================================
+  // BAŞLAT MENÜSÜ & GÖREV ÇUBUĞU
+  // ============================================================================
+  function initDesktopControls() {
+    document.querySelectorAll('.desktop-item').forEach(item => {
+      const target = item.getAttribute('data-open');
+      if (!target) return;
+      item.addEventListener('click', () => WindowManager.open(target));
+    });
+
+    const startBtn = document.getElementById('start-btn');
+    const startFlyout = document.getElementById('start-flyout');
+
+    if (startBtn && startFlyout) {
+      startBtn.addEventListener('click', () => {
+        startFlyout.classList.toggle('open');
+        startBtn.classList.toggle('active');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!startFlyout.contains(e.target) && !startBtn.contains(e.target)) {
+          startFlyout.classList.remove('open');
+          startBtn.classList.remove('active');
+        }
+      });
+    }
+
+    document.querySelectorAll('.start-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const target = row.getAttribute('data-open');
+        if (target) WindowManager.open(target);
+        if (startFlyout) startFlyout.classList.remove('open');
+        if (startBtn) startBtn.classList.remove('active');
+      });
+    });
+
+    const trayClock = document.getElementById('tray-clock');
+    const updateTime = () => {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      if (trayClock) trayClock.textContent = `${h}:${m}`;
+    };
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    const trayBridge = document.getElementById('tray-bridge');
+    if (trayBridge) {
+      trayBridge.textContent = TauriBridge.isAvailable ? 'Tauri Core: Aktif' : 'Tauri Core: Hazır (Web Modu)';
+    }
+
+    const btnSaveOffice = document.getElementById('btn-office-save');
+    const btnClearOffice = document.getElementById('btn-office-clear');
+    const officePad = document.getElementById('office-pad');
+
+    if (btnSaveOffice) {
+      btnSaveOffice.addEventListener('click', () => {
+        Terminal.log('[OFİS] notlar.txt kaydedildi.', 'success');
+      });
+    }
+    if (btnClearOffice && officePad) {
+      btnClearOffice.addEventListener('click', () => {
+        officePad.innerHTML = '';
+      });
+    }
+  }
+
+  // SİSTEMİ BAŞLAT
+  WindowManager.init();
+  WelcomeManager.init();
+  InstallerWizard.init();
+  StoreManager.init();
+  Terminal.init();
+  AIAgent.init();
+  SettingsManager.init();
+  initDesktopControls();
+
+})();
+
+
+
+================================================================================
+DOSYA: src/logo.svg
+================================================================================
+
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Matte Dark Background -->
+  <rect width="512" height="512" rx="96" fill="#060608"/>
+  <rect x="8" y="8" width="496" height="496" rx="88" stroke="#1f1f26" stroke-width="2"/>
+
+  <!-- Geometric Anchor & Apex 'A' Monogram -->
+  <g transform="translate(0, -10)">
+    <!-- Top Anchor Ring -->
+    <circle cx="256" cy="110" r="38" stroke="#f0f0f4" stroke-width="14" fill="none"/>
+    <circle cx="256" cy="110" r="18" fill="#141418"/>
+
+    <!-- Crossbar -->
+    <path d="M190 156 H322" stroke="#f0f0f4" stroke-width="14" stroke-linecap="square"/>
+
+    <!-- Central Shaft -->
+    <line x1="256" y1="148" x2="256" y2="380" stroke="#f0f0f4" stroke-width="14"/>
+
+    <!-- Outer Apex Legs ('A' shape) -->
+    <path d="M256 156 L150 360" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
+    <path d="M256 156 L362 360" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
+
+    <!-- 'A' Horizontal Bridge -->
+    <path d="M188 280 H324" stroke="#ffffff" stroke-width="16"/>
+
+    <!-- Anchor Curved Flukes -->
+    <path d="M130 250 C130 380 382 380 382 250" stroke="#ffffff" stroke-width="20" fill="none" stroke-linecap="round"/>
+
+    <!-- Left & Right Arrow Tips -->
+    <polygon points="130,225 105,275 155,275" fill="#f0f0f4"/>
+    <polygon points="382,225 357,275 407,275" fill="#f0f0f4"/>
+
+    <!-- Anchor Bottom Center Keel -->
+    <polygon points="256,410 236,365 276,365" fill="#f0f0f4"/>
+  </g>
+
+  <!-- Typography -->
+  <text x="256" y="455" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="800" letter-spacing="9" fill="#f0f0f4">ANKORA</text>
+  <text x="256" y="482" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" letter-spacing="12" fill="#757582">LINUX</text>
+</svg>
+
+
+
+================================================================================
+DOSYA: src/wallpaper.svg
+================================================================================
+
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#040404"/>
+      <stop offset="50%" stop-color="#08080a"/>
+      <stop offset="100%" stop-color="#101013"/>
+    </linearGradient>
+    <linearGradient id="mtnGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#242428"/>
+      <stop offset="100%" stop-color="#0d0d0f"/>
+    </linearGradient>
+    <linearGradient id="mtnGrad2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#19191d"/>
+      <stop offset="100%" stop-color="#08080a"/>
+    </linearGradient>
+    <linearGradient id="mtnGrad3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#111114"/>
+      <stop offset="100%" stop-color="#040405"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#skyGrad)"/>
+
+  <circle cx="1380" cy="340" r="160" stroke="#282830" stroke-width="1" stroke-dasharray="6 6" fill="none" opacity="0.6"/>
+  <circle cx="1380" cy="340" r="100" stroke="#3b3b44" stroke-width="1.25" fill="#141418" fill-opacity="0.4"/>
+  <circle cx="1380" cy="340" r="40" stroke="#52525e" stroke-width="1" fill="#1a1a20" fill-opacity="0.6"/>
+
+  <circle cx="220" cy="160" r="1.5" fill="#666670"/>
+  <circle cx="480" cy="90" r="1" fill="#4a4a52"/>
+  <circle cx="740" cy="210" r="1.25" fill="#555560"/>
+  <circle cx="980" cy="130" r="1" fill="#44444c"/>
+  <circle cx="1180" cy="220" r="1.5" fill="#666670"/>
+  <circle cx="1660" cy="180" r="1.25" fill="#555560"/>
+  <circle cx="1780" cy="90" r="1" fill="#44444c"/>
+
+  <path d="M0 1080 L0 720 L160 590 L340 680 L540 500 L720 620 L940 450 L1120 590 L1320 420 L1540 560 L1740 460 L1920 530 L1920 1080 Z" fill="url(#mtnGrad1)"/>
+  <path d="M0 720 L160 590 L340 680 L540 500 L720 620 L940 450 L1120 590 L1320 420 L1540 560 L1740 460 L1920 530" stroke="#44444e" stroke-width="1.5" fill="none"/>
+
+  <path d="M0 1080 L0 810 L130 760 L290 660 L460 740 L670 580 L860 700 L1050 560 L1230 680 L1450 540 L1650 670 L1820 600 L1920 640 L1920 1080 Z" fill="url(#mtnGrad2)"/>
+  <path d="M0 810 L130 760 L290 660 L460 740 L670 580 L860 700 L1050 560 L1230 680 L1450 540 L1650 670 L1820 600 L1920 640" stroke="#32323a" stroke-width="1.5" fill="none"/>
+
+  <path d="M0 1080 L0 880 L200 800 L390 870 L580 730 L780 830 L980 700 L1180 810 L1380 680 L1580 790 L1790 710 L1920 770 L1920 1080 Z" fill="url(#mtnGrad3)"/>
+  <path d="M0 880 L200 800 L390 870 L580 730 L780 830 L980 700 L1180 810 L1380 680 L1580 790 L1790 710 L1920 770" stroke="#25252d" stroke-width="1.5" fill="none"/>
+
+  <path d="M0 940 Q480 910 960 950 T1920 920" stroke="#1c1c22" stroke-width="1" stroke-dasharray="6 6" fill="none"/>
+  <path d="M0 990 Q480 965 960 1000 T1920 970" stroke="#16161b" stroke-width="1" stroke-dasharray="8 8" fill="none"/>
+  <path d="M0 1040 Q480 1015 960 1045 T1920 1020" stroke="#0f0f13" stroke-width="1" fill="none"/>
+</svg>
+
+
+
+================================================================================
+DOSYA: src/wallpaper-obsidian.svg
+================================================================================
+
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <rect width="1920" height="1080" fill="#040405"/>
+  <defs>
+    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="0.85" fill="#22222a"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#gridPattern)"/>
+  
+  <circle cx="960" cy="540" r="280" stroke="#16161b" stroke-width="1.5" stroke-dasharray="6 6" fill="none"/>
+  <circle cx="960" cy="540" r="180" stroke="#1f1f26" stroke-width="1" fill="none"/>
+  <circle cx="960" cy="540" r="80" stroke="#2b2b34" stroke-width="1" fill="#09090c"/>
+  <circle cx="960" cy="540" r="12" fill="#ffffff" fill-opacity="0.8"/>
+  
+  <line x1="960" y1="220" x2="960" y2="860" stroke="#181820" stroke-width="1"/>
+  <line x1="640" y1="540" x2="1280" y2="540" stroke="#181820" stroke-width="1"/>
+</svg>
+
+
+
+================================================================================
+DOSYA: src/wallpaper-topo.svg
+================================================================================
+
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <rect width="1920" height="1080" fill="#060608"/>
+  <g stroke="#1a1a22" stroke-width="1.25" fill="none">
+    <path d="M-100 200 Q400 120 960 220 T1920 180" />
+    <path d="M-100 280 Q350 200 960 300 T1920 250" stroke="#22222d"/>
+    <path d="M-100 360 Q300 280 960 380 T1920 330" />
+    <path d="M-100 440 Q250 360 960 460 T1920 410" stroke="#282834"/>
+    <path d="M-100 520 Q200 440 960 540 T1920 490" />
+    <path d="M-100 600 Q150 520 960 620 T1920 570" stroke="#2e2e3a"/>
+    <path d="M-100 680 Q200 600 960 700 T1920 650" />
+    <path d="M-100 760 Q250 680 960 780 T1920 730" stroke="#22222d"/>
+    <path d="M-100 840 Q300 760 960 860 T1920 810" />
+    <path d="M-100 920 Q350 840 960 940 T1920 890" stroke="#1c1c24"/>
+    <path d="M-100 1000 Q400 920 960 1020 T1920 970" />
+  </g>
+  <circle cx="1480" cy="420" r="140" stroke="#333340" stroke-width="1" stroke-dasharray="4 4" fill="none"/>
+  <circle cx="1480" cy="420" r="4" fill="#ffffff"/>
+  <text x="1480" y="450" fill="#666675" font-family="monospace" font-size="10" text-anchor="middle">PEAK 4,120M</text>
+</svg>
+
+
+
+================================================================================
+DOSYA: src/wallpaper-nordic.svg
+================================================================================
+
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
+  <defs>
+    <linearGradient id="nordicSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#020203"/>
+      <stop offset="60%" stop-color="#070709"/>
+      <stop offset="100%" stop-color="#141418"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#nordicSky)"/>
+  
+  <!-- High Contrast Sharp Peaks -->
+  <polygon points="120,1080 380,480 620,1080" fill="#1b1b22"/>
+  <polygon points="380,480 620,1080 480,1080" fill="#24242d"/>
+  
+  <polygon points="480,1080 820,360 1140,1080" fill="#14141a"/>
+  <polygon points="820,360 1140,1080 960,1080" fill="#202028"/>
+  
+  <polygon points="980,1080 1340,420 1700,1080" fill="#181820"/>
+  <polygon points="1340,420 1700,1080 1520,1080" fill="#262632"/>
+  
+  <!-- Crest Lines -->
+  <line x1="380" y1="480" x2="480" y2="1080" stroke="#484856" stroke-width="1.5"/>
+  <line x1="820" y1="360" x2="960" y2="1080" stroke="#525262" stroke-width="1.5"/>
+  <line x1="1340" y1="420" x2="1520" y2="1080" stroke="#484856" stroke-width="1.5"/>
+  
+  <!-- Stars -->
+  <circle cx="280" cy="180" r="1.5" fill="#888898"/>
+  <circle cx="680" cy="120" r="1" fill="#666675"/>
+  <circle cx="1120" cy="190" r="1.25" fill="#888898"/>
+  <circle cx="1580" cy="140" r="1.5" fill="#aaaaaa"/>
+</svg>
+
