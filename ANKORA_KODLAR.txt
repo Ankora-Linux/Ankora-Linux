@@ -1,6 +1,6 @@
 ﻿================================================================================
 ANKORA LINUX (TAURI + RUST NATIVE + WEBKITGTK) — TÜM PROJE KAYNAK KODLARI
-Tarih: 2026-09-21 22:25:06
+Tarih: 2026-09-21 22:26:16
 Mimari: Devuan Daedalus 2.0 (SysVinit, systemd-free)
 Motor: XDG .Desktop Scanner, Real Bash PTY/IPC, PDF Native Handler, Ollama AI
 ================================================================================
