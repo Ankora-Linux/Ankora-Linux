@@ -18,86 +18,8 @@
   <!-- MASAÜSTÜ ÇALIŞMA ALANI -->
   <main class="desktop-workspace" id="desktop-workspace">
 
-    <!-- MASAÜSTÜ SİMGELERİ -->
+    <!-- MASAÜSTÜ SİMGELERİ (Yalnızca dinamik harici uygulamalar) -->
     <nav class="desktop-grid" id="desktop-grid" aria-label="Masaüstü Simgeleri">
-      
-      <!-- KARŞILAYICI -->
-      <div class="desktop-item" data-open="win-welcome" tabindex="0" role="button">
-        <div class="item-icon brand-icon">
-          <img src="logo.svg" alt="Ankora Logo" class="desktop-item-logo">
-        </div>
-        <span class="item-name">Karşılayıcı</span>
-      </div>
-
-      <!-- KURULUM ARACI -->
-      <div class="desktop-item highlight-item" data-open="win-installer" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 8v8M8 12l4 4 4-4"></path>
-          </svg>
-        </div>
-        <span class="item-name">Kurulum</span>
-      </div>
-
-      <!-- MAĞAZA -->
-      <div class="desktop-item" data-open="win-store" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <path d="M4 7V4h16v3M4 7l2 13h12l2-13M4 7h16"></path>
-            <path d="M9 11v4M15 11v4"></path>
-          </svg>
-        </div>
-        <span class="item-name">Mağaza</span>
-      </div>
-
-      <!-- TERMİNAL -->
-      <div class="desktop-item" data-open="win-terminal" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <polyline points="4 17 10 11 4 5"></polyline>
-            <line x1="12" y1="19" x2="20" y2="19"></line>
-          </svg>
-        </div>
-        <span class="item-name">Terminal</span>
-      </div>
-
-      <!-- AI ASİSTAN -->
-      <div class="desktop-item" data-open="win-ai" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
-            <circle cx="12" cy="5" r="2"></circle>
-            <path d="M12 7v4M8 16h.01M16 16h.01"></path>
-          </svg>
-        </div>
-        <span class="item-name">AI Ajan</span>
-      </div>
-
-      <!-- BELGELER / NOTLAR -->
-      <div class="desktop-item" data-open="win-office" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-          </svg>
-        </div>
-        <span class="item-name">Belgeler</span>
-      </div>
-
-      <!-- AYARLAR -->
-      <div class="desktop-item" data-open="win-settings" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-        </div>
-        <span class="item-name">Ayarlar</span>
-      </div>
-
       <div id="dynamic-desktop-icons"></div>
     </nav>
 
@@ -629,52 +551,220 @@
     </div>
   </div>
 
-  <!-- BAŞLAT MENÜSÜ -->
-  <aside class="start-flyout" id="start-flyout">
-    <div class="start-header-bar">
-      <div class="start-brand">
-        <img src="logo.svg" alt="Ankora" style="width: 22px; height: 22px;">
-        <span style="font-weight: 600; font-size: 12px;">ANKORA LINUX</span>
+  <!-- ======================================================================= -->
+  <!-- MODERN BAŞLAT MENÜSÜ (CHROME OS FLEX & WINDOWS 11 APP LAUNCHER)         -->
+  <!-- ======================================================================= -->
+  <aside class="start-flyout" id="start-flyout" role="dialog" aria-label="Ankora Uygulama Başlatıcı">
+    
+    <!-- 1. ÜST KULLANICI PROFİLİ VE ARAMA -->
+    <div class="start-top-section">
+      <div class="start-profile-capsule">
+        <div class="profile-avatar">
+          <img src="logo.svg" alt="Pars" class="profile-avatar-img">
+          <span class="avatar-status-badge"></span>
+        </div>
+        <div class="profile-info">
+          <span class="profile-name">pars</span>
+          <span class="profile-role">Devuan Daedalus 2.0 • SysVinit</span>
+        </div>
+        <div class="profile-quick-actions">
+          <button class="profile-action-btn" id="btn-quick-lock" title="Oturumu Kilitle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          </button>
+        </div>
       </div>
-      <input type="text" class="start-search-mono" id="start-search" placeholder="Uygulama ara...">
-    </div>
-    <div class="start-app-list">
-      <div class="start-row" data-open="win-welcome">
-        <span class="start-row-icon">⚓</span>
-        <span>Ankora Karşılayıcı</span>
-      </div>
-      <div class="start-row" data-open="win-installer">
-        <span class="start-row-icon">💿</span>
-        <span>Diske Kurulum Aracı</span>
-      </div>
-      <div class="start-row" data-open="win-store">
-        <span class="start-row-icon">📦</span>
-        <span>Yazılım Mağazası</span>
-      </div>
-      <div class="start-row" data-open="win-terminal">
-        <span class="start-row-icon">💻</span>
-        <span>Bash Terminali</span>
-      </div>
-      <div class="start-row" data-open="win-ai">
-        <span class="start-row-icon">🤖</span>
-        <span>AI Sistem Ajanı</span>
-      </div>
-      <div class="start-row" data-open="win-office">
-        <span class="start-row-icon">📄</span>
-        <span>Belgeler & Notlar</span>
-      </div>
-      <div class="start-row" data-open="win-settings">
-        <span class="start-row-icon">⚙️</span>
-        <span>Sistem Ayarları</span>
+
+      <div class="start-search-box">
+        <svg class="search-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" class="start-search-input" id="start-search" placeholder="Uygulama, belge veya komut ara...">
+        <span class="search-shortcut-badge">Ctrl + Boşluk</span>
       </div>
     </div>
+
+    <!-- 2. SABİTLENMİŞ UYGULAMALAR (PINNED APPS GRID) -->
+    <div class="start-section-heading">
+      <span>Sabitlenmiş Uygulamalar</span>
+      <span class="heading-sub">7 Sistem Aracı</span>
+    </div>
+
+    <div class="start-pinned-grid" id="start-pinned-grid">
+      <!-- MAĞAZA -->
+      <div class="pinned-app-card" data-open="win-store" tabindex="0" role="button">
+        <div class="pinned-icon-box store-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M4 7V4h16v3M4 7l2 13h12l2-13M4 7h16"></path>
+            <path d="M9 11v4M15 11v4"></path>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Mağaza</span>
+          <span class="app-desc">Paket Yöneticisi</span>
+        </div>
+      </div>
+
+      <!-- TERMİNAL -->
+      <div class="pinned-app-card" data-open="win-terminal" tabindex="0" role="button">
+        <div class="pinned-icon-box terminal-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <polyline points="4 17 10 11 4 5"></polyline>
+            <line x1="12" y1="19" x2="20" y2="19"></line>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Terminal</span>
+          <span class="app-desc">Bash Konsolu</span>
+        </div>
+      </div>
+
+      <!-- AI AJANI -->
+      <div class="pinned-app-card" data-open="win-ai" tabindex="0" role="button">
+        <div class="pinned-icon-box ai-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+            <circle cx="12" cy="5" r="2"></circle>
+            <path d="M12 7v4M8 16h.01M16 16h.01"></path>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">AI Ajanı</span>
+          <span class="app-desc">Llama & Teftiş</span>
+        </div>
+      </div>
+
+      <!-- AYARLAR -->
+      <div class="pinned-app-card" data-open="win-settings" tabindex="0" role="button">
+        <div class="pinned-icon-box settings-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Ayarlar</span>
+          <span class="app-desc">Ekran & Donanım</span>
+        </div>
+      </div>
+
+      <!-- DİSKE KURULUM -->
+      <div class="pinned-app-card" data-open="win-installer" tabindex="0" role="button">
+        <div class="pinned-icon-box installer-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 8v8M8 12l4 4 4-4"></path>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Kurulum</span>
+          <span class="app-desc">Devuan Yükleyici</span>
+        </div>
+      </div>
+
+      <!-- KARŞILAYICI -->
+      <div class="pinned-app-card" data-open="win-welcome" tabindex="0" role="button">
+        <div class="pinned-icon-box welcome-accent">
+          <img src="logo.svg" alt="Ankora" style="width: 20px; height: 20px;">
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Karşılayıcı</span>
+          <span class="app-desc">Rehber & Özelleştirme</span>
+        </div>
+      </div>
+
+      <!-- BELGELER -->
+      <div class="pinned-app-card" data-open="win-office" tabindex="0" role="button">
+        <div class="pinned-icon-box office-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Belgeler</span>
+          <span class="app-desc">PDF & Not Düzenleyici</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. ALT BÖLÜM: 2 SÜTUNLU SON BELGELER VE HIZLI KISAYOLLAR -->
+    <div class="start-dual-section">
+      <!-- Sol: Son Kullanılan Belgeler -->
+      <div class="start-sub-col">
+        <div class="start-sub-heading">
+          <span>Son Belgeler</span>
+        </div>
+        <div class="start-recent-list">
+          <div class="recent-doc-row" data-file="ankora-sistem-rehberi.pdf" tabindex="0" role="button">
+            <div class="recent-file-icon pdf">PDF</div>
+            <div class="recent-file-info">
+              <span class="recent-filename">ankora-sistem-rehberi.pdf</span>
+              <span class="recent-filetime">Bugün, 21:00 • 48 KB</span>
+            </div>
+          </div>
+          <div class="recent-doc-row" data-file="kiosk-ayarlari.md" tabindex="0" role="button">
+            <div class="recent-file-icon md">MD</div>
+            <div class="recent-file-info">
+              <span class="recent-filename">kiosk-ayarlari.md</span>
+              <span class="recent-filetime">Dün • 12 KB</span>
+            </div>
+          </div>
+          <div class="recent-doc-row" data-file="surum-notlari.txt" tabindex="0" role="button">
+            <div class="recent-file-icon txt">TXT</div>
+            <div class="recent-file-info">
+              <span class="recent-filename">surum-notlari.txt</span>
+              <span class="recent-filetime">18 Eyl • 4 KB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sağ: Hızlı Sistem Eylemleri -->
+      <div class="start-sub-col">
+        <div class="start-sub-heading">
+          <span>Hızlı Kısayollar</span>
+        </div>
+        <div class="start-shortcuts-list">
+          <div class="shortcut-action-row" data-action="quick-clean" tabindex="0" role="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Önbelleği Temizle</span>
+          </div>
+          <div class="shortcut-action-row" data-action="open-settings" data-open="win-settings" tabindex="0" role="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span>Ekran & Görünüm</span>
+          </div>
+          <div class="shortcut-action-row" data-action="open-ai" data-open="win-ai" tabindex="0" role="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4M8 16h.01M16 16h.01"></path></svg>
+            <span>AI Sistem Sorusu</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. ALT GÜÇ ÇUBUĞU -->
     <div class="start-footer-bar">
-      <span class="start-user-label">pars (devuan)</span>
-      <button class="btn-power-mono" id="btn-restart">Yeniden Başlat</button>
+      <div class="start-device-pill">
+        <span class="device-dot online"></span>
+        <span class="device-text">Devuan Daedalus • Kiosk Modu</span>
+      </div>
+      <div class="start-power-actions">
+        <button class="btn-power-item" id="btn-lock" title="Oturumu Kilitle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span>Kilitle</span>
+        </button>
+        <button class="btn-power-item" id="btn-restart" title="Sistemi Yeniden Başlat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          <span>Yeniden Başlat</span>
+        </button>
+        <button class="btn-power-item power-danger" id="btn-shutdown" title="Sistemi Kapat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
+          <span>Kapat</span>
+        </button>
+      </div>
     </div>
   </aside>
 
-  <!-- GÖREV ÇUBUĞU -->
+  <!-- GÖREV ÇUBUĞU (TASKBAR) -->
   <footer class="taskbar">
     <div class="taskbar-start-group">
       <button class="start-btn" id="start-btn">
@@ -685,7 +775,25 @@
     </div>
 
     <div class="taskbar-tray">
-      <div class="tray-cell" id="tray-bridge">Tauri Core: Aktif</div>
+      <!-- Hızlı Sistem Tepsisi Araçları -->
+      <button class="tray-icon-btn" id="tray-ai-btn" title="AI Sistem Ajanı (Llama)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4M8 16h.01M16 16h.01"></path></svg>
+      </button>
+      <button class="tray-icon-btn" id="tray-settings-btn" title="Sistem Ayarları">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </button>
+
+      <div class="tray-separator"></div>
+
+      <!-- Durum İkonları (Ağ ve Ses) -->
+      <div class="tray-status-group" title="Ağ: eth0 (Gigabit LAN)">
+        <svg class="tray-status-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+      </div>
+      <div class="tray-status-group" title="Ses: ALSA HDA Intel (100%)">
+        <svg class="tray-status-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+      </div>
+
+      <div class="tray-cell tray-badge" id="tray-bridge">Devuan • 6.1 LTS</div>
       <div class="tray-cell tray-clock" id="tray-clock">12:00</div>
     </div>
   </footer>

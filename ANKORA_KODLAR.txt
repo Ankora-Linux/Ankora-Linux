@@ -1,958 +1,8 @@
-﻿================================================================================
-ANKORA LINUX (TAURI + RUST NATIVE + WEBKITGTK) — TÜM PROJE KAYNAK KODLARI
-Tarih: 2026-09-21 22:26:16
-Mimari: Devuan Daedalus 2.0 (SysVinit, systemd-free)
-Motor: XDG .Desktop Scanner, Real Bash PTY/IPC, PDF Native Handler, Ollama AI
-================================================================================
+﻿==============================================================================
+ANKORA LINUX - TAM KAYNAK KOD DÖKÜMÜ (DEVUAN LINUX & TAURI 2.0)
+Tarih: 2026-09-21 22:34:28
+==============================================================================
 
-
-================================================================================
-DOSYA: package.json
-================================================================================
-
-
-{
-  "name": "ankora-de",
-  "version": "2.0.0",
-  "description": "Ankora Linux Minimalist Kiosk Desktop Environment (Tauri + Rust)",
-  "private": true,
-  "scripts": {
-    "tauri": "tauri",
-    "dev": "tauri dev",
-    "build": "tauri build"
-  },
-  "devDependencies": {
-    "@tauri-apps/cli": "^1.5.0"
-  }
-}
-
-
-
-================================================================================
-DOSYA: README.md
-================================================================================
-
-
-<div align="center">
-  <img src="assets/logo.png" alt="Ankora OS Logo" width="240" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-  <br><br>
-  <h1>Ankora Linux (Ankora OS)</h1>
-  <p><b>Devuan Linux Tabanlı, Systemd-Free Hafif Çekirdekli, Modern Kiosk Masaüstü Ortamı (Tauri + Rust)</b></p>
-
-  <p>
-    <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-2.0_(DEVUAN)-ffffff?style=for-the-badge&labelColor=111111" alt="Sürüm">
-    <img src="https://img.shields.io/badge/TABAN-DEVUAN_DAEDALUS-d1d1d1?style=for-the-badge&labelColor=111111" alt="Taban">
-    <img src="https://img.shields.io/badge/MASA%C3%9CST%C3%9C-ANKORA_DE_(TAURI)-ffffff?style=for-the-badge&labelColor=111111" alt="Masaüstü">
-    <img src="https://img.shields.io/badge/L%C3%B0SANS-MIT-41a013?style=for-the-badge&labelColor=111111" alt="Lisans">
-  </p>
-</div>
-
-Ankora OS; düşük donanım kaynaklarına sahip sistemlerde Chrome OS Flex kararlılığı ve yüksek tepkisellik sunmak üzere tasarlanmış, systemd kirliliğinden arındırılmış Devuan Linux tabanlı bağımsız bir dağıtımdır. Masaüstü ortamı (Ankora DE), Rust ve WebKitGTK (Tauri) üzerinde sıfır çökme ve ultra hafif bellek ayak izi ile çalışır.
-
----
-
-## 📌 Ankora OS Nedir?
-
-Ankora OS, genel kullanım dağıtımlarında bulunan gereksiz servis kirliliğini (telemetri, kullanılmayan daemon'lar) engellemek ve donanım limitlerini en verimli şekilde kullanmak amacıyla geliştirilmiştir. Masaüstü ortamında görsel tutarlılık sağlarken arka planda Linux çekirdek parametrelerini (sysctl, zram) düşük gecikmeye göre optimize eder.
-
-Sistemde bulunan yerel AI bileşeni, uzak sunuculara veya API anahtarlarına bağımlı değildir. Makine üzerindeki yerel kaynakları kullanarak doğrudan terminal içinden teknik komut yardımı, hata ayıklama ve sistem analizi sunar.
-
----
-
-## 🛠 Temel Mühendislik Tercihleri ve Mimarisi
-
-### 1. Kademeli Bellek Yönetimi (ZRAM + SWAP Hiyerarşisi)
-Düşük RAM kapasitesinde Out-Of-Memory (OOM) kilitlenmelerini engellemek için bellek mimarisi hiyerarşik olarak kurgulanmıştır:
-* **ZRAM:** RAM üzerinde sıkıştırılmış blok alanı oluşturarak disk I/O yükünü düşürür ve ilk bellek taşıntılarını karşılar.
-* **Disk SWAP:** ZRAM kapasitesi dolduğunda devreye giren ikincil yedek alandır.
-* **vm.swappiness & vm.vfs_cache_pressure:** Çekirdek parametreleri disk okuma/yazma gecikmesini minimize edecek değerlere çekilmiştir.
-
-### 2. Çevrimdışı Terminal AI Asistanı (`yardimci`)
-Terminalde `yardimci` komutuyla çağrılan bileşen, internet bağlantısı gerektirmeksizin çalışır:
-* Veriler harici sunuculara gönderilmez, tamamen yerel bellek üzerinde işlenir.
-* Shell komutları, paket bağımlılıkları ve sistem konfigürasyon dosyaları için hızlı referans sağlar.
-
-### 3. Çift Masaüstü Kirliliğini Önleme (Unified Desktop Stack)
-Hem KDE Plasma hem de XFCE masaüstü ortamlarında sistem üzerine aynı görevi yapan çift uygulama yüklenmez:
-* **Dosya Yöneticisi:** Her iki ortamda da çakışmaları engellemek için varsayılan olarak **Dolphin** kullanılır.
-* **Görsel Bütünlük:** Simge seti olarak **Fairy Wren** entegre edilmiştir.
-
-### 4. Şişkinlikten Arındırılmış Sistem (Bloat-Free)
-* ISO boyutunu ve sistem açılış süresini olumsuz etkileyen Office suitleri (LibreOffice vb.) imajdan çıkarılmıştır.
-* Kullanıcı ihtiyaç duyduğu paketi depo üzerinden tek komutla kurabilir.
-
-### 5. Dahili Oyun ve Grafik Katmanı
-* **GameMode:** Oyun başlatıldığında CPU valörünü performance moduna çeker.
-* **MangoHud:** Vulkan/OpenGL katmanında FPS, sıcaklık ve RAM kullanım değerlerini önceden yapılandırılmış olarak sunar.
-
----
-
-## 📊 Sürüm Karşılaştırma Tablosu
-
-| Sürüm Adı | Sistem Tabanı | Yayın Tipi | Odak Noktası | Durum |
-| :--- | :--- | :--- | :--- | :--- |
-| **Ankora AI Debian** | Debian 13 (Trixie) | Sabit / Stable | Yüksek sistem stabilitesi, düşük kaynak kullanımı | **Aktif Sürüm** |
-| **Ankora Kurumsal** | Debian LTS | Sabit / LTS | Merkezi yönetim profilleri, sıkılaştırılmış güvenlik (AppArmor) | **Planlama** |
-| **Ankora Geliştirici** | Debian / Arch | Özel Derleme | Hazır derleyici araçları (GCC, Rust, Go, Python) ve Zsh terminal yapısı | **Özel Sürüm** |
-
----
-
-## 📋 Sistem Gereksinimleri
-
-| Bileşen | Minimum Gereksinim | Önerilen Sistem |
-| :--- | :--- | :--- |
-| **İşlemci (CPU)** | 64-bit Çift Çekirdek (1.5 GHz) | 64-bit Dört Çekirdek (2.0 GHz+) |
-| **Bellek (RAM)** | 2 GB (ZRAM Aktif) | 4 GB ve üzeri |
-| **Depolama** | 15 GB Boş Disk Alanı | 25 GB SSD Depolama |
-| **Ekran Kartı** | KMS destekli herhangi bir GPU | Vulkan / OpenGL 4.5 destekli GPU |
-
----
-
-## ⚡ Kurulum ve Kullanım Talimatları
-
-### 1. ISO İmajını Diske Yazdırma
-Linux ortamında terminal üzerinden `dd` komutunu kullanarak önyüklenebilir USB oluşturabilirsiniz:
-
-
-sudo dd if=ankora-2.0-debian-x86_64.iso of=/dev/sdX bs=4M status=progress conv=fsync
-
-
-## 🌐 Topluluk ve İletişim
-Bu proje tamamen açık kaynaklıdır ve topluluğun geri bildirimleriyle büyümektedir. Karşılaştığınız sorunlar, yeni özellik talepleri veya sadece selam vermek için bize katılın:
-
-* 💬 **Topluluk Forumu:** [Ankalab Flarum Cloud](https://ankalab.flarum.cloud)
-* 🌍 **Resmi Web Sitesi:** [Sitemiz](https://ankora-linux.github.io/#home) 
-* 🐞 **Hata Bildirimi:** GitHub üzerindeki [Issues](../../issues) sekmesini veya forumdan konu açarak kullanabilirsiniz.
-
-### License & Source Code
-Ankora OS is built on top of **Debian 12 (Bookworm)**. The base system, Linux Kernel, and upstream packages are distributed under the **GPL (GNU General Public License)** or their respective original licenses. You can find the source code for the base Debian packages in the official Debian repositories.
-
-All custom configurations, boot parameters (GRUB/ISOLinux), UI artwork, and build scripts specific to Ankora OS provided in this repository are licensed under the **MIT License**.
-
-
-
-================================================================================
-DOSYA: src-tauri/Cargo.toml
-================================================================================
-
-
-[package]
-name = "ankora-de"
-version = "2.0.0"
-description = "Ankora Linux Minimalist Kiosk Desktop Environment"
-authors = ["Ankora Linux Team"]
-edition = "2021"
-
-[build-dependencies]
-tauri-build = { version = "1.5", features = [] }
-
-[dependencies]
-tauri = { version = "1.5", features = ["window-start-dragging", "shell-open"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-tokio = { version = "1", features = ["full"] }
-dirs = "5.0"
-base64 = "0.21"
-reqwest = { version = "0.11", features = ["json"] }
-
-[features]
-default = ["custom-protocol"]
-custom-protocol = ["tauri/custom-protocol"]
-
-
-
-================================================================================
-DOSYA: src-tauri/build.rs
-================================================================================
-
-
-fn main() {
-    tauri_build::build()
-}
-
-
-
-================================================================================
-DOSYA: src-tauri/tauri.conf.json
-================================================================================
-
-
-{
-  "$schema": "https://raw.githubusercontent.com/tauri-apps/tauri/tauri-v1/tooling/cli/schema.json",
-  "build": {
-    "beforeBuildCommand": "",
-    "beforeDevCommand": "",
-    "devPath": "../src",
-    "distDir": "../src"
-  },
-  "package": {
-    "productName": "Ankora DE",
-    "version": "2.0.0"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "window": {
-        "all": false,
-        "startDragging": true,
-        "close": true,
-        "minimize": true,
-        "maximize": true,
-        "unmaximize": true,
-        "show": true,
-        "hide": true
-      },
-      "shell": {
-        "all": false,
-        "open": true
-      }
-    },
-    "bundle": {
-      "active": true,
-      "category": "Utility",
-      "copyright": "2026 Ankora Linux Project",
-      "deb": {
-        "depends": [
-          "libwebkit2gtk-4.0-37 | libwebkit2gtk-4.1-0",
-          "libgtk-3-0",
-          "libayatana-appindicator3-1"
-        ]
-      },
-      "icon": [
-        "icons/icon.png"
-      ],
-      "identifier": "org.ankora.de",
-      "targets": ["deb", "appimage"]
-    },
-    "security": {
-      "csp": null
-    },
-    "windows": [
-      {
-        "title": "Ankora Linux",
-        "fullscreen": true,
-        "decorations": false,
-        "resizable": false,
-        "transparent": false,
-        "alwaysOnTop": false,
-        "skipTaskbar": false,
-        "center": true,
-        "width": 1920,
-        "height": 1080
-      }
-    ]
-  }
-}
-
-
-
-================================================================================
-DOSYA: src-tauri/src/main.rs
-================================================================================
-
-
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-
-use base64::Engine;
-use serde::{Deserialize, Serialize};
-use std::fs;
-use std::io::Read;
-use std::path::{Path, PathBuf};
-use std::process::Command;
-use tauri::Manager;
-
-// ============================================================================
-// VERİ YAPILARI (DATA STRUCTURES)
-// ============================================================================
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct XdgApplication {
-    pub id: String,
-    pub name: String,
-    pub exec: String,
-    pub icon: String,
-    pub comment: String,
-    pub categories: Vec<String>,
-    pub desktop_file: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct DocumentResult {
-    pub file_name: String,
-    pub file_type: String,
-    pub file_size: u64,
-    pub content: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct SystemTelemetry {
-    pub os_name: String,
-    pub kernel: String,
-    pub init_system: String,
-    pub memory_used_mb: u64,
-    pub memory_total_mb: u64,
-    pub cpu_cores: usize,
-    pub uptime_seconds: u64,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct StorageDisk {
-    pub name: String,
-    pub path: String,
-    pub size_gb: f64,
-    pub model: String,
-    pub is_removable: bool,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct InstallPayload {
-    pub target_disk: String,
-    pub fullname: String,
-    pub username: String,
-    pub hostname: String,
-    pub password: String,
-    pub autologin: bool,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct AiResponse {
-    pub reply: String,
-    pub has_action: bool,
-    pub action_command: Option<String>,
-    pub action_desc: Option<String>,
-}
-
-fn get_ankora_config_dir() -> PathBuf {
-    let mut path = dirs::config_dir().unwrap_or_else(|| PathBuf::from("/root/.config"));
-    path.push("ankora");
-    let _ = fs::create_dir_all(&path);
-    path
-}
-
-// ============================================================================
-// 1. GERÇEK TAURI NATIVE WINDOW DRAG
-// ============================================================================
-#[tauri::command]
-fn drag_window(window: tauri::Window) -> Result<(), String> {
-    window.start_dragging().map_err(|e| e.to_string())
-}
-
-// ============================================================================
-// 2. GERÇEK DİNAMİK XDG .DESKTOP MOTORU
-// ============================================================================
-fn parse_desktop_entry(path: &Path) -> Option<XdgApplication> {
-    let content = fs::read_to_string(path).ok()?;
-    let mut name = String::new();
-    let mut exec = String::new();
-    let mut icon = String::new();
-    let mut comment = String::new();
-    let mut categories = Vec::new();
-    let mut nodisplay = false;
-
-    let mut in_desktop_entry = false;
-    for line in content.lines() {
-        let line = line.trim();
-        if line == "[Desktop Entry]" {
-            in_desktop_entry = true;
-            continue;
-        } else if line.starts_with('[') {
-            in_desktop_entry = false;
-        }
-
-        if !in_desktop_entry {
-            continue;
-        }
-
-        if let Some((key, val)) = line.split_once('=') {
-            let key = key.trim();
-            let val = val.trim();
-            match key {
-                "Name" if name.is_empty() => name = val.to_string(),
-                "Exec" if exec.is_empty() => {
-                    let cleaned = val.split('%').next().unwrap_or(val).trim();
-                    exec = cleaned.to_string();
-                }
-                "Icon" if icon.is_empty() => icon = val.to_string(),
-                "Comment" if comment.is_empty() => comment = val.to_string(),
-                "NoDisplay" => nodisplay = val.eq_ignore_ascii_case("true"),
-                "Categories" => {
-                    categories = val.split(';').filter(|s| !s.is_empty()).map(|s| s.to_string()).collect();
-                }
-                _ => {}
-            }
-        }
-    }
-
-    if nodisplay || name.is_empty() || exec.is_empty() {
-        return None;
-    }
-
-    let file_stem = path.file_stem()?.to_string_lossy().to_string();
-    Some(XdgApplication {
-        id: file_stem,
-        name,
-        exec,
-        icon,
-        comment,
-        categories,
-        desktop_file: path.to_string_lossy().to_string(),
-    })
-}
-
-#[tauri::command]
-async fn scan_xdg_applications() -> Result<Vec<XdgApplication>, String> {
-    #[cfg(target_os = "linux")]
-    {
-        let mut apps = Vec::new();
-        let search_dirs = [
-            PathBuf::from("/usr/share/applications"),
-            PathBuf::from("/usr/local/share/applications"),
-            PathBuf::from("/var/lib/flatpak/exports/share/applications"),
-            dirs::data_dir().map(|d| d.join("applications")).unwrap_or_default(),
-        ];
-
-        for dir in &search_dirs {
-            if dir.exists() {
-                if let Ok(entries) = fs::read_dir(dir) {
-                    for entry in entries.flatten() {
-                        let path = entry.path();
-                        if path.extension().and_then(|s| s.to_str()) == Some("desktop") {
-                            if let Some(app) = parse_desktop_entry(&path) {
-                                if !apps.iter().any(|a: &XdgApplication| a.id == app.id) {
-                                    apps.push(app);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        Ok(apps)
-    }
-
-    #[cfg(not(target_os = "linux"))]
-    {
-        Ok(vec![
-            XdgApplication {
-                id: "firefox-esr".to_string(),
-                name: "Firefox ESR".to_string(),
-                exec: "firefox-esr".to_string(),
-                icon: "firefox-esr".to_string(),
-                comment: "Gizlilik odaklı web tarayıcısı".to_string(),
-                categories: vec!["Network".to_string(), "WebBrowser".to_string()],
-                desktop_file: "/usr/share/applications/firefox-esr.desktop".to_string(),
-            },
-            XdgApplication {
-                id: "code".to_string(),
-                name: "Visual Studio Code".to_string(),
-                exec: "code".to_string(),
-                icon: "vscode".to_string(),
-                comment: "Kaynak Kod Düzenleyicisi".to_string(),
-                categories: vec!["Development".to_string(), "IDE".to_string()],
-                desktop_file: "/usr/share/applications/code.desktop".to_string(),
-            },
-            XdgApplication {
-                id: "vlc".to_string(),
-                name: "VLC Media Player".to_string(),
-                exec: "vlc".to_string(),
-                icon: "vlc".to_string(),
-                comment: "Evrensel Medya Yürütücüsü".to_string(),
-                categories: vec!["AudioVideo".to_string(), "Player".to_string()],
-                desktop_file: "/usr/share/applications/vlc.desktop".to_string(),
-            },
-            XdgApplication {
-                id: "gimp".to_string(),
-                name: "GNU Image Manipulation Program".to_string(),
-                exec: "gimp".to_string(),
-                icon: "gimp".to_string(),
-                comment: "Grafik ve Fotoğraf Düzenleyici".to_string(),
-                categories: vec!["Graphics".to_string(), "2DGraphics".to_string()],
-                desktop_file: "/usr/share/applications/gimp.desktop".to_string(),
-            },
-            XdgApplication {
-                id: "htop".to_string(),
-                name: "Htop".to_string(),
-                exec: "htop".to_string(),
-                icon: "htop".to_string(),
-                comment: "Terminal Sistem Süreç Gözlemcisi".to_string(),
-                categories: vec!["System".to_string(), "Monitor".to_string()],
-                desktop_file: "/usr/share/applications/htop.desktop".to_string(),
-            }
-        ])
-    }
-}
-
-#[tauri::command]
-async fn install_deb_package(package_name: String) -> Result<XdgApplication, String> {
-    let clean_pkg = package_name.trim();
-    if clean_pkg.is_empty() {
-        return Err("Geçersiz paket adı.".to_string());
-    }
-
-    #[cfg(target_os = "linux")]
-    {
-        let output = if clean_pkg.ends_with(".deb") {
-            Command::new("dpkg").args(["-i", clean_pkg]).output()
-        } else {
-            Command::new("apt-get").args(["install", "-y", clean_pkg]).output()
-        };
-
-        match output {
-            Ok(res) => {
-                if !res.status.success() {
-                    let err = String::from_utf8_lossy(&res.stderr);
-                    return Err(format!("Paket kurulumu başarısız: {}", err));
-                }
-            }
-            Err(e) => return Err(format!("apt-get/dpkg çalıştırılamadı: {}", e)),
-        }
-
-        // Kurulum sonrası XDG dizinini tara
-        let apps = scan_xdg_applications().await?;
-        if let Some(app) = apps.into_iter().find(|a| a.id.contains(clean_pkg) || clean_pkg.contains(&a.id)) {
-            Ok(app)
-        } else {
-            Ok(XdgApplication {
-                id: clean_pkg.to_string(),
-                name: clean_pkg.to_uppercase(),
-                exec: clean_pkg.to_string(),
-                icon: "application-x-executable".to_string(),
-                comment: format!("{} paketi sisteme kuruldu.", clean_pkg),
-                categories: vec!["Utility".to_string()],
-                desktop_file: format!("/usr/share/applications/{}.desktop", clean_pkg),
-            })
-        }
-    }
-
-    #[cfg(not(target_os = "linux"))]
-    {
-        Ok(XdgApplication {
-            id: clean_pkg.to_string(),
-            name: format!("{} (Kuruldu)", clean_pkg),
-            exec: clean_pkg.to_string(),
-            icon: clean_pkg.to_string(),
-            comment: "Yerel sisteme başarıyla kaydedildi.".to_string(),
-            categories: vec!["System".to_string()],
-            desktop_file: format!("/usr/share/applications/{}.desktop", clean_pkg),
-        })
-    }
-}
-
-// ============================================================================
-// 3. GERÇEK CANLI BASH TERMİNALİ
-// ============================================================================
-#[tauri::command]
-async fn run_terminal_command(command: String) -> Result<String, String> {
-    let cmd_trimmed = command.trim();
-    if cmd_trimmed.is_empty() {
-        return Ok(String::new());
-    }
-
-    #[cfg(target_os = "windows")]
-    let res = Command::new("cmd").args(["/C", cmd_trimmed]).output();
-
-    #[cfg(not(target_os = "windows"))]
-    let res = Command::new("bash").args(["-c", cmd_trimmed]).output();
-
-    match res {
-        Ok(output) => {
-            let stdout = String::from_utf8_lossy(&output.stdout).to_string();
-            let stderr = String::from_utf8_lossy(&output.stderr).to_string();
-
-            if output.status.success() {
-                Ok(stdout)
-            } else if !stderr.trim().is_empty() {
-                Err(stderr)
-            } else {
-                Ok(stdout)
-            }
-        }
-        Err(err) => Err(format!("Kabuk başlatılamadı: {}", err)),
-    }
-}
-
-// ============================================================================
-// 4. ANKORA OFFICE (GERÇEK PDF / METİN BELGE İŞLEYİCİ)
-// ============================================================================
-#[tauri::command]
-async fn read_document_file(file_path: String) -> Result<DocumentResult, String> {
-    let path = Path::new(&file_path);
-    if !path.exists() {
-        return Err(format!("Belge bulunamadı: {}", file_path));
-    }
-
-    let file_name = path.file_name().unwrap_or_default().to_string_lossy().to_string();
-    let extension = path.extension().and_then(|s| s.to_str()).unwrap_or("").to_lowercase();
-    let metadata = fs::metadata(path).map_err(|e| e.to_string())?;
-    let file_size = metadata.len();
-
-    match extension.as_str() {
-        "pdf" => {
-            let mut file = fs::File::open(path).map_err(|e| e.to_string())?;
-            let mut bytes = Vec::new();
-            file.read_to_end(&mut bytes).map_err(|e| e.to_string())?;
-            let b64 = base64::engine::general_purpose::STANDARD.encode(&bytes);
-            let data_uri = format!("data:application/pdf;base64,{}", b64);
-
-            Ok(DocumentResult {
-                file_name,
-                file_type: "pdf".to_string(),
-                file_size,
-                content: data_uri,
-            })
-        }
-        _ => {
-            let text = fs::read_to_string(path).map_err(|e| format!("Dosya okunamadı: {}", e))?;
-            Ok(DocumentResult {
-                file_name,
-                file_type: if extension == "docx" { "docx".to_string() } else { "text".to_string() },
-                file_size,
-                content: text,
-            })
-        }
-    }
-}
-
-#[tauri::command]
-async fn list_available_documents() -> Result<Vec<String>, String> {
-    let mut files = Vec::new();
-    let search_roots = [
-        dirs::document_dir().unwrap_or_default(),
-        dirs::download_dir().unwrap_or_default(),
-        PathBuf::from("/root/Belgeler"),
-    ];
-
-    for root in &search_roots {
-        if root.exists() {
-            if let Ok(entries) = fs::read_dir(root) {
-                for entry in entries.flatten() {
-                    let path = entry.path();
-                    if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
-                        let ext = ext.to_lowercase();
-                        if ext == "pdf" || ext == "docx" || ext == "txt" || ext == "md" {
-                            files.push(path.to_string_lossy().to_string());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    if files.is_empty() {
-        files.push("/root/Belgeler/ankora-sistem-rehberi.pdf".to_string());
-        files.push("/root/Belgeler/kiosk-ayarlari.txt".to_string());
-    }
-
-    Ok(files)
-}
-
-// ============================================================================
-// 5. ANKORA AI (GERÇEK OLLAMA ENTEGRASYONU & ONAY MEKANİZMASI)
-// ============================================================================
-#[tauri::command]
-async fn query_local_ai(prompt: String, endpoint: Option<String>, model: Option<String>) -> Result<AiResponse, String> {
-    let url = endpoint.unwrap_or_else(|| "http://127.0.0.1:11434/api/generate".to_string());
-    let ai_model = model.unwrap_or_else(|| "qwen2.5:0.5b".to_string());
-
-    let sys_prompt = "Sen Ankora Linux (Devuan Daedalus) işletim sisteminin yerel sistem asistanısın. \
-Kullanıcıya teknik, kısa ve profesyonel yanıtlar ver. \
-Eğer kullanıcının talebi sistemde bir kabuk komutu çalıştırmayı gerektiriyorsa (örn: paket kurma, disk temizleme, dosya okuma), \
-yanıtının sonuna tam olarak şu formatta bir eylem etiketi ekle: \
-<<<ACTION:{\"command\":\"calistirilacak_komut\",\"desc\":\"Yapılacak eylemin açıklaması\"}>>> \
-Asla rastgele komut uydurma. Sadece geçerli Debian/Devuan bash komutları üret.";
-
-    let payload = serde_json::json!({
-        "model": ai_model,
-        "prompt": format!("{}\n\nKullanıcı: {}", sys_prompt, prompt),
-        "stream": false
-    });
-
-    // HTTP İsteği
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(30))
-        .build()
-        .map_err(|e| e.to_string())?;
-
-    let res = client.post(&url).json(&payload).send().await;
-
-    match res {
-        Ok(resp) => {
-            if resp.status().is_success() {
-                let json_data: serde_json::Value = resp.json().await.map_err(|e| e.to_string())?;
-                let raw_reply = json_data["response"].as_str().unwrap_or("").to_string();
-
-                if let Some(start_idx) = raw_reply.find("<<<ACTION:") {
-                    if let Some(end_idx) = raw_reply[start_idx..].find(">>>") {
-                        let json_str = &raw_reply[start_idx + 10..start_idx + end_idx];
-                        let clean_reply = raw_reply[..start_idx].trim().to_string();
-
-                        if let Ok(action_val) = serde_json::from_str::<serde_json::Value>(json_str) {
-                            return Ok(AiResponse {
-                                reply: clean_reply,
-                                has_action: true,
-                                action_command: action_val["command"].as_str().map(|s| s.to_string()),
-                                action_desc: action_val["desc"].as_str().map(|s| s.to_string()),
-                            });
-                        }
-                    }
-                }
-
-                Ok(AiResponse {
-                    reply: raw_reply,
-                    has_action: false,
-                    action_command: None,
-                    action_desc: None,
-                })
-            } else {
-                Err(format!("Ollama API hatası (Kod: {})", resp.status()))
-            }
-        }
-        Err(_) => {
-            // Ollama çalışmıyorsa akıllı sistem fallback'i
-            let p_lower = prompt.to_lowercase();
-            if p_lower.contains("temizle") || p_lower.contains("önbellek") {
-                Ok(AiResponse {
-                    reply: "Sistem önbelleklerinin temizlenmesi için paket önbelleği boşaltılmalıdır.".to_string(),
-                    has_action: true,
-                    action_command: Some("apt-get clean && rm -rf /tmp/*".to_string()),
-                    action_desc: Some("Sistem ve geçici dosya önbelleklerini temizleme".to_string()),
-                })
-            } else if p_lower.contains("durum") || p_lower.contains("disk") {
-                Ok(AiResponse {
-                    reply: "Disk ve bellek doluluk raporu taranıyor.".to_string(),
-                    has_action: true,
-                    action_command: Some("df -h / && free -m".to_string()),
-                    action_desc: Some("Disk ve bellek durumunu sorgulama".to_string()),
-                })
-            } else {
-                Ok(AiResponse {
-                    reply: format!(
-                        "Ankora AI Çekirdeği hazır. Ollama (localhost:11434) servisi tespit edilemediğinden dahili sistem analiz modunda yanıt veriliyor: \"{}\"",
-                        prompt
-                    ),
-                    has_action: false,
-                    action_command: None,
-                    action_desc: None,
-                })
-            }
-        }
-    }
-}
-
-#[tauri::command]
-async fn execute_agent_confirmed_action(command: String) -> Result<String, String> {
-    run_terminal_command(command).await
-}
-
-// ============================================================================
-// DİSK KURULUM & DONANIM TELEMETRİSİ
-// ============================================================================
-#[tauri::command]
-async fn get_storage_devices() -> Result<Vec<StorageDisk>, String> {
-    #[cfg(target_os = "linux")]
-    {
-        let output = Command::new("lsblk").args(["-d", "-b", "-n", "-o", "NAME,SIZE,MODEL,RM,TYPE"]).output();
-        if let Ok(out) = output {
-            let stdout = String::from_utf8_lossy(&out.stdout);
-            let mut disks = Vec::new();
-            for line in stdout.lines() {
-                let parts: Vec<&str> = line.split_whitespace().collect();
-                if parts.len() >= 3 && line.contains("disk") && !parts[0].starts_with("loop") {
-                    let size_bytes: u64 = parts[1].parse().unwrap_or(0);
-                    let size_gb = (size_bytes as f64) / (1024.0 * 1024.0 * 1024.0);
-                    disks.push(StorageDisk {
-                        name: parts[0].to_string(),
-                        path: format!("/dev/{}", parts[0]),
-                        size_gb: (size_gb * 10.0).round() / 10.0,
-                        model: if parts.len() >= 5 { parts[2..parts.len() - 2].join(" ") } else { "Sabit Disk".to_string() },
-                        is_removable: line.contains(" 1 "),
-                    });
-                }
-            }
-            if !disks.is_empty() {
-                return Ok(disks);
-            }
-        }
-    }
-
-    Ok(vec![
-        StorageDisk {
-            name: "sda".to_string(),
-            path: "/dev/sda".to_string(),
-            size_gb: 256.0,
-            model: "Dahili SATA SSD".to_string(),
-            is_removable: false,
-        },
-        StorageDisk {
-            name: "nvme0n1".to_string(),
-            path: "/dev/nvme0n1".to_string(),
-            size_gb: 512.0,
-            model: "NVMe M.2 SSD".to_string(),
-            is_removable: false,
-        }
-    ])
-}
-
-#[tauri::command]
-async fn execute_system_installation(payload: InstallPayload) -> Result<String, String> {
-    let target = payload.target_disk.trim();
-    if target.is_empty() || !target.starts_with("/dev/") {
-        return Err("Geçerli bir hedef disk seçilmedi.".to_string());
-    }
-
-    #[cfg(target_os = "linux")]
-    {
-        let script = format!(
-            r#"
-            set -e
-            parted -s {disk} mklabel gpt
-            parted -s {disk} mkpart ESP fat32 1MiB 513MiB
-            parted -s {disk} set 1 esp on
-            parted -s {disk} mkpart primary ext4 513MiB 100%
-
-            EFI_PART="{disk}1"
-            ROOT_PART="{disk}2"
-            if [[ "{disk}" =~ "nvme" ]]; then
-                EFI_PART="{disk}p1"
-                ROOT_PART="{disk}p2"
-            fi
-
-            mkfs.vfat -F32 "$EFI_PART"
-            mkfs.ext4 -F "$ROOT_PART"
-
-            mkdir -p /target
-            mount "$ROOT_PART" /target
-            mkdir -p /target/boot/efi
-            mount "$EFI_PART" /target/boot/efi
-
-            rsync -aAX --info=progress2 / /target/ \
-                --exclude=/proc/* --exclude=/sys/* --exclude=/dev/* \
-                --exclude=/tmp/* --exclude=/run/* --exclude=/mnt/* \
-                --exclude=/media/* --exclude=/target/* --exclude=/home/*
-
-            echo "{hostname}" > /target/etc/hostname
-            chroot /target useradd -m -s /bin/bash -G sudo,audio,video,plugdev "{username}" || true
-            echo "{username}:{password}" | chroot /target chpasswd
-
-            chroot /target grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Ankora --recheck
-            chroot /target update-grub
-
-            umount -R /target
-            "#,
-            disk = target,
-            hostname = payload.hostname,
-            username = payload.username,
-            password = payload.password
-        );
-
-        let out = Command::new("bash").args(["-c", &script]).output();
-        match out {
-            Ok(res) if res.status.success() => Ok("Ankora Linux başarıyla kuruldu.".to_string()),
-            Ok(res) => Err(format!("Kurulum hatası: {}", String::from_utf8_lossy(&res.stderr))),
-            Err(e) => Err(format!("Kurulum yürütülemedi: {}", e)),
-        }
-    }
-
-    #[cfg(not(target_os = "linux"))]
-    {
-        Ok(format!("Kurulum tamamlandı: {} -> {}", payload.target_disk, payload.username))
-    }
-}
-
-#[tauri::command]
-fn get_system_telemetry() -> Result<SystemTelemetry, String> {
-    Ok(SystemTelemetry {
-        os_name: "Devuan GNU/Linux 5 (daedalus)".to_string(),
-        kernel: "Linux 6.1.0-22-amd64 (Tauri Native Core)".to_string(),
-        init_system: "SysVinit (systemd-free)".to_string(),
-        memory_used_mb: 1140,
-        memory_total_mb: 8192,
-        cpu_cores: std::thread::available_parallelism().map(|p| p.get()).unwrap_or(4),
-        uptime_seconds: 7200,
-    })
-}
-
-#[tauri::command]
-async fn set_brightness(level: u32) -> Result<String, String> {
-    let clamped = level.clamp(20, 100);
-    let ratio = clamped as f32 / 100.0;
-    #[cfg(target_os = "linux")]
-    {
-        let cmd = format!(
-            "xrandr --output $(xrandr | grep ' connected' | awk '{{print $1}}' | head -n1) --brightness {:.2}",
-            ratio
-        );
-        let _ = Command::new("sh").args(["-c", &cmd]).output();
-    }
-    Ok(format!("Parlaklık ayarlandı: %{}", clamped))
-}
-
-#[tauri::command]
-async fn launch_application(exec: String) -> Result<String, String> {
-    let clean = exec.trim();
-    #[cfg(target_os = "linux")]
-    {
-        let _ = Command::new("sh")
-            .args(["-c", &format!("DISPLAY=:0 {} >/dev/null 2>&1 &", clean)])
-            .spawn();
-    }
-    Ok(format!("Uygulama çalıştırıldı: {}", clean))
-}
-
-#[tauri::command]
-fn check_first_run() -> Result<bool, String> {
-    let path = get_ankora_config_dir().join("welcomed.lock");
-    Ok(!path.exists())
-}
-
-#[tauri::command]
-fn set_first_run_completed(dont_show_again: bool) -> Result<(), String> {
-    if dont_show_again {
-        let path = get_ankora_config_dir().join("welcomed.lock");
-        let _ = fs::write(path, "ankora-v2-welcomed");
-    }
-    Ok(())
-}
-
-#[tauri::command]
-async fn set_system_keyboard(layout: String) -> Result<String, String> {
-    let clean = layout.trim();
-    #[cfg(target_os = "linux")]
-    {
-        let _ = Command::new("setxkbmap").arg(clean).output();
-    }
-    Ok(format!("Klavye: {}", clean))
-}
-
-fn main() {
-    tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![
-            drag_window,
-            scan_xdg_applications,
-            install_deb_package,
-            run_terminal_command,
-            read_document_file,
-            list_available_documents,
-            query_local_ai,
-            execute_agent_confirmed_action,
-            get_storage_devices,
-            execute_system_installation,
-            get_system_telemetry,
-            set_brightness,
-            launch_application,
-            check_first_run,
-            set_first_run_completed,
-            set_system_keyboard
-        ])
-        .setup(|app| {
-            if let Some(win) = app.get_window("main") {
-                let _ = win.set_fullscreen(true);
-            }
-            Ok(())
-        })
-        .run(tauri::generate_context!())
-        .expect("Ankora DE başlatılırken hata oluştu");
-}
 
 
 
@@ -981,86 +31,8 @@ DOSYA: src/index.html
   <!-- MASAÜSTÜ ÇALIŞMA ALANI -->
   <main class="desktop-workspace" id="desktop-workspace">
 
-    <!-- MASAÜSTÜ SİMGELERİ -->
+    <!-- MASAÜSTÜ SİMGELERİ (Yalnızca dinamik harici uygulamalar) -->
     <nav class="desktop-grid" id="desktop-grid" aria-label="Masaüstü Simgeleri">
-      
-      <!-- KARŞILAYICI -->
-      <div class="desktop-item" data-open="win-welcome" tabindex="0" role="button">
-        <div class="item-icon brand-icon">
-          <img src="logo.svg" alt="Ankora Logo" class="desktop-item-logo">
-        </div>
-        <span class="item-name">Karşılayıcı</span>
-      </div>
-
-      <!-- KURULUM ARACI -->
-      <div class="desktop-item highlight-item" data-open="win-installer" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 8v8M8 12l4 4 4-4"></path>
-          </svg>
-        </div>
-        <span class="item-name">Kurulum</span>
-      </div>
-
-      <!-- MAĞAZA -->
-      <div class="desktop-item" data-open="win-store" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <path d="M4 7V4h16v3M4 7l2 13h12l2-13M4 7h16"></path>
-            <path d="M9 11v4M15 11v4"></path>
-          </svg>
-        </div>
-        <span class="item-name">Mağaza</span>
-      </div>
-
-      <!-- TERMİNAL -->
-      <div class="desktop-item" data-open="win-terminal" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <polyline points="4 17 10 11 4 5"></polyline>
-            <line x1="12" y1="19" x2="20" y2="19"></line>
-          </svg>
-        </div>
-        <span class="item-name">Terminal</span>
-      </div>
-
-      <!-- AI ASİSTAN -->
-      <div class="desktop-item" data-open="win-ai" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
-            <circle cx="12" cy="5" r="2"></circle>
-            <path d="M12 7v4M8 16h.01M16 16h.01"></path>
-          </svg>
-        </div>
-        <span class="item-name">AI Ajan</span>
-      </div>
-
-      <!-- BELGELER / NOTLAR -->
-      <div class="desktop-item" data-open="win-office" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-          </svg>
-        </div>
-        <span class="item-name">Belgeler</span>
-      </div>
-
-      <!-- AYARLAR -->
-      <div class="desktop-item" data-open="win-settings" tabindex="0" role="button">
-        <div class="item-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-        </div>
-        <span class="item-name">Ayarlar</span>
-      </div>
-
       <div id="dynamic-desktop-icons"></div>
     </nav>
 
@@ -1592,52 +564,220 @@ DOSYA: src/index.html
     </div>
   </div>
 
-  <!-- BAŞLAT MENÜSÜ -->
-  <aside class="start-flyout" id="start-flyout">
-    <div class="start-header-bar">
-      <div class="start-brand">
-        <img src="logo.svg" alt="Ankora" style="width: 22px; height: 22px;">
-        <span style="font-weight: 600; font-size: 12px;">ANKORA LINUX</span>
+  <!-- ======================================================================= -->
+  <!-- MODERN BAŞLAT MENÜSÜ (CHROME OS FLEX & WINDOWS 11 APP LAUNCHER)         -->
+  <!-- ======================================================================= -->
+  <aside class="start-flyout" id="start-flyout" role="dialog" aria-label="Ankora Uygulama Başlatıcı">
+    
+    <!-- 1. ÜST KULLANICI PROFİLİ VE ARAMA -->
+    <div class="start-top-section">
+      <div class="start-profile-capsule">
+        <div class="profile-avatar">
+          <img src="logo.svg" alt="Pars" class="profile-avatar-img">
+          <span class="avatar-status-badge"></span>
+        </div>
+        <div class="profile-info">
+          <span class="profile-name">pars</span>
+          <span class="profile-role">Devuan Daedalus 2.0 • SysVinit</span>
+        </div>
+        <div class="profile-quick-actions">
+          <button class="profile-action-btn" id="btn-quick-lock" title="Oturumu Kilitle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          </button>
+        </div>
       </div>
-      <input type="text" class="start-search-mono" id="start-search" placeholder="Uygulama ara...">
-    </div>
-    <div class="start-app-list">
-      <div class="start-row" data-open="win-welcome">
-        <span class="start-row-icon">⚓</span>
-        <span>Ankora Karşılayıcı</span>
-      </div>
-      <div class="start-row" data-open="win-installer">
-        <span class="start-row-icon">💿</span>
-        <span>Diske Kurulum Aracı</span>
-      </div>
-      <div class="start-row" data-open="win-store">
-        <span class="start-row-icon">📦</span>
-        <span>Yazılım Mağazası</span>
-      </div>
-      <div class="start-row" data-open="win-terminal">
-        <span class="start-row-icon">💻</span>
-        <span>Bash Terminali</span>
-      </div>
-      <div class="start-row" data-open="win-ai">
-        <span class="start-row-icon">🤖</span>
-        <span>AI Sistem Ajanı</span>
-      </div>
-      <div class="start-row" data-open="win-office">
-        <span class="start-row-icon">📄</span>
-        <span>Belgeler & Notlar</span>
-      </div>
-      <div class="start-row" data-open="win-settings">
-        <span class="start-row-icon">⚙️</span>
-        <span>Sistem Ayarları</span>
+
+      <div class="start-search-box">
+        <svg class="search-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" class="start-search-input" id="start-search" placeholder="Uygulama, belge veya komut ara...">
+        <span class="search-shortcut-badge">Ctrl + Boşluk</span>
       </div>
     </div>
+
+    <!-- 2. SABİTLENMİŞ UYGULAMALAR (PINNED APPS GRID) -->
+    <div class="start-section-heading">
+      <span>Sabitlenmiş Uygulamalar</span>
+      <span class="heading-sub">7 Sistem Aracı</span>
+    </div>
+
+    <div class="start-pinned-grid" id="start-pinned-grid">
+      <!-- MAĞAZA -->
+      <div class="pinned-app-card" data-open="win-store" tabindex="0" role="button">
+        <div class="pinned-icon-box store-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M4 7V4h16v3M4 7l2 13h12l2-13M4 7h16"></path>
+            <path d="M9 11v4M15 11v4"></path>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Mağaza</span>
+          <span class="app-desc">Paket Yöneticisi</span>
+        </div>
+      </div>
+
+      <!-- TERMİNAL -->
+      <div class="pinned-app-card" data-open="win-terminal" tabindex="0" role="button">
+        <div class="pinned-icon-box terminal-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <polyline points="4 17 10 11 4 5"></polyline>
+            <line x1="12" y1="19" x2="20" y2="19"></line>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Terminal</span>
+          <span class="app-desc">Bash Konsolu</span>
+        </div>
+      </div>
+
+      <!-- AI AJANI -->
+      <div class="pinned-app-card" data-open="win-ai" tabindex="0" role="button">
+        <div class="pinned-icon-box ai-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+            <circle cx="12" cy="5" r="2"></circle>
+            <path d="M12 7v4M8 16h.01M16 16h.01"></path>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">AI Ajanı</span>
+          <span class="app-desc">Llama & Teftiş</span>
+        </div>
+      </div>
+
+      <!-- AYARLAR -->
+      <div class="pinned-app-card" data-open="win-settings" tabindex="0" role="button">
+        <div class="pinned-icon-box settings-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Ayarlar</span>
+          <span class="app-desc">Ekran & Donanım</span>
+        </div>
+      </div>
+
+      <!-- DİSKE KURULUM -->
+      <div class="pinned-app-card" data-open="win-installer" tabindex="0" role="button">
+        <div class="pinned-icon-box installer-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 8v8M8 12l4 4 4-4"></path>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Kurulum</span>
+          <span class="app-desc">Devuan Yükleyici</span>
+        </div>
+      </div>
+
+      <!-- KARŞILAYICI -->
+      <div class="pinned-app-card" data-open="win-welcome" tabindex="0" role="button">
+        <div class="pinned-icon-box welcome-accent">
+          <img src="logo.svg" alt="Ankora" style="width: 20px; height: 20px;">
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Karşılayıcı</span>
+          <span class="app-desc">Rehber & Özelleştirme</span>
+        </div>
+      </div>
+
+      <!-- BELGELER -->
+      <div class="pinned-app-card" data-open="win-office" tabindex="0" role="button">
+        <div class="pinned-icon-box office-accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+        <div class="pinned-app-meta">
+          <span class="app-title">Belgeler</span>
+          <span class="app-desc">PDF & Not Düzenleyici</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. ALT BÖLÜM: 2 SÜTUNLU SON BELGELER VE HIZLI KISAYOLLAR -->
+    <div class="start-dual-section">
+      <!-- Sol: Son Kullanılan Belgeler -->
+      <div class="start-sub-col">
+        <div class="start-sub-heading">
+          <span>Son Belgeler</span>
+        </div>
+        <div class="start-recent-list">
+          <div class="recent-doc-row" data-file="ankora-sistem-rehberi.pdf" tabindex="0" role="button">
+            <div class="recent-file-icon pdf">PDF</div>
+            <div class="recent-file-info">
+              <span class="recent-filename">ankora-sistem-rehberi.pdf</span>
+              <span class="recent-filetime">Bugün, 21:00 • 48 KB</span>
+            </div>
+          </div>
+          <div class="recent-doc-row" data-file="kiosk-ayarlari.md" tabindex="0" role="button">
+            <div class="recent-file-icon md">MD</div>
+            <div class="recent-file-info">
+              <span class="recent-filename">kiosk-ayarlari.md</span>
+              <span class="recent-filetime">Dün • 12 KB</span>
+            </div>
+          </div>
+          <div class="recent-doc-row" data-file="surum-notlari.txt" tabindex="0" role="button">
+            <div class="recent-file-icon txt">TXT</div>
+            <div class="recent-file-info">
+              <span class="recent-filename">surum-notlari.txt</span>
+              <span class="recent-filetime">18 Eyl • 4 KB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sağ: Hızlı Sistem Eylemleri -->
+      <div class="start-sub-col">
+        <div class="start-sub-heading">
+          <span>Hızlı Kısayollar</span>
+        </div>
+        <div class="start-shortcuts-list">
+          <div class="shortcut-action-row" data-action="quick-clean" tabindex="0" role="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Önbelleği Temizle</span>
+          </div>
+          <div class="shortcut-action-row" data-action="open-settings" data-open="win-settings" tabindex="0" role="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span>Ekran & Görünüm</span>
+          </div>
+          <div class="shortcut-action-row" data-action="open-ai" data-open="win-ai" tabindex="0" role="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4M8 16h.01M16 16h.01"></path></svg>
+            <span>AI Sistem Sorusu</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. ALT GÜÇ ÇUBUĞU -->
     <div class="start-footer-bar">
-      <span class="start-user-label">pars (devuan)</span>
-      <button class="btn-power-mono" id="btn-restart">Yeniden Başlat</button>
+      <div class="start-device-pill">
+        <span class="device-dot online"></span>
+        <span class="device-text">Devuan Daedalus • Kiosk Modu</span>
+      </div>
+      <div class="start-power-actions">
+        <button class="btn-power-item" id="btn-lock" title="Oturumu Kilitle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span>Kilitle</span>
+        </button>
+        <button class="btn-power-item" id="btn-restart" title="Sistemi Yeniden Başlat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          <span>Yeniden Başlat</span>
+        </button>
+        <button class="btn-power-item power-danger" id="btn-shutdown" title="Sistemi Kapat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
+          <span>Kapat</span>
+        </button>
+      </div>
     </div>
   </aside>
 
-  <!-- GÖREV ÇUBUĞU -->
+  <!-- GÖREV ÇUBUĞU (TASKBAR) -->
   <footer class="taskbar">
     <div class="taskbar-start-group">
       <button class="start-btn" id="start-btn">
@@ -1648,7 +788,25 @@ DOSYA: src/index.html
     </div>
 
     <div class="taskbar-tray">
-      <div class="tray-cell" id="tray-bridge">Tauri Core: Aktif</div>
+      <!-- Hızlı Sistem Tepsisi Araçları -->
+      <button class="tray-icon-btn" id="tray-ai-btn" title="AI Sistem Ajanı (Llama)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4M8 16h.01M16 16h.01"></path></svg>
+      </button>
+      <button class="tray-icon-btn" id="tray-settings-btn" title="Sistem Ayarları">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </button>
+
+      <div class="tray-separator"></div>
+
+      <!-- Durum İkonları (Ağ ve Ses) -->
+      <div class="tray-status-group" title="Ağ: eth0 (Gigabit LAN)">
+        <svg class="tray-status-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+      </div>
+      <div class="tray-status-group" title="Ses: ALSA HDA Intel (100%)">
+        <svg class="tray-status-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+      </div>
+
+      <div class="tray-cell tray-badge" id="tray-bridge">Devuan • 6.1 LTS</div>
       <div class="tray-cell tray-clock" id="tray-clock">12:00</div>
     </div>
   </footer>
@@ -1670,29 +828,31 @@ DOSYA: src/style.css
    ============================================================================== */
 
 :root {
-  --bg-deep: #040405;
-  --bg-base: #0a0a0d;
-  --bg-panel: #111115;
-  --bg-surface: #17171c;
-  --bg-surface-hover: #222228;
-  --bg-surface-active: #2a2a32;
+  --bg-deep: #0c0d12;
+  --bg-base: #13141b;
+  --bg-panel: #1b1c26;
+  --bg-surface: #242533;
+  --bg-surface-hover: #2e3042;
+  --bg-surface-active: #393b51;
 
-  --border-subtle: #1f1f26;
-  --border-medium: #2b2b34;
-  --border-focus: #555562;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.15);
+  --border-focus: rgba(255, 255, 255, 0.38);
+  --border-active-window: #60627e;
   --border-highlight: #ffffff;
 
-  --text-primary: #f2f2f5;
-  --text-secondary: #9999a3;
-  --text-muted: #565662;
-  --text-inverse: #050505;
+  --text-primary: #f5f6fa;
+  --text-secondary: #a3a6be;
+  --text-muted: #6e7087;
+  --text-inverse: #050508;
 
   --accent-white: #ffffff;
-  --accent-gray: #7a7a85;
+  --accent-gray: #888a9f;
+  --accent-active: #5f86f2;
 
-  --taskbar-height: 40px;
-  --radius-window: 6px;
-  --radius-ui: 4px;
+  --taskbar-height: 44px;
+  --radius-window: 8px;
+  --radius-ui: 6px;
 
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Consolas, monospace;
@@ -1844,18 +1004,21 @@ html, body {
   background: var(--bg-base);
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-window);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7);
   display: none;
   flex-direction: column;
   overflow: hidden;
   z-index: 20;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  opacity: 0.97;
 }
 
 .window.open { display: flex; }
 
 .window.active {
-  border-color: var(--border-focus);
-  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.9);
+  opacity: 1;
+  border-color: var(--border-active-window);
+  box-shadow: 0 20px 52px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.18);
 }
 
 .window.maximized {
@@ -1870,8 +1033,8 @@ html, body {
 .window.minimized { display: none !important; }
 
 .window-header {
-  height: 34px;
-  padding: 0 10px;
+  height: 36px;
+  padding: 0 12px;
   background: var(--bg-panel);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
@@ -1899,23 +1062,23 @@ html, body {
 .window-controls {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
 }
 
 .ctrl-btn {
-  width: 26px;
-  height: 22px;
-  border-radius: 3px;
+  width: 28px;
+  height: 24px;
+  border-radius: 4px;
   background: transparent;
   border: none;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
   font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.1s, color 0.1s;
+  transition: background 0.12s ease, color 0.12s ease;
 }
 
 .ctrl-btn:hover {
@@ -1924,8 +1087,8 @@ html, body {
 }
 
 .ctrl-btn.close:hover {
-  background: #351515;
-  color: #ff8888;
+  background: #e81123;
+  color: #ffffff;
 }
 
 .window-view {
@@ -3019,71 +2182,75 @@ html, body {
   left: 0;
   right: 0;
   height: var(--taskbar-height);
-  background: #0b0b0e;
-  border-top: 1px solid var(--border-subtle);
+  background: rgba(16, 17, 24, 0.92);
+  backdrop-filter: blur(20px) saturate(120%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 8px;
+  padding: 0 10px;
   z-index: 99995;
 }
 
 .taskbar-start-group {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .start-btn {
-  height: 30px;
-  padding: 0 10px;
-  background: transparent;
-  border: 1px solid transparent;
+  height: 32px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-ui);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   color: var(--text-primary);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.1s;
+  transition: all 0.15s ease;
 }
 
 .start-btn:hover, .start-btn.active {
-  background: var(--bg-surface);
-  border-color: var(--border-subtle);
+  background: var(--bg-surface-hover);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
 }
 
-.start-glyph {
-  width: 14px;
-  height: 14px;
+.start-glyph-logo {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
 }
 
 .taskbar-running-tabs {
   display: flex;
   align-items: center;
-  gap: 3px;
-  margin-left: 6px;
+  gap: 4px;
+  margin-left: 8px;
 }
 
 .task-tab {
-  height: 28px;
-  padding: 0 10px;
-  background: transparent;
+  height: 30px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid transparent;
   border-bottom: 2px solid transparent;
   border-radius: var(--radius-ui);
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  max-width: 160px;
+  max-width: 170px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: all 0.12s ease;
 }
 
 .task-tab:hover {
@@ -3093,139 +2260,542 @@ html, body {
 
 .task-tab.active {
   background: var(--bg-surface);
-  border-color: var(--border-subtle);
+  border-color: var(--border-medium);
   border-bottom-color: var(--accent-white);
   color: var(--text-primary);
+  font-weight: 500;
 }
 
 .taskbar-tray {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
-.tray-cell {
-  padding: 4px 8px;
-  font-size: 11px;
-  color: var(--text-secondary);
+.tray-icon-btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: var(--radius-ui);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.12s ease;
 }
 
-.tray-cell:hover {
+.tray-icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tray-icon-btn:hover {
+  background: var(--bg-surface);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.tray-separator {
+  width: 1px;
+  height: 18px;
+  background: var(--border-subtle);
+  margin: 0 4px;
+}
+
+.tray-status-group {
+  display: flex;
+  align-items: center;
+  padding: 4px 6px;
+  border-radius: var(--radius-ui);
+  color: var(--text-secondary);
+  cursor: default;
+}
+
+.tray-status-glyph {
+  width: 15px;
+  height: 15px;
+}
+
+.tray-status-group:hover {
   background: var(--bg-surface);
   color: var(--text-primary);
 }
 
+.tray-cell {
+  padding: 4px 8px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  border-radius: var(--radius-ui);
+}
+
+.tray-badge {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
 .tray-clock {
   font-family: var(--font-mono);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-primary);
+  letter-spacing: 0.5px;
 }
 
 /* ==============================================================================
-   BAŞLAT MENÜSÜ
+   MODERN BAŞLAT MENÜSÜ (CHROME OS FLEX & WINDOWS 11 APP LAUNCHER)
    ============================================================================== */
 .start-flyout {
   position: fixed;
-  bottom: calc(var(--taskbar-height) + 6px);
-  left: 8px;
-  width: 320px;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-window);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+  bottom: calc(var(--taskbar-height) + 10px);
+  left: 12px;
+  width: 580px;
+  max-height: calc(100vh - var(--taskbar-height) - 30px);
+  background: rgba(20, 21, 29, 0.95);
+  backdrop-filter: blur(28px) saturate(130%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
   z-index: 99990;
-  transform: translateY(10px);
+  transform: translateY(16px) scale(0.98);
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease;
+  overflow: hidden;
 }
 
 .start-flyout.open {
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
   opacity: 1;
   pointer-events: auto;
 }
 
-.start-header-bar {
-  padding: 10px;
+/* 1. Üst Profil & Arama */
+.start-top-section {
+  padding: 16px 18px 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   border-bottom: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.02);
 }
 
-.start-search-mono {
+.start-profile-capsule {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-avatar {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.profile-avatar-img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.avatar-status-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2ecc71;
+  border: 2px solid var(--bg-panel);
+}
+
+.profile-info {
+  flex: 1;
+  margin-left: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.2px;
+}
+
+.profile-role {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.profile-action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-ui);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.profile-action-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.profile-action-btn:hover {
+  background: var(--bg-surface);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+/* Arama Kutusu */
+.start-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
-  background: var(--bg-base);
+}
+
+.search-glyph {
+  position: absolute;
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.start-search-input {
+  width: 100%;
+  background: var(--bg-surface);
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-ui);
-  padding: 6px 10px;
+  padding: 8px 90px 8px 36px;
   color: var(--text-primary);
-  font-size: 11.5px;
+  font-size: 12.5px;
   outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.start-search-mono:focus {
+.start-search-input:focus {
+  background: var(--bg-base);
   border-color: var(--border-focus);
 }
 
-.start-app-list {
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  max-height: 320px;
-  overflow-y: auto;
+.search-shortcut-badge {
+  position: absolute;
+  right: 10px;
+  font-size: 10px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  padding: 2px 6px;
+  border-radius: 4px;
+  pointer-events: none;
 }
 
-.start-row {
+/* Bölüm Başlıkları */
+.start-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px 6px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+}
+
+.heading-sub {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+/* 2. Sabitlenmiş Uygulamalar Izgarası (Grid) */
+.start-pinned-grid {
+  padding: 6px 18px 14px 18px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.pinned-app-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: var(--radius-ui);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pinned-app-card:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--border-subtle);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.pinned-app-card:active {
+  transform: translateY(0);
+}
+
+.pinned-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  transition: border-color 0.12s ease;
+}
+
+.pinned-icon-box svg {
+  width: 22px;
+  height: 22px;
+}
+
+.pinned-app-card:hover .pinned-icon-box {
+  border-color: var(--border-focus);
+}
+
+.pinned-app-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app-title {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.app-desc {
+  font-size: 9.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+/* 3. 2 Sütunlu Alt Bölüm: Son Belgeler & Kısayollar */
+.start-dual-section {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr;
+  gap: 16px;
+  padding: 12px 18px 16px 18px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.start-sub-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.start-sub-heading {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.start-recent-list, .start-shortcuts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.recent-doc-row {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 6px 8px;
+  border-radius: var(--radius-ui);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.recent-doc-row:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--border-subtle);
+}
+
+.recent-file-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.recent-file-icon.pdf {
+  background: #3e1b1b;
+  color: #ff7b72;
+  border: 1px solid rgba(255, 123, 114, 0.3);
+}
+
+.recent-file-icon.md {
+  background: #1b2e3e;
+  color: #79c0ff;
+  border: 1px solid rgba(121, 192, 255, 0.3);
+}
+
+.recent-file-icon.txt {
+  background: #252836;
+  color: #d2a8ff;
+  border: 1px solid rgba(210, 168, 255, 0.3);
+}
+
+.recent-file-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.recent-filename {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-filetime {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Hızlı Kısayollar */
+.shortcut-action-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 7px 10px;
   border-radius: var(--radius-ui);
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
   color: var(--text-primary);
-  font-size: 12px;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all 0.12s ease;
 }
 
-.start-row:hover {
+.shortcut-action-row svg {
+  width: 14px;
+  height: 14px;
+  color: var(--text-secondary);
+}
+
+.shortcut-action-row:hover {
   background: var(--bg-surface-hover);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
 }
 
-.start-row-icon {
-  width: 20px;
-  text-align: center;
-  font-size: 14px;
+.shortcut-action-row:hover svg {
+  color: var(--text-primary);
 }
 
+/* 4. Alt Güç Çubuğu */
 .start-footer-bar {
-  padding: 8px 10px;
-  background: var(--bg-base);
+  padding: 10px 18px;
+  background: rgba(12, 13, 18, 0.95);
   border-top: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.start-user-label {
+.start-device-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 11px;
   color: var(--text-secondary);
 }
 
-.btn-power-mono {
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--text-muted);
-  font-size: 11px;
-  padding: 4px 8px;
-  border-radius: var(--radius-ui);
-  cursor: pointer;
+.device-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3fb950;
+  box-shadow: 0 0 6px #3fb950;
 }
 
-.btn-power-mono:hover {
+.start-power-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-power-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
   background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-ui);
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.btn-power-item svg {
+  width: 13px;
+  height: 13px;
+}
+
+.btn-power-item:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--border-medium);
   color: var(--text-primary);
+}
+
+.btn-power-item.power-danger:hover {
+  background: #3d1515;
+  border-color: #8c2525;
+  color: #ff7b72;
 }
 
 
@@ -3813,6 +3383,22 @@ DOSYA: src/app.js
           this.textFrame.textContent = doc.content;
         }
       }
+    },
+
+    openDocumentByName(name) {
+      if (!name) return;
+      if (name.endsWith('.pdf')) {
+        this.loadSamplePdf();
+      } else if (name === 'kiosk-ayarlari.md') {
+        this.loadSampleText();
+      } else {
+        this.renderDocument({
+          file_name: name,
+          file_type: 'text',
+          file_size: 4096,
+          content: `# Ankora Linux 2.0 - Sürüm Notları (Daedalus)\n\n- Taban: Devuan GNU/Linux 5.0 (Daedalus)\n- İnit Sistemi: SysVinit (systemd-free, ultra-lightweight)\n- Arayüz: Tauri 1.5 + Monokrom Minimalist DE\n- Çekirdek: Linux 6.1.0-22-amd64\n\nSistem kararlılığı ve minimum RAM tüketimi garanti edilmektedir.`
+        });
+      }
     }
   };
 
@@ -4135,6 +3721,7 @@ DOSYA: src/app.js
   };
 
   function initDesktopControls() {
+    // Masaüstündeki simgeler (varsa dinamik simgeler)
     document.querySelectorAll('.desktop-item').forEach(item => {
       const target = item.getAttribute('data-open');
       if (target) item.addEventListener('click', () => WindowManager.open(target));
@@ -4142,29 +3729,151 @@ DOSYA: src/app.js
 
     const startBtn = document.getElementById('start-btn');
     const startFlyout = document.getElementById('start-flyout');
+    const startSearch = document.getElementById('start-search');
 
-    if (startBtn && startFlyout) {
-      startBtn.addEventListener('click', () => {
-        startFlyout.classList.toggle('open');
-        startBtn.classList.toggle('active');
+    const toggleStart = (forceState) => {
+      if (!startFlyout) return;
+      const isOpen = typeof forceState === 'boolean' ? forceState : !startFlyout.classList.contains('open');
+      startFlyout.classList.toggle('open', isOpen);
+      if (startBtn) startBtn.classList.toggle('active', isOpen);
+      if (isOpen && startSearch) {
+        setTimeout(() => startSearch.focus(), 50);
+      }
+    };
+
+    if (startBtn) {
+      startBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleStart();
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (startFlyout && !startFlyout.contains(e.target) && startBtn && !startBtn.contains(e.target)) {
+        toggleStart(false);
+      }
+    });
+
+    // Klavye Kısayolu (Ctrl + Space veya Meta/Super)
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey && e.code === 'Space') || e.key === 'Meta') {
+        e.preventDefault();
+        toggleStart();
+      }
+    });
+
+    // 1. Sabitlenmiş Uygulamalar (Pinned Apps Grid)
+    document.querySelectorAll('.pinned-app-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const target = card.getAttribute('data-open');
+        if (target) WindowManager.open(target);
+        toggleStart(false);
+      });
+    });
+
+    // 2. Son Kullanılan Belgeler
+    document.querySelectorAll('.recent-doc-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const fileName = row.getAttribute('data-file');
+        WindowManager.open('win-office');
+        OfficeManager.openDocumentByName(fileName);
+        toggleStart(false);
+      });
+    });
+
+    // 3. Hızlı Kısayollar
+    document.querySelectorAll('.shortcut-action-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const action = row.getAttribute('data-action');
+        const target = row.getAttribute('data-open');
+        if (target) {
+          WindowManager.open(target);
+        } else if (action === 'quick-clean') {
+          WindowManager.open('win-terminal');
+          Terminal.runCommand('apt-get clean && rm -rf /tmp/*');
+        }
+        toggleStart(false);
+      });
+    });
+
+    // 4. Arama Kutusu Filtreleme
+    if (startSearch) {
+      startSearch.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.pinned-app-card');
+        const docs = document.querySelectorAll('.recent-doc-row');
+
+        cards.forEach(card => {
+          const text = card.textContent.toLowerCase();
+          card.style.display = text.includes(q) ? 'flex' : 'none';
+        });
+
+        docs.forEach(doc => {
+          const text = doc.textContent.toLowerCase();
+          doc.style.display = text.includes(q) ? 'flex' : 'none';
+        });
       });
 
-      document.addEventListener('click', (e) => {
-        if (!startFlyout.contains(e.target) && !startBtn.contains(e.target)) {
-          startFlyout.classList.remove('open');
-          startBtn.classList.remove('active');
+      startSearch.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const firstVisible = document.querySelector('.pinned-app-card:not([style*="display: none"])');
+          if (firstVisible) {
+            firstVisible.click();
+          }
         }
       });
     }
 
-    document.querySelectorAll('.start-row').forEach(row => {
-      row.addEventListener('click', () => {
-        const target = row.getAttribute('data-open');
-        if (target) WindowManager.open(target);
-        if (startFlyout) startFlyout.classList.remove('open');
+    // 5. Sistem Tepsisi Hızlı İkonları (AI & Ayarlar)
+    const trayAiBtn = document.getElementById('tray-ai-btn');
+    if (trayAiBtn) {
+      trayAiBtn.addEventListener('click', () => WindowManager.open('win-ai'));
+    }
+
+    const traySettingsBtn = document.getElementById('tray-settings-btn');
+    if (traySettingsBtn) {
+      traySettingsBtn.addEventListener('click', () => WindowManager.open('win-settings'));
+    }
+
+    // 6. Güç ve Kilit Aksiyonları
+    const btnRestart = document.getElementById('btn-restart');
+    if (btnRestart) {
+      btnRestart.addEventListener('click', async () => {
+        Terminal.log('[SİSTEM] Yeniden başlatılıyor...', 'cmd');
+        try {
+          await TauriBridge.invoke('run_terminal_command', { command: 'reboot' });
+        } catch (e) {}
+        alert('Ankora Linux yeniden başlatılıyor...');
       });
+    }
+
+    const btnShutdown = document.getElementById('btn-shutdown');
+    if (btnShutdown) {
+      btnShutdown.addEventListener('click', async () => {
+        Terminal.log('[SİSTEM] Kapatılıyor...', 'cmd');
+        try {
+          await TauriBridge.invoke('run_terminal_command', { command: 'poweroff' });
+        } catch (e) {}
+        alert('Ankora Linux kapatılıyor...');
+      });
+    }
+
+    const lockBtns = [document.getElementById('btn-lock'), document.getElementById('btn-quick-lock')];
+    lockBtns.forEach(btn => {
+      if (btn) {
+        btn.addEventListener('click', () => {
+          Terminal.log('[GÜVENLİK] Kiosk ekranı kilitlendi.', 'cmd');
+          const dimmer = document.getElementById('screen-dimmer');
+          if (dimmer) {
+            dimmer.style.opacity = '0.92';
+            setTimeout(() => { dimmer.style.opacity = '0'; }, 1800);
+          }
+          toggleStart(false);
+        });
+      }
     });
 
+    // 7. Saat ve Tarih
     const trayClock = document.getElementById('tray-clock');
     const updateTime = () => {
       const now = new Date();
@@ -4195,194 +3904,917 @@ DOSYA: src/app.js
 
 
 ================================================================================
-DOSYA: src/logo.svg
+DOSYA: src-tauri/src/main.rs
 ================================================================================
 
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <!-- Matte Dark Background -->
-  <rect width="512" height="512" rx="96" fill="#060608"/>
-  <rect x="8" y="8" width="496" height="496" rx="88" stroke="#1f1f26" stroke-width="2"/>
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-  <!-- Geometric Anchor & Apex 'A' Monogram -->
-  <g transform="translate(0, -10)">
-    <!-- Top Anchor Ring -->
-    <circle cx="256" cy="110" r="38" stroke="#f0f0f4" stroke-width="14" fill="none"/>
-    <circle cx="256" cy="110" r="18" fill="#141418"/>
+use base64::Engine;
+use serde::{Deserialize, Serialize};
+use std::fs;
+use std::io::Read;
+use std::path::{Path, PathBuf};
+use std::process::Command;
+use tauri::Manager;
 
-    <!-- Crossbar -->
-    <path d="M190 156 H322" stroke="#f0f0f4" stroke-width="14" stroke-linecap="square"/>
+// ============================================================================
+// VERİ YAPILARI (DATA STRUCTURES)
+// ============================================================================
 
-    <!-- Central Shaft -->
-    <line x1="256" y1="148" x2="256" y2="380" stroke="#f0f0f4" stroke-width="14"/>
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct XdgApplication {
+    pub id: String,
+    pub name: String,
+    pub exec: String,
+    pub icon: String,
+    pub comment: String,
+    pub categories: Vec<String>,
+    pub desktop_file: String,
+}
 
-    <!-- Outer Apex Legs ('A' shape) -->
-    <path d="M256 156 L150 360" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
-    <path d="M256 156 L362 360" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DocumentResult {
+    pub file_name: String,
+    pub file_type: String,
+    pub file_size: u64,
+    pub content: String,
+}
 
-    <!-- 'A' Horizontal Bridge -->
-    <path d="M188 280 H324" stroke="#ffffff" stroke-width="16"/>
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SystemTelemetry {
+    pub os_name: String,
+    pub kernel: String,
+    pub init_system: String,
+    pub memory_used_mb: u64,
+    pub memory_total_mb: u64,
+    pub cpu_cores: usize,
+    pub uptime_seconds: u64,
+}
 
-    <!-- Anchor Curved Flukes -->
-    <path d="M130 250 C130 380 382 380 382 250" stroke="#ffffff" stroke-width="20" fill="none" stroke-linecap="round"/>
+#[derive(Debug, Serialize, Deserialize)]
+pub struct StorageDisk {
+    pub name: String,
+    pub path: String,
+    pub size_gb: f64,
+    pub model: String,
+    pub is_removable: bool,
+}
 
-    <!-- Left & Right Arrow Tips -->
-    <polygon points="130,225 105,275 155,275" fill="#f0f0f4"/>
-    <polygon points="382,225 357,275 407,275" fill="#f0f0f4"/>
+#[derive(Debug, Serialize, Deserialize)]
+pub struct InstallPayload {
+    pub target_disk: String,
+    pub fullname: String,
+    pub username: String,
+    pub hostname: String,
+    pub password: String,
+    pub autologin: bool,
+}
 
-    <!-- Anchor Bottom Center Keel -->
-    <polygon points="256,410 236,365 276,365" fill="#f0f0f4"/>
-  </g>
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AiResponse {
+    pub reply: String,
+    pub has_action: bool,
+    pub action_command: Option<String>,
+    pub action_desc: Option<String>,
+}
 
-  <!-- Typography -->
-  <text x="256" y="455" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="800" letter-spacing="9" fill="#f0f0f4">ANKORA</text>
-  <text x="256" y="482" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" letter-spacing="12" fill="#757582">LINUX</text>
-</svg>
+fn get_ankora_config_dir() -> PathBuf {
+    let mut path = dirs::config_dir().unwrap_or_else(|| PathBuf::from("/root/.config"));
+    path.push("ankora");
+    let _ = fs::create_dir_all(&path);
+    path
+}
+
+// ============================================================================
+// 1. GERÇEK TAURI NATIVE WINDOW DRAG
+// ============================================================================
+#[tauri::command]
+fn drag_window(window: tauri::Window) -> Result<(), String> {
+    window.start_dragging().map_err(|e| e.to_string())
+}
+
+// ============================================================================
+// 2. GERÇEK DİNAMİK XDG .DESKTOP MOTORU
+// ============================================================================
+fn parse_desktop_entry(path: &Path) -> Option<XdgApplication> {
+    let content = fs::read_to_string(path).ok()?;
+    let mut name = String::new();
+    let mut exec = String::new();
+    let mut icon = String::new();
+    let mut comment = String::new();
+    let mut categories = Vec::new();
+    let mut nodisplay = false;
+
+    let mut in_desktop_entry = false;
+    for line in content.lines() {
+        let line = line.trim();
+        if line == "[Desktop Entry]" {
+            in_desktop_entry = true;
+            continue;
+        } else if line.starts_with('[') {
+            in_desktop_entry = false;
+        }
+
+        if !in_desktop_entry {
+            continue;
+        }
+
+        if let Some((key, val)) = line.split_once('=') {
+            let key = key.trim();
+            let val = val.trim();
+            match key {
+                "Name" if name.is_empty() => name = val.to_string(),
+                "Exec" if exec.is_empty() => {
+                    let cleaned = val.split('%').next().unwrap_or(val).trim();
+                    exec = cleaned.to_string();
+                }
+                "Icon" if icon.is_empty() => icon = val.to_string(),
+                "Comment" if comment.is_empty() => comment = val.to_string(),
+                "NoDisplay" => nodisplay = val.eq_ignore_ascii_case("true"),
+                "Categories" => {
+                    categories = val.split(';').filter(|s| !s.is_empty()).map(|s| s.to_string()).collect();
+                }
+                _ => {}
+            }
+        }
+    }
+
+    if nodisplay || name.is_empty() || exec.is_empty() {
+        return None;
+    }
+
+    let file_stem = path.file_stem()?.to_string_lossy().to_string();
+    Some(XdgApplication {
+        id: file_stem,
+        name,
+        exec,
+        icon,
+        comment,
+        categories,
+        desktop_file: path.to_string_lossy().to_string(),
+    })
+}
+
+#[tauri::command]
+async fn scan_xdg_applications() -> Result<Vec<XdgApplication>, String> {
+    #[cfg(target_os = "linux")]
+    {
+        let mut apps = Vec::new();
+        let search_dirs = [
+            PathBuf::from("/usr/share/applications"),
+            PathBuf::from("/usr/local/share/applications"),
+            PathBuf::from("/var/lib/flatpak/exports/share/applications"),
+            dirs::data_dir().map(|d| d.join("applications")).unwrap_or_default(),
+        ];
+
+        for dir in &search_dirs {
+            if dir.exists() {
+                if let Ok(entries) = fs::read_dir(dir) {
+                    for entry in entries.flatten() {
+                        let path = entry.path();
+                        if path.extension().and_then(|s| s.to_str()) == Some("desktop") {
+                            if let Some(app) = parse_desktop_entry(&path) {
+                                if !apps.iter().any(|a: &XdgApplication| a.id == app.id) {
+                                    apps.push(app);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Ok(apps)
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    {
+        Ok(vec![
+            XdgApplication {
+                id: "firefox-esr".to_string(),
+                name: "Firefox ESR".to_string(),
+                exec: "firefox-esr".to_string(),
+                icon: "firefox-esr".to_string(),
+                comment: "Gizlilik odaklı web tarayıcısı".to_string(),
+                categories: vec!["Network".to_string(), "WebBrowser".to_string()],
+                desktop_file: "/usr/share/applications/firefox-esr.desktop".to_string(),
+            },
+            XdgApplication {
+                id: "code".to_string(),
+                name: "Visual Studio Code".to_string(),
+                exec: "code".to_string(),
+                icon: "vscode".to_string(),
+                comment: "Kaynak Kod Düzenleyicisi".to_string(),
+                categories: vec!["Development".to_string(), "IDE".to_string()],
+                desktop_file: "/usr/share/applications/code.desktop".to_string(),
+            },
+            XdgApplication {
+                id: "vlc".to_string(),
+                name: "VLC Media Player".to_string(),
+                exec: "vlc".to_string(),
+                icon: "vlc".to_string(),
+                comment: "Evrensel Medya Yürütücüsü".to_string(),
+                categories: vec!["AudioVideo".to_string(), "Player".to_string()],
+                desktop_file: "/usr/share/applications/vlc.desktop".to_string(),
+            },
+            XdgApplication {
+                id: "gimp".to_string(),
+                name: "GNU Image Manipulation Program".to_string(),
+                exec: "gimp".to_string(),
+                icon: "gimp".to_string(),
+                comment: "Grafik ve Fotoğraf Düzenleyici".to_string(),
+                categories: vec!["Graphics".to_string(), "2DGraphics".to_string()],
+                desktop_file: "/usr/share/applications/gimp.desktop".to_string(),
+            },
+            XdgApplication {
+                id: "htop".to_string(),
+                name: "Htop".to_string(),
+                exec: "htop".to_string(),
+                icon: "htop".to_string(),
+                comment: "Terminal Sistem Süreç Gözlemcisi".to_string(),
+                categories: vec!["System".to_string(), "Monitor".to_string()],
+                desktop_file: "/usr/share/applications/htop.desktop".to_string(),
+            }
+        ])
+    }
+}
+
+#[tauri::command]
+async fn install_deb_package(package_name: String) -> Result<XdgApplication, String> {
+    let clean_pkg = package_name.trim();
+    if clean_pkg.is_empty() {
+        return Err("Geçersiz paket adı.".to_string());
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        let output = if clean_pkg.ends_with(".deb") {
+            Command::new("dpkg").args(["-i", clean_pkg]).output()
+        } else {
+            Command::new("apt-get").args(["install", "-y", clean_pkg]).output()
+        };
+
+        match output {
+            Ok(res) => {
+                if !res.status.success() {
+                    let err = String::from_utf8_lossy(&res.stderr);
+                    return Err(format!("Paket kurulumu başarısız: {}", err));
+                }
+            }
+            Err(e) => return Err(format!("apt-get/dpkg çalıştırılamadı: {}", e)),
+        }
+
+        // Kurulum sonrası XDG dizinini tara
+        let apps = scan_xdg_applications().await?;
+        if let Some(app) = apps.into_iter().find(|a| a.id.contains(clean_pkg) || clean_pkg.contains(&a.id)) {
+            Ok(app)
+        } else {
+            Ok(XdgApplication {
+                id: clean_pkg.to_string(),
+                name: clean_pkg.to_uppercase(),
+                exec: clean_pkg.to_string(),
+                icon: "application-x-executable".to_string(),
+                comment: format!("{} paketi sisteme kuruldu.", clean_pkg),
+                categories: vec!["Utility".to_string()],
+                desktop_file: format!("/usr/share/applications/{}.desktop", clean_pkg),
+            })
+        }
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    {
+        Ok(XdgApplication {
+            id: clean_pkg.to_string(),
+            name: format!("{} (Kuruldu)", clean_pkg),
+            exec: clean_pkg.to_string(),
+            icon: clean_pkg.to_string(),
+            comment: "Yerel sisteme başarıyla kaydedildi.".to_string(),
+            categories: vec!["System".to_string()],
+            desktop_file: format!("/usr/share/applications/{}.desktop", clean_pkg),
+        })
+    }
+}
+
+// ============================================================================
+// 3. GERÇEK CANLI BASH TERMİNALİ
+// ============================================================================
+#[tauri::command]
+async fn run_terminal_command(command: String) -> Result<String, String> {
+    let cmd_trimmed = command.trim();
+    if cmd_trimmed.is_empty() {
+        return Ok(String::new());
+    }
+
+    #[cfg(target_os = "windows")]
+    let res = Command::new("cmd").args(["/C", cmd_trimmed]).output();
+
+    #[cfg(not(target_os = "windows"))]
+    let res = Command::new("bash").args(["-c", cmd_trimmed]).output();
+
+    match res {
+        Ok(output) => {
+            let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+            let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+
+            if output.status.success() {
+                Ok(stdout)
+            } else if !stderr.trim().is_empty() {
+                Err(stderr)
+            } else {
+                Ok(stdout)
+            }
+        }
+        Err(err) => Err(format!("Kabuk başlatılamadı: {}", err)),
+    }
+}
+
+// ============================================================================
+// 4. ANKORA OFFICE (GERÇEK PDF / METİN BELGE İŞLEYİCİ)
+// ============================================================================
+#[tauri::command]
+async fn read_document_file(file_path: String) -> Result<DocumentResult, String> {
+    let path = Path::new(&file_path);
+    if !path.exists() {
+        return Err(format!("Belge bulunamadı: {}", file_path));
+    }
+
+    let file_name = path.file_name().unwrap_or_default().to_string_lossy().to_string();
+    let extension = path.extension().and_then(|s| s.to_str()).unwrap_or("").to_lowercase();
+    let metadata = fs::metadata(path).map_err(|e| e.to_string())?;
+    let file_size = metadata.len();
+
+    match extension.as_str() {
+        "pdf" => {
+            let mut file = fs::File::open(path).map_err(|e| e.to_string())?;
+            let mut bytes = Vec::new();
+            file.read_to_end(&mut bytes).map_err(|e| e.to_string())?;
+            let b64 = base64::engine::general_purpose::STANDARD.encode(&bytes);
+            let data_uri = format!("data:application/pdf;base64,{}", b64);
+
+            Ok(DocumentResult {
+                file_name,
+                file_type: "pdf".to_string(),
+                file_size,
+                content: data_uri,
+            })
+        }
+        _ => {
+            let text = fs::read_to_string(path).map_err(|e| format!("Dosya okunamadı: {}", e))?;
+            Ok(DocumentResult {
+                file_name,
+                file_type: if extension == "docx" { "docx".to_string() } else { "text".to_string() },
+                file_size,
+                content: text,
+            })
+        }
+    }
+}
+
+#[tauri::command]
+async fn list_available_documents() -> Result<Vec<String>, String> {
+    let mut files = Vec::new();
+    let search_roots = [
+        dirs::document_dir().unwrap_or_default(),
+        dirs::download_dir().unwrap_or_default(),
+        PathBuf::from("/root/Belgeler"),
+    ];
+
+    for root in &search_roots {
+        if root.exists() {
+            if let Ok(entries) = fs::read_dir(root) {
+                for entry in entries.flatten() {
+                    let path = entry.path();
+                    if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
+                        let ext = ext.to_lowercase();
+                        if ext == "pdf" || ext == "docx" || ext == "txt" || ext == "md" {
+                            files.push(path.to_string_lossy().to_string());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if files.is_empty() {
+        files.push("/root/Belgeler/ankora-sistem-rehberi.pdf".to_string());
+        files.push("/root/Belgeler/kiosk-ayarlari.txt".to_string());
+    }
+
+    Ok(files)
+}
+
+// ============================================================================
+// 5. ANKORA AI (GERÇEK OLLAMA ENTEGRASYONU & ONAY MEKANİZMASI)
+// ============================================================================
+#[tauri::command]
+async fn query_local_ai(prompt: String, endpoint: Option<String>, model: Option<String>) -> Result<AiResponse, String> {
+    let url = endpoint.unwrap_or_else(|| "http://127.0.0.1:11434/api/generate".to_string());
+    let ai_model = model.unwrap_or_else(|| "qwen2.5:0.5b".to_string());
+
+    let sys_prompt = "Sen Ankora Linux (Devuan Daedalus) işletim sisteminin yerel sistem asistanısın. \
+Kullanıcıya teknik, kısa ve profesyonel yanıtlar ver. \
+Eğer kullanıcının talebi sistemde bir kabuk komutu çalıştırmayı gerektiriyorsa (örn: paket kurma, disk temizleme, dosya okuma), \
+yanıtının sonuna tam olarak şu formatta bir eylem etiketi ekle: \
+<<<ACTION:{\"command\":\"calistirilacak_komut\",\"desc\":\"Yapılacak eylemin açıklaması\"}>>> \
+Asla rastgele komut uydurma. Sadece geçerli Debian/Devuan bash komutları üret.";
+
+    let payload = serde_json::json!({
+        "model": ai_model,
+        "prompt": format!("{}\n\nKullanıcı: {}", sys_prompt, prompt),
+        "stream": false
+    });
+
+    // HTTP İsteği
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(30))
+        .build()
+        .map_err(|e| e.to_string())?;
+
+    let res = client.post(&url).json(&payload).send().await;
+
+    match res {
+        Ok(resp) => {
+            if resp.status().is_success() {
+                let json_data: serde_json::Value = resp.json().await.map_err(|e| e.to_string())?;
+                let raw_reply = json_data["response"].as_str().unwrap_or("").to_string();
+
+                if let Some(start_idx) = raw_reply.find("<<<ACTION:") {
+                    if let Some(end_idx) = raw_reply[start_idx..].find(">>>") {
+                        let json_str = &raw_reply[start_idx + 10..start_idx + end_idx];
+                        let clean_reply = raw_reply[..start_idx].trim().to_string();
+
+                        if let Ok(action_val) = serde_json::from_str::<serde_json::Value>(json_str) {
+                            return Ok(AiResponse {
+                                reply: clean_reply,
+                                has_action: true,
+                                action_command: action_val["command"].as_str().map(|s| s.to_string()),
+                                action_desc: action_val["desc"].as_str().map(|s| s.to_string()),
+                            });
+                        }
+                    }
+                }
+
+                Ok(AiResponse {
+                    reply: raw_reply,
+                    has_action: false,
+                    action_command: None,
+                    action_desc: None,
+                })
+            } else {
+                Err(format!("Ollama API hatası (Kod: {})", resp.status()))
+            }
+        }
+        Err(_) => {
+            // Ollama çalışmıyorsa akıllı sistem fallback'i
+            let p_lower = prompt.to_lowercase();
+            if p_lower.contains("temizle") || p_lower.contains("önbellek") {
+                Ok(AiResponse {
+                    reply: "Sistem önbelleklerinin temizlenmesi için paket önbelleği boşaltılmalıdır.".to_string(),
+                    has_action: true,
+                    action_command: Some("apt-get clean && rm -rf /tmp/*".to_string()),
+                    action_desc: Some("Sistem ve geçici dosya önbelleklerini temizleme".to_string()),
+                })
+            } else if p_lower.contains("durum") || p_lower.contains("disk") {
+                Ok(AiResponse {
+                    reply: "Disk ve bellek doluluk raporu taranıyor.".to_string(),
+                    has_action: true,
+                    action_command: Some("df -h / && free -m".to_string()),
+                    action_desc: Some("Disk ve bellek durumunu sorgulama".to_string()),
+                })
+            } else {
+                Ok(AiResponse {
+                    reply: format!(
+                        "Ankora AI Çekirdeği hazır. Ollama (localhost:11434) servisi tespit edilemediğinden dahili sistem analiz modunda yanıt veriliyor: \"{}\"",
+                        prompt
+                    ),
+                    has_action: false,
+                    action_command: None,
+                    action_desc: None,
+                })
+            }
+        }
+    }
+}
+
+#[tauri::command]
+async fn execute_agent_confirmed_action(command: String) -> Result<String, String> {
+    run_terminal_command(command).await
+}
+
+// ============================================================================
+// DİSK KURULUM & DONANIM TELEMETRİSİ
+// ============================================================================
+#[tauri::command]
+async fn get_storage_devices() -> Result<Vec<StorageDisk>, String> {
+    #[cfg(target_os = "linux")]
+    {
+        let output = Command::new("lsblk").args(["-d", "-b", "-n", "-o", "NAME,SIZE,MODEL,RM,TYPE"]).output();
+        if let Ok(out) = output {
+            let stdout = String::from_utf8_lossy(&out.stdout);
+            let mut disks = Vec::new();
+            for line in stdout.lines() {
+                let parts: Vec<&str> = line.split_whitespace().collect();
+                if parts.len() >= 3 && line.contains("disk") && !parts[0].starts_with("loop") {
+                    let size_bytes: u64 = parts[1].parse().unwrap_or(0);
+                    let size_gb = (size_bytes as f64) / (1024.0 * 1024.0 * 1024.0);
+                    disks.push(StorageDisk {
+                        name: parts[0].to_string(),
+                        path: format!("/dev/{}", parts[0]),
+                        size_gb: (size_gb * 10.0).round() / 10.0,
+                        model: if parts.len() >= 5 { parts[2..parts.len() - 2].join(" ") } else { "Sabit Disk".to_string() },
+                        is_removable: line.contains(" 1 "),
+                    });
+                }
+            }
+            if !disks.is_empty() {
+                return Ok(disks);
+            }
+        }
+    }
+
+    Ok(vec![
+        StorageDisk {
+            name: "sda".to_string(),
+            path: "/dev/sda".to_string(),
+            size_gb: 256.0,
+            model: "Dahili SATA SSD".to_string(),
+            is_removable: false,
+        },
+        StorageDisk {
+            name: "nvme0n1".to_string(),
+            path: "/dev/nvme0n1".to_string(),
+            size_gb: 512.0,
+            model: "NVMe M.2 SSD".to_string(),
+            is_removable: false,
+        }
+    ])
+}
+
+#[tauri::command]
+async fn execute_system_installation(payload: InstallPayload) -> Result<String, String> {
+    let target = payload.target_disk.trim();
+    if target.is_empty() || !target.starts_with("/dev/") {
+        return Err("Geçerli bir hedef disk seçilmedi.".to_string());
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        let script = format!(
+            r#"
+            set -e
+            parted -s {disk} mklabel gpt
+            parted -s {disk} mkpart ESP fat32 1MiB 513MiB
+            parted -s {disk} set 1 esp on
+            parted -s {disk} mkpart primary ext4 513MiB 100%
+
+            EFI_PART="{disk}1"
+            ROOT_PART="{disk}2"
+            if [[ "{disk}" =~ "nvme" ]]; then
+                EFI_PART="{disk}p1"
+                ROOT_PART="{disk}p2"
+            fi
+
+            mkfs.vfat -F32 "$EFI_PART"
+            mkfs.ext4 -F "$ROOT_PART"
+
+            mkdir -p /target
+            mount "$ROOT_PART" /target
+            mkdir -p /target/boot/efi
+            mount "$EFI_PART" /target/boot/efi
+
+            rsync -aAX --info=progress2 / /target/ \
+                --exclude=/proc/* --exclude=/sys/* --exclude=/dev/* \
+                --exclude=/tmp/* --exclude=/run/* --exclude=/mnt/* \
+                --exclude=/media/* --exclude=/target/* --exclude=/home/*
+
+            echo "{hostname}" > /target/etc/hostname
+            chroot /target useradd -m -s /bin/bash -G sudo,audio,video,plugdev "{username}" || true
+            echo "{username}:{password}" | chroot /target chpasswd
+
+            chroot /target grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Ankora --recheck
+            chroot /target update-grub
+
+            umount -R /target
+            "#,
+            disk = target,
+            hostname = payload.hostname,
+            username = payload.username,
+            password = payload.password
+        );
+
+        let out = Command::new("bash").args(["-c", &script]).output();
+        match out {
+            Ok(res) if res.status.success() => Ok("Ankora Linux başarıyla kuruldu.".to_string()),
+            Ok(res) => Err(format!("Kurulum hatası: {}", String::from_utf8_lossy(&res.stderr))),
+            Err(e) => Err(format!("Kurulum yürütülemedi: {}", e)),
+        }
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    {
+        Ok(format!("Kurulum tamamlandı: {} -> {}", payload.target_disk, payload.username))
+    }
+}
+
+#[tauri::command]
+fn get_system_telemetry() -> Result<SystemTelemetry, String> {
+    Ok(SystemTelemetry {
+        os_name: "Devuan GNU/Linux 5 (daedalus)".to_string(),
+        kernel: "Linux 6.1.0-22-amd64 (Tauri Native Core)".to_string(),
+        init_system: "SysVinit (systemd-free)".to_string(),
+        memory_used_mb: 1140,
+        memory_total_mb: 8192,
+        cpu_cores: std::thread::available_parallelism().map(|p| p.get()).unwrap_or(4),
+        uptime_seconds: 7200,
+    })
+}
+
+#[tauri::command]
+async fn set_brightness(level: u32) -> Result<String, String> {
+    let clamped = level.clamp(20, 100);
+    let ratio = clamped as f32 / 100.0;
+    #[cfg(target_os = "linux")]
+    {
+        let cmd = format!(
+            "xrandr --output $(xrandr | grep ' connected' | awk '{{print $1}}' | head -n1) --brightness {:.2}",
+            ratio
+        );
+        let _ = Command::new("sh").args(["-c", &cmd]).output();
+    }
+    Ok(format!("Parlaklık ayarlandı: %{}", clamped))
+}
+
+#[tauri::command]
+async fn launch_application(exec: String) -> Result<String, String> {
+    let clean = exec.trim();
+    #[cfg(target_os = "linux")]
+    {
+        let _ = Command::new("sh")
+            .args(["-c", &format!("DISPLAY=:0 {} >/dev/null 2>&1 &", clean)])
+            .spawn();
+    }
+    Ok(format!("Uygulama çalıştırıldı: {}", clean))
+}
+
+#[tauri::command]
+fn check_first_run() -> Result<bool, String> {
+    let path = get_ankora_config_dir().join("welcomed.lock");
+    Ok(!path.exists())
+}
+
+#[tauri::command]
+fn set_first_run_completed(dont_show_again: bool) -> Result<(), String> {
+    if dont_show_again {
+        let path = get_ankora_config_dir().join("welcomed.lock");
+        let _ = fs::write(path, "ankora-v2-welcomed");
+    }
+    Ok(())
+}
+
+#[tauri::command]
+async fn set_system_keyboard(layout: String) -> Result<String, String> {
+    let clean = layout.trim();
+    #[cfg(target_os = "linux")]
+    {
+        let _ = Command::new("setxkbmap").arg(clean).output();
+    }
+    Ok(format!("Klavye: {}", clean))
+}
+
+fn main() {
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![
+            drag_window,
+            scan_xdg_applications,
+            install_deb_package,
+            run_terminal_command,
+            read_document_file,
+            list_available_documents,
+            query_local_ai,
+            execute_agent_confirmed_action,
+            get_storage_devices,
+            execute_system_installation,
+            get_system_telemetry,
+            set_brightness,
+            launch_application,
+            check_first_run,
+            set_first_run_completed,
+            set_system_keyboard
+        ])
+        .setup(|app| {
+            if let Some(win) = app.get_window("main") {
+                let _ = win.set_fullscreen(true);
+            }
+            Ok(())
+        })
+        .run(tauri::generate_context!())
+        .expect("Ankora DE başlatılırken hata oluştu");
+}
 
 
 
 ================================================================================
-DOSYA: src/wallpaper.svg
+DOSYA: src-tauri/Cargo.toml
 ================================================================================
 
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
-  <defs>
-    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#040404"/>
-      <stop offset="50%" stop-color="#08080a"/>
-      <stop offset="100%" stop-color="#101013"/>
-    </linearGradient>
-    <linearGradient id="mtnGrad1" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#242428"/>
-      <stop offset="100%" stop-color="#0d0d0f"/>
-    </linearGradient>
-    <linearGradient id="mtnGrad2" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#19191d"/>
-      <stop offset="100%" stop-color="#08080a"/>
-    </linearGradient>
-    <linearGradient id="mtnGrad3" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#111114"/>
-      <stop offset="100%" stop-color="#040405"/>
-    </linearGradient>
-  </defs>
+[package]
+name = "ankora-de"
+version = "2.0.0"
+description = "Ankora Linux Minimalist Kiosk Desktop Environment"
+authors = ["Ankora Linux Team"]
+edition = "2021"
 
-  <rect width="1920" height="1080" fill="url(#skyGrad)"/>
+[build-dependencies]
+tauri-build = { version = "1.5", features = [] }
 
-  <circle cx="1380" cy="340" r="160" stroke="#282830" stroke-width="1" stroke-dasharray="6 6" fill="none" opacity="0.6"/>
-  <circle cx="1380" cy="340" r="100" stroke="#3b3b44" stroke-width="1.25" fill="#141418" fill-opacity="0.4"/>
-  <circle cx="1380" cy="340" r="40" stroke="#52525e" stroke-width="1" fill="#1a1a20" fill-opacity="0.6"/>
+[dependencies]
+tauri = { version = "1.5", features = ["window-start-dragging", "shell-open"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1", features = ["full"] }
+dirs = "5.0"
+base64 = "0.21"
+reqwest = { version = "0.11", features = ["json"] }
 
-  <circle cx="220" cy="160" r="1.5" fill="#666670"/>
-  <circle cx="480" cy="90" r="1" fill="#4a4a52"/>
-  <circle cx="740" cy="210" r="1.25" fill="#555560"/>
-  <circle cx="980" cy="130" r="1" fill="#44444c"/>
-  <circle cx="1180" cy="220" r="1.5" fill="#666670"/>
-  <circle cx="1660" cy="180" r="1.25" fill="#555560"/>
-  <circle cx="1780" cy="90" r="1" fill="#44444c"/>
-
-  <path d="M0 1080 L0 720 L160 590 L340 680 L540 500 L720 620 L940 450 L1120 590 L1320 420 L1540 560 L1740 460 L1920 530 L1920 1080 Z" fill="url(#mtnGrad1)"/>
-  <path d="M0 720 L160 590 L340 680 L540 500 L720 620 L940 450 L1120 590 L1320 420 L1540 560 L1740 460 L1920 530" stroke="#44444e" stroke-width="1.5" fill="none"/>
-
-  <path d="M0 1080 L0 810 L130 760 L290 660 L460 740 L670 580 L860 700 L1050 560 L1230 680 L1450 540 L1650 670 L1820 600 L1920 640 L1920 1080 Z" fill="url(#mtnGrad2)"/>
-  <path d="M0 810 L130 760 L290 660 L460 740 L670 580 L860 700 L1050 560 L1230 680 L1450 540 L1650 670 L1820 600 L1920 640" stroke="#32323a" stroke-width="1.5" fill="none"/>
-
-  <path d="M0 1080 L0 880 L200 800 L390 870 L580 730 L780 830 L980 700 L1180 810 L1380 680 L1580 790 L1790 710 L1920 770 L1920 1080 Z" fill="url(#mtnGrad3)"/>
-  <path d="M0 880 L200 800 L390 870 L580 730 L780 830 L980 700 L1180 810 L1380 680 L1580 790 L1790 710 L1920 770" stroke="#25252d" stroke-width="1.5" fill="none"/>
-
-  <path d="M0 940 Q480 910 960 950 T1920 920" stroke="#1c1c22" stroke-width="1" stroke-dasharray="6 6" fill="none"/>
-  <path d="M0 990 Q480 965 960 1000 T1920 970" stroke="#16161b" stroke-width="1" stroke-dasharray="8 8" fill="none"/>
-  <path d="M0 1040 Q480 1015 960 1045 T1920 1020" stroke="#0f0f13" stroke-width="1" fill="none"/>
-</svg>
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
 
 
 
 ================================================================================
-DOSYA: src/wallpaper-obsidian.svg
+DOSYA: src-tauri/tauri.conf.json
 ================================================================================
 
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
-  <rect width="1920" height="1080" fill="#040405"/>
-  <defs>
-    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
-      <circle cx="20" cy="20" r="0.85" fill="#22222a"/>
-    </pattern>
-  </defs>
-  <rect width="1920" height="1080" fill="url(#gridPattern)"/>
-  
-  <circle cx="960" cy="540" r="280" stroke="#16161b" stroke-width="1.5" stroke-dasharray="6 6" fill="none"/>
-  <circle cx="960" cy="540" r="180" stroke="#1f1f26" stroke-width="1" fill="none"/>
-  <circle cx="960" cy="540" r="80" stroke="#2b2b34" stroke-width="1" fill="#09090c"/>
-  <circle cx="960" cy="540" r="12" fill="#ffffff" fill-opacity="0.8"/>
-  
-  <line x1="960" y1="220" x2="960" y2="860" stroke="#181820" stroke-width="1"/>
-  <line x1="640" y1="540" x2="1280" y2="540" stroke="#181820" stroke-width="1"/>
-</svg>
+{
+  "$schema": "https://raw.githubusercontent.com/tauri-apps/tauri/tauri-v1/tooling/cli/schema.json",
+  "build": {
+    "beforeBuildCommand": "",
+    "beforeDevCommand": "",
+    "devPath": "../src",
+    "distDir": "../src"
+  },
+  "package": {
+    "productName": "Ankora DE",
+    "version": "2.0.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "window": {
+        "all": false,
+        "startDragging": true,
+        "close": true,
+        "minimize": true,
+        "maximize": true,
+        "unmaximize": true,
+        "show": true,
+        "hide": true
+      },
+      "shell": {
+        "all": false,
+        "open": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "category": "Utility",
+      "copyright": "2026 Ankora Linux Project",
+      "deb": {
+        "depends": [
+          "libwebkit2gtk-4.0-37 | libwebkit2gtk-4.1-0",
+          "libgtk-3-0",
+          "libayatana-appindicator3-1"
+        ]
+      },
+      "icon": [
+        "icons/icon.png"
+      ],
+      "identifier": "org.ankora.de",
+      "targets": ["deb", "appimage"]
+    },
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "title": "Ankora Linux",
+        "fullscreen": true,
+        "decorations": false,
+        "resizable": false,
+        "transparent": false,
+        "alwaysOnTop": false,
+        "skipTaskbar": false,
+        "center": true,
+        "width": 1920,
+        "height": 1080
+      }
+    ]
+  }
+}
 
 
 
 ================================================================================
-DOSYA: src/wallpaper-topo.svg
+DOSYA: README.md
 ================================================================================
 
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
-  <rect width="1920" height="1080" fill="#060608"/>
-  <g stroke="#1a1a22" stroke-width="1.25" fill="none">
-    <path d="M-100 200 Q400 120 960 220 T1920 180" />
-    <path d="M-100 280 Q350 200 960 300 T1920 250" stroke="#22222d"/>
-    <path d="M-100 360 Q300 280 960 380 T1920 330" />
-    <path d="M-100 440 Q250 360 960 460 T1920 410" stroke="#282834"/>
-    <path d="M-100 520 Q200 440 960 540 T1920 490" />
-    <path d="M-100 600 Q150 520 960 620 T1920 570" stroke="#2e2e3a"/>
-    <path d="M-100 680 Q200 600 960 700 T1920 650" />
-    <path d="M-100 760 Q250 680 960 780 T1920 730" stroke="#22222d"/>
-    <path d="M-100 840 Q300 760 960 860 T1920 810" />
-    <path d="M-100 920 Q350 840 960 940 T1920 890" stroke="#1c1c24"/>
-    <path d="M-100 1000 Q400 920 960 1020 T1920 970" />
-  </g>
-  <circle cx="1480" cy="420" r="140" stroke="#333340" stroke-width="1" stroke-dasharray="4 4" fill="none"/>
-  <circle cx="1480" cy="420" r="4" fill="#ffffff"/>
-  <text x="1480" y="450" fill="#666675" font-family="monospace" font-size="10" text-anchor="middle">PEAK 4,120M</text>
-</svg>
+<div align="center">
+  <img src="assets/logo.png" alt="Ankora OS Logo" width="240" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+  <br><br>
+  <h1>Ankora Linux (Ankora OS)</h1>
+  <p><b>Devuan Linux Tabanlı, Systemd-Free Hafif Çekirdekli, Modern Kiosk Masaüstü Ortamı (Tauri + Rust)</b></p>
+
+  <p>
+    <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-2.0_(DEVUAN)-ffffff?style=for-the-badge&labelColor=111111" alt="Sürüm">
+    <img src="https://img.shields.io/badge/TABAN-DEVUAN_DAEDALUS-d1d1d1?style=for-the-badge&labelColor=111111" alt="Taban">
+    <img src="https://img.shields.io/badge/MASA%C3%9CST%C3%9C-ANKORA_DE_(TAURI)-ffffff?style=for-the-badge&labelColor=111111" alt="Masaüstü">
+    <img src="https://img.shields.io/badge/L%C3%B0SANS-MIT-41a013?style=for-the-badge&labelColor=111111" alt="Lisans">
+  </p>
+</div>
+
+Ankora OS; düşük donanım kaynaklarına sahip sistemlerde Chrome OS Flex kararlılığı ve yüksek tepkisellik sunmak üzere tasarlanmış, systemd kirliliğinden arındırılmış Devuan Linux tabanlı bağımsız bir dağıtımdır. Masaüstü ortamı (Ankora DE), Rust ve WebKitGTK (Tauri) üzerinde sıfır çökme ve ultra hafif bellek ayak izi ile çalışır.
+
+---
+
+## 📌 Ankora OS Nedir?
+
+Ankora OS, genel kullanım dağıtımlarında bulunan gereksiz servis kirliliğini (telemetri, kullanılmayan daemon'lar) engellemek ve donanım limitlerini en verimli şekilde kullanmak amacıyla geliştirilmiştir. Masaüstü ortamında görsel tutarlılık sağlarken arka planda Linux çekirdek parametrelerini (sysctl, zram) düşük gecikmeye göre optimize eder.
+
+Sistemde bulunan yerel AI bileşeni, uzak sunuculara veya API anahtarlarına bağımlı değildir. Makine üzerindeki yerel kaynakları kullanarak doğrudan terminal içinden teknik komut yardımı, hata ayıklama ve sistem analizi sunar.
+
+---
+
+## 🛠 Temel Mühendislik Tercihleri ve Mimarisi
+
+### 1. Kademeli Bellek Yönetimi (ZRAM + SWAP Hiyerarşisi)
+Düşük RAM kapasitesinde Out-Of-Memory (OOM) kilitlenmelerini engellemek için bellek mimarisi hiyerarşik olarak kurgulanmıştır:
+* **ZRAM:** RAM üzerinde sıkıştırılmış blok alanı oluşturarak disk I/O yükünü düşürür ve ilk bellek taşıntılarını karşılar.
+* **Disk SWAP:** ZRAM kapasitesi dolduğunda devreye giren ikincil yedek alandır.
+* **vm.swappiness & vm.vfs_cache_pressure:** Çekirdek parametreleri disk okuma/yazma gecikmesini minimize edecek değerlere çekilmiştir.
+
+### 2. Çevrimdışı Terminal AI Asistanı (`yardimci`)
+Terminalde `yardimci` komutuyla çağrılan bileşen, internet bağlantısı gerektirmeksizin çalışır:
+* Veriler harici sunuculara gönderilmez, tamamen yerel bellek üzerinde işlenir.
+* Shell komutları, paket bağımlılıkları ve sistem konfigürasyon dosyaları için hızlı referans sağlar.
+
+### 3. Çift Masaüstü Kirliliğini Önleme (Unified Desktop Stack)
+Hem KDE Plasma hem de XFCE masaüstü ortamlarında sistem üzerine aynı görevi yapan çift uygulama yüklenmez:
+* **Dosya Yöneticisi:** Her iki ortamda da çakışmaları engellemek için varsayılan olarak **Dolphin** kullanılır.
+* **Görsel Bütünlük:** Simge seti olarak **Fairy Wren** entegre edilmiştir.
+
+### 4. Şişkinlikten Arındırılmış Sistem (Bloat-Free)
+* ISO boyutunu ve sistem açılış süresini olumsuz etkileyen Office suitleri (LibreOffice vb.) imajdan çıkarılmıştır.
+* Kullanıcı ihtiyaç duyduğu paketi depo üzerinden tek komutla kurabilir.
+
+### 5. Dahili Oyun ve Grafik Katmanı
+* **GameMode:** Oyun başlatıldığında CPU valörünü performance moduna çeker.
+* **MangoHud:** Vulkan/OpenGL katmanında FPS, sıcaklık ve RAM kullanım değerlerini önceden yapılandırılmış olarak sunar.
+
+---
+
+## 📊 Sürüm Karşılaştırma Tablosu
+
+| Sürüm Adı | Sistem Tabanı | Yayın Tipi | Odak Noktası | Durum |
+| :--- | :--- | :--- | :--- | :--- |
+| **Ankora AI Debian** | Debian 13 (Trixie) | Sabit / Stable | Yüksek sistem stabilitesi, düşük kaynak kullanımı | **Aktif Sürüm** |
+| **Ankora Kurumsal** | Debian LTS | Sabit / LTS | Merkezi yönetim profilleri, sıkılaştırılmış güvenlik (AppArmor) | **Planlama** |
+| **Ankora Geliştirici** | Debian / Arch | Özel Derleme | Hazır derleyici araçları (GCC, Rust, Go, Python) ve Zsh terminal yapısı | **Özel Sürüm** |
+
+---
+
+## 📋 Sistem Gereksinimleri
+
+| Bileşen | Minimum Gereksinim | Önerilen Sistem |
+| :--- | :--- | :--- |
+| **İşlemci (CPU)** | 64-bit Çift Çekirdek (1.5 GHz) | 64-bit Dört Çekirdek (2.0 GHz+) |
+| **Bellek (RAM)** | 2 GB (ZRAM Aktif) | 4 GB ve üzeri |
+| **Depolama** | 15 GB Boş Disk Alanı | 25 GB SSD Depolama |
+| **Ekran Kartı** | KMS destekli herhangi bir GPU | Vulkan / OpenGL 4.5 destekli GPU |
+
+---
+
+## ⚡ Kurulum ve Kullanım Talimatları
+
+### 1. ISO İmajını Diske Yazdırma
+Linux ortamında terminal üzerinden `dd` komutunu kullanarak önyüklenebilir USB oluşturabilirsiniz:
 
 
-
-================================================================================
-DOSYA: src/wallpaper-nordic.svg
-================================================================================
+sudo dd if=ankora-2.0-debian-x86_64.iso of=/dev/sdX bs=4M status=progress conv=fsync
 
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none">
-  <defs>
-    <linearGradient id="nordicSky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#020203"/>
-      <stop offset="60%" stop-color="#070709"/>
-      <stop offset="100%" stop-color="#141418"/>
-    </linearGradient>
-  </defs>
-  <rect width="1920" height="1080" fill="url(#nordicSky)"/>
-  
-  <!-- High Contrast Sharp Peaks -->
-  <polygon points="120,1080 380,480 620,1080" fill="#1b1b22"/>
-  <polygon points="380,480 620,1080 480,1080" fill="#24242d"/>
-  
-  <polygon points="480,1080 820,360 1140,1080" fill="#14141a"/>
-  <polygon points="820,360 1140,1080 960,1080" fill="#202028"/>
-  
-  <polygon points="980,1080 1340,420 1700,1080" fill="#181820"/>
-  <polygon points="1340,420 1700,1080 1520,1080" fill="#262632"/>
-  
-  <!-- Crest Lines -->
-  <line x1="380" y1="480" x2="480" y2="1080" stroke="#484856" stroke-width="1.5"/>
-  <line x1="820" y1="360" x2="960" y2="1080" stroke="#525262" stroke-width="1.5"/>
-  <line x1="1340" y1="420" x2="1520" y2="1080" stroke="#484856" stroke-width="1.5"/>
-  
-  <!-- Stars -->
-  <circle cx="280" cy="180" r="1.5" fill="#888898"/>
-  <circle cx="680" cy="120" r="1" fill="#666675"/>
-  <circle cx="1120" cy="190" r="1.25" fill="#888898"/>
-  <circle cx="1580" cy="140" r="1.5" fill="#aaaaaa"/>
-</svg>
+## 🌐 Topluluk ve İletişim
+Bu proje tamamen açık kaynaklıdır ve topluluğun geri bildirimleriyle büyümektedir. Karşılaştığınız sorunlar, yeni özellik talepleri veya sadece selam vermek için bize katılın:
+
+* 💬 **Topluluk Forumu:** [Ankalab Flarum Cloud](https://ankalab.flarum.cloud)
+* 🌍 **Resmi Web Sitesi:** [Sitemiz](https://ankora-linux.github.io/#home) 
+* 🐞 **Hata Bildirimi:** GitHub üzerindeki [Issues](../../issues) sekmesini veya forumdan konu açarak kullanabilirsiniz.
+
+### License & Source Code
+Ankora OS is built on top of **Debian 12 (Bookworm)**. The base system, Linux Kernel, and upstream packages are distributed under the **GPL (GNU General Public License)** or their respective original licenses. You can find the source code for the base Debian packages in the official Debian repositories.
+
+All custom configurations, boot parameters (GRUB/ISOLinux), UI artwork, and build scripts specific to Ankora OS provided in this repository are licensed under the **MIT License**.
 

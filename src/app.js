@@ -576,6 +576,22 @@
           this.textFrame.textContent = doc.content;
         }
       }
+    },
+
+    openDocumentByName(name) {
+      if (!name) return;
+      if (name.endsWith('.pdf')) {
+        this.loadSamplePdf();
+      } else if (name === 'kiosk-ayarlari.md') {
+        this.loadSampleText();
+      } else {
+        this.renderDocument({
+          file_name: name,
+          file_type: 'text',
+          file_size: 4096,
+          content: `# Ankora Linux 2.0 - Sürüm Notları (Daedalus)\n\n- Taban: Devuan GNU/Linux 5.0 (Daedalus)\n- İnit Sistemi: SysVinit (systemd-free, ultra-lightweight)\n- Arayüz: Tauri 1.5 + Monokrom Minimalist DE\n- Çekirdek: Linux 6.1.0-22-amd64\n\nSistem kararlılığı ve minimum RAM tüketimi garanti edilmektedir.`
+        });
+      }
     }
   };
 
@@ -898,6 +914,7 @@
   };
 
   function initDesktopControls() {
+    // Masaüstündeki simgeler (varsa dinamik simgeler)
     document.querySelectorAll('.desktop-item').forEach(item => {
       const target = item.getAttribute('data-open');
       if (target) item.addEventListener('click', () => WindowManager.open(target));
@@ -905,29 +922,151 @@
 
     const startBtn = document.getElementById('start-btn');
     const startFlyout = document.getElementById('start-flyout');
+    const startSearch = document.getElementById('start-search');
 
-    if (startBtn && startFlyout) {
-      startBtn.addEventListener('click', () => {
-        startFlyout.classList.toggle('open');
-        startBtn.classList.toggle('active');
+    const toggleStart = (forceState) => {
+      if (!startFlyout) return;
+      const isOpen = typeof forceState === 'boolean' ? forceState : !startFlyout.classList.contains('open');
+      startFlyout.classList.toggle('open', isOpen);
+      if (startBtn) startBtn.classList.toggle('active', isOpen);
+      if (isOpen && startSearch) {
+        setTimeout(() => startSearch.focus(), 50);
+      }
+    };
+
+    if (startBtn) {
+      startBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleStart();
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (startFlyout && !startFlyout.contains(e.target) && startBtn && !startBtn.contains(e.target)) {
+        toggleStart(false);
+      }
+    });
+
+    // Klavye Kısayolu (Ctrl + Space veya Meta/Super)
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey && e.code === 'Space') || e.key === 'Meta') {
+        e.preventDefault();
+        toggleStart();
+      }
+    });
+
+    // 1. Sabitlenmiş Uygulamalar (Pinned Apps Grid)
+    document.querySelectorAll('.pinned-app-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const target = card.getAttribute('data-open');
+        if (target) WindowManager.open(target);
+        toggleStart(false);
+      });
+    });
+
+    // 2. Son Kullanılan Belgeler
+    document.querySelectorAll('.recent-doc-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const fileName = row.getAttribute('data-file');
+        WindowManager.open('win-office');
+        OfficeManager.openDocumentByName(fileName);
+        toggleStart(false);
+      });
+    });
+
+    // 3. Hızlı Kısayollar
+    document.querySelectorAll('.shortcut-action-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const action = row.getAttribute('data-action');
+        const target = row.getAttribute('data-open');
+        if (target) {
+          WindowManager.open(target);
+        } else if (action === 'quick-clean') {
+          WindowManager.open('win-terminal');
+          Terminal.runCommand('apt-get clean && rm -rf /tmp/*');
+        }
+        toggleStart(false);
+      });
+    });
+
+    // 4. Arama Kutusu Filtreleme
+    if (startSearch) {
+      startSearch.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.pinned-app-card');
+        const docs = document.querySelectorAll('.recent-doc-row');
+
+        cards.forEach(card => {
+          const text = card.textContent.toLowerCase();
+          card.style.display = text.includes(q) ? 'flex' : 'none';
+        });
+
+        docs.forEach(doc => {
+          const text = doc.textContent.toLowerCase();
+          doc.style.display = text.includes(q) ? 'flex' : 'none';
+        });
       });
 
-      document.addEventListener('click', (e) => {
-        if (!startFlyout.contains(e.target) && !startBtn.contains(e.target)) {
-          startFlyout.classList.remove('open');
-          startBtn.classList.remove('active');
+      startSearch.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const firstVisible = document.querySelector('.pinned-app-card:not([style*="display: none"])');
+          if (firstVisible) {
+            firstVisible.click();
+          }
         }
       });
     }
 
-    document.querySelectorAll('.start-row').forEach(row => {
-      row.addEventListener('click', () => {
-        const target = row.getAttribute('data-open');
-        if (target) WindowManager.open(target);
-        if (startFlyout) startFlyout.classList.remove('open');
+    // 5. Sistem Tepsisi Hızlı İkonları (AI & Ayarlar)
+    const trayAiBtn = document.getElementById('tray-ai-btn');
+    if (trayAiBtn) {
+      trayAiBtn.addEventListener('click', () => WindowManager.open('win-ai'));
+    }
+
+    const traySettingsBtn = document.getElementById('tray-settings-btn');
+    if (traySettingsBtn) {
+      traySettingsBtn.addEventListener('click', () => WindowManager.open('win-settings'));
+    }
+
+    // 6. Güç ve Kilit Aksiyonları
+    const btnRestart = document.getElementById('btn-restart');
+    if (btnRestart) {
+      btnRestart.addEventListener('click', async () => {
+        Terminal.log('[SİSTEM] Yeniden başlatılıyor...', 'cmd');
+        try {
+          await TauriBridge.invoke('run_terminal_command', { command: 'reboot' });
+        } catch (e) {}
+        alert('Ankora Linux yeniden başlatılıyor...');
       });
+    }
+
+    const btnShutdown = document.getElementById('btn-shutdown');
+    if (btnShutdown) {
+      btnShutdown.addEventListener('click', async () => {
+        Terminal.log('[SİSTEM] Kapatılıyor...', 'cmd');
+        try {
+          await TauriBridge.invoke('run_terminal_command', { command: 'poweroff' });
+        } catch (e) {}
+        alert('Ankora Linux kapatılıyor...');
+      });
+    }
+
+    const lockBtns = [document.getElementById('btn-lock'), document.getElementById('btn-quick-lock')];
+    lockBtns.forEach(btn => {
+      if (btn) {
+        btn.addEventListener('click', () => {
+          Terminal.log('[GÜVENLİK] Kiosk ekranı kilitlendi.', 'cmd');
+          const dimmer = document.getElementById('screen-dimmer');
+          if (dimmer) {
+            dimmer.style.opacity = '0.92';
+            setTimeout(() => { dimmer.style.opacity = '0'; }, 1800);
+          }
+          toggleStart(false);
+        });
+      }
     });
 
+    // 7. Saat ve Tarih
     const trayClock = document.getElementById('tray-clock');
     const updateTime = () => {
       const now = new Date();
