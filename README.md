@@ -1,95 +1,121 @@
 <div align="center">
-  <img src="assets/logo.png" alt="Ankora OS Logo" width="240" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+  <img src="assets/ankora-logo.jpg" alt="Ankora Linux Logo" width="220" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
   <br><br>
   <h1>Ankora Linux (Ankora OS)</h1>
-  <p><b>Devuan Linux Tabanlı, Systemd-Free Hafif Çekirdekli, Modern Kiosk Masaüstü Ortamı (Tauri + Rust)</b></p>
+  <p><b>Devuan Daedalus Tabanlı, Systemd-Free, Ultra Hafif ve Kiosk Odaklı Bağımsız Linux Dağıtımı</b></p>
 
   <p>
-    <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-2.0_(DEVUAN)-ffffff?style=for-the-badge&labelColor=111111" alt="Sürüm">
-    <img src="https://img.shields.io/badge/TABAN-DEVUAN_DAEDALUS-d1d1d1?style=for-the-badge&labelColor=111111" alt="Taban">
-    <img src="https://img.shields.io/badge/MASA%C3%9CST%C3%9C-ANKORA_DE_(TAURI)-ffffff?style=for-the-badge&labelColor=111111" alt="Masaüstü">
+    <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-2.0_(DAEDALUS)-ffffff?style=for-the-badge&labelColor=111111" alt="Sürüm">
+    <img src="https://img.shields.io/badge/TABAN-DEVUAN_5.0-d1d1d1?style=for-the-badge&labelColor=111111" alt="Taban">
+    <img src="https://img.shields.io/badge/%C4%B0N%C4%B0T-SYSVINIT_(PID_1)-059669?style=for-the-badge&labelColor=111111" alt="İnit">
+    <img src="https://img.shields.io/badge/MASA%C3%9CST%C3%9C-AYAZ_DE-2563eb?style=for-the-badge&labelColor=111111" alt="Masaüstü">
     <img src="https://img.shields.io/badge/L%C3%B0SANS-MIT-41a013?style=for-the-badge&labelColor=111111" alt="Lisans">
   </p>
 </div>
 
-Ankora OS; düşük donanım kaynaklarına sahip sistemlerde Chrome OS Flex kararlılığı ve yüksek tepkisellik sunmak üzere tasarlanmış, systemd kirliliğinden arındırılmış Devuan Linux tabanlı bağımsız bir dağıtımdır. Masaüstü ortamı (Ankora DE), Rust ve WebKitGTK (Tauri) üzerinde sıfır çökme ve ultra hafif bellek ayak izi ile çalışır.
+---
+
+## 📌 Ankora Linux Nedir?
+
+**Ankora Linux**, düşük donanım kaynaklarına sahip bilgisayarlardan modern kiosk terminallerine kadar yüksek tepkisellik ve sarsılmaz kararlılık sunmak üzere tasarlanmış, systemd kirliliğinden arındırılmış bağımsız bir **Devuan GNU/Linux** dağıtımıdır.
+
+Sistem, geleneksel UNIX sadeliğini koruyan **SysVinit (PID 1)** çekirdeği ile çalışır. Varsayılan grafik arayüzü olarak resmi masaüstü ortamı olan **[Ayaz Desktop Environment (Ayaz DE)](https://github.com/Ankora-Linux/Ayaz)** ile birlikte gelir.
 
 ---
 
-## 📌 Ankora OS Nedir?
+## 🏛️ Temel Sistem Mimarisi
 
-Ankora OS, genel kullanım dağıtımlarında bulunan gereksiz servis kirliliğini (telemetri, kullanılmayan daemon'lar) engellemek ve donanım limitlerini en verimli şekilde kullanmak amacıyla geliştirilmiştir. Masaüstü ortamında görsel tutarlılık sağlarken arka planda Linux çekirdek parametrelerini (sysctl, zram) düşük gecikmeye göre optimize eder.
+```mermaid
+graph TD
+    A[Donanım / BIOS-UEFI] --> B[Linux Kernel 6.1 LTS]
+    B --> C[SysVinit 3.06 / nodm Kiosk]
+    C --> D[X11 Ekran Sunucusu]
+    D --> E[Ayaz Desktop Environment - Tauri/Rust]
+    E --> F[Yerel Sistem Ajanı & Donanım Telemetrisi]
+    C --> G[Calamares 3.x Yükleyici]
+    C --> H[ZRAM LZO-RLE Bellek Sıkıştırması]
+```
 
-Sistemde bulunan yerel AI bileşeni, uzak sunuculara veya API anahtarlarına bağımlı değildir. Makine üzerindeki yerel kaynakları kullanarak doğrudan terminal içinden teknik komut yardımı, hata ayıklama ve sistem analizi sunar.
+### 1. Systemd-Free ve SysVinit Tabanı
+Gereksiz arka plan daemon'ları, telemetri servisleri ve karmaşık ikili kayıt sistemleri (`journald`) yerine hafif, şeffaf ve kararlı SysVinit süreç kontrolü kullanılır. Sistem birkaç saniye içinde açılır ve boşta yalnızca ~80 MB RAM tüketir.
 
----
+### 2. Resmi Masaüstü Ortamı: Ayaz DE
+Ankora Linux'un resmi masaüstü arayüzü, bağımsız olarak geliştirilen **[Ayaz DE](https://github.com/Ankora-Linux/Ayaz)** projesidir.
+* **Rust + WebKitGTK (Tauri 1.5):** Ağır GNOME/KDE kütüphaneleri olmadan doğrudan web teknolojileriyle donanım hızlandırmalı modern bir masaüstü.
+* **Ayaz Güncelleyici:** Masaüstünden tek tıkla yeni `.deb` sürümlerini kurabilme.
+* **Monokrom Cam Tasarım:** Windows 11 ve Chrome OS Flex esintili başlat menüsü ve minimalist estetik.
 
-## 🛠 Temel Mühendislik Tercihleri ve Mimarisi
+### 3. Calamares Grafiksel Yükleyici (`calamares/`)
+Canlı (Live) ISO üzerinden sistemi kalıcı olarak hedef diske kurmak için özelleştirilmiş Calamares kurulum motoru entegre edilmiştir:
+* Otomatik EFI (GPT) ve MBR (BIOS) disk bölümlendirme.
+* Kiosk kullanıcıları için şifresiz otomatik oturum açma (`nodm`) yapılandırması.
+* Donanım sürücülerinin kalıcı sisteme hatasız aktarımı (`unpackfs` ve `chroot`).
 
-### 1. Kademeli Bellek Yönetimi (ZRAM + SWAP Hiyerarşisi)
-Düşük RAM kapasitesinde Out-Of-Memory (OOM) kilitlenmelerini engellemek için bellek mimarisi hiyerarşik olarak kurgulanmıştır:
-* **ZRAM:** RAM üzerinde sıkıştırılmış blok alanı oluşturarak disk I/O yükünü düşürür ve ilk bellek taşıntılarını karşılar.
-* **Disk SWAP:** ZRAM kapasitesi dolduğunda devreye giren ikincil yedek alandır.
-* **vm.swappiness & vm.vfs_cache_pressure:** Çekirdek parametreleri disk okuma/yazma gecikmesini minimize edecek değerlere çekilmiştir.
+### 4. Kademeli Bellek Sıkıştırması (ZRAM Hiyerarşisi)
+* **ZRAM (zram0):** RAM üzerinde LZO-RLE sıkıştırma alanı açarak disk I/O beklemesini ortadan kaldırır.
+* **vm.swappiness & vm.vfs_cache_pressure:** Çekirdek parametreleri disk gecikmesini minimize edecek şekilde optimize edilmiştir.
 
-### 2. Çevrimdışı Terminal AI Asistanı (`yardimci`)
-Terminalde `yardimci` komutuyla çağrılan bileşen, internet bağlantısı gerektirmeksizin çalışır:
-* Veriler harici sunuculara gönderilmez, tamamen yerel bellek üzerinde işlenir.
-* Shell komutları, paket bağımlılıkları ve sistem konfigürasyon dosyaları için hızlı referans sağlar.
-
-### 3. Çift Masaüstü Kirliliğini Önleme (Unified Desktop Stack)
-Hem KDE Plasma hem de XFCE masaüstü ortamlarında sistem üzerine aynı görevi yapan çift uygulama yüklenmez:
-* **Dosya Yöneticisi:** Her iki ortamda da çakışmaları engellemek için varsayılan olarak **Dolphin** kullanılır.
-* **Görsel Bütünlük:** Simge seti olarak **Fairy Wren** entegre edilmiştir.
-
-### 4. Şişkinlikten Arındırılmış Sistem (Bloat-Free)
-* ISO boyutunu ve sistem açılış süresini olumsuz etkileyen Office suitleri (LibreOffice vb.) imajdan çıkarılmıştır.
-* Kullanıcı ihtiyaç duyduğu paketi depo üzerinden tek komutla kurabilir.
-
-### 5. Dahili Oyun ve Grafik Katmanı
-* **GameMode:** Oyun başlatıldığında CPU valörünü performance moduna çeker.
-* **MangoHud:** Vulkan/OpenGL katmanında FPS, sıcaklık ve RAM kullanım değerlerini önceden yapılandırılmış olarak sunar.
-
----
-
-## 📊 Sürüm Karşılaştırma Tablosu
-
-| Sürüm Adı | Sistem Tabanı | Yayın Tipi | Odak Noktası | Durum |
-| :--- | :--- | :--- | :--- | :--- |
-| **Ankora AI Debian** | Debian 13 (Trixie) | Sabit / Stable | Yüksek sistem stabilitesi, düşük kaynak kullanımı | **Aktif Sürüm** |
-| **Ankora Kurumsal** | Debian LTS | Sabit / LTS | Merkezi yönetim profilleri, sıkılaştırılmış güvenlik (AppArmor) | **Planlama** |
-| **Ankora Geliştirici** | Debian / Arch | Özel Derleme | Hazır derleyici araçları (GCC, Rust, Go, Python) ve Zsh terminal yapısı | **Özel Sürüm** |
+### 5. Çevrimdışı Terminal AI Asistanı (`tools/yardimci`)
+Uzak sunuculara veya API anahtarına ihtiyaç duymayan, doğrudan terminal içerisinden teknik komut referansı ve hata ayıklama desteği sunan yerel yardımcı araç.
 
 ---
 
-## 📋 Sistem Gereksinimleri
+## 📁 Depo Dizin Yapısı
 
-| Bileşen | Minimum Gereksinim | Önerilen Sistem |
+```
+Ankora-Linux/
+├── assets/                     # Dağıtım logoları, açılış splash'ı ve masaüstü önizlemeleri
+│   ├── ankora-logo.jpg         # Ankora Linux resmi logosu
+│   ├── ankoraboot.png          # Canlı sistem önyükleme görseli
+│   ├── desktop-preview.jpg     # Masaüstü çalışma alanı önizlemesi
+│   └── logo.svg / logo.png     # Vektörel sistem rozetleri
+├── calamares/                  # Calamares 3.x Grafiksel Kurulum Motoru
+│   ├── settings.conf           # Kurulum adımları ve modül sıralaması
+│   ├── branding/debian/        # Ankora Linux marka teması, karşılayıcı ve slaytlar
+│   └── modules/                # Mount, users, fstab, bootloader vb. modül yapılandırmaları
+├── config/                     # Canlı Sistem ve ISO İnşa Yapılandırmaları
+│   └── refractasnapshot.conf   # Canlı ortamdan anlık ISO kalıbı çıkarma kuralları
+├── tools/                      # Ankora Sistem Yardımcı Araçları
+│   └── yardimci                # Çevrimdışı terminal AI asistanı betiği
+├── LICENSE                     # MIT Lisansı
+└── README.md                   # Dağıtım ana dokümantasyonu
+```
+
+---
+
+## 💿 Sistem Gereksinimleri
+
+| Donanım | Minimum Gereksinim | Önerilen Donanım |
 | :--- | :--- | :--- |
-| **İşlemci (CPU)** | 64-bit Çift Çekirdek (1.5 GHz) | 64-bit Dört Çekirdek (2.0 GHz+) |
-| **Bellek (RAM)** | 2 GB (ZRAM Aktif) | 4 GB ve üzeri |
-| **Depolama** | 15 GB Boş Disk Alanı | 25 GB SSD Depolama |
-| **Ekran Kartı** | KMS destekli herhangi bir GPU | Vulkan / OpenGL 4.5 destekli GPU |
+| **İşlemci (CPU)** | 64-bit x86_64 Çift Çekirdek | 2.0 GHz+ Dört Çekirdek |
+| **Bellek (RAM)** | 1.0 GB RAM | 2.0 GB veya üzeri |
+| **Depolama** | 10 GB Boş Disk Alanı | 20 GB+ Hızlı SSD |
+| **Grafik / Ekran** | 1024x768 çözünürlük | 1920x1080 Full HD (Kiosk Ekranı) |
+| **Önyükleme** | Legacy BIOS veya UEFI | 64-bit UEFI |
 
 ---
 
-## ⚡ Kurulum ve Kullanım Talimatları
+## 🔧 Canlı Sistemden ISO Kalıbı Üretme
 
-### 1. ISO İmajını Diske Yazdırma
-Linux ortamında terminal üzerinden `dd` komutunu kullanarak önyüklenebilir USB oluşturabilirsiniz:
+Ankora Linux canlı sistem imajı, özelleştirilmiş **Refracta Snapshot** altyapısı ile üretilir:
 
+1. `config/refractasnapshot.conf` yapılandırmasını `/etc/refractasnapshot.conf` dizinine kopyalayın.
+2. Root yetkisiyle kalıp çıkarma sürecini başlatın:
+   ```bash
+   sudo refractasnapshot
+   ```
+3. Üretilen `ankora-linux-2.0-amd64.iso` dosyası `/home/snapshot/` dizininde kullanıma hazır olacaktır.
 
-sudo dd if=ankora-2.0-debian-x86_64.iso of=/dev/sdX bs=4M status=progress conv=fsync
+---
 
+## 🔗 İlgili Projeler ve Bağlantılar
 
-## 🌐 Topluluk ve İletişim
-Bu proje tamamen açık kaynaklıdır ve topluluğun geri bildirimleriyle büyümektedir. Karşılaştığınız sorunlar, yeni özellik talepleri veya sadece selam vermek için bize katılın:
+* **Masaüstü Ortamı Deposu:** [Ayaz Desktop Environment (Ayaz DE)](https://github.com/Ankora-Linux/Ayaz)
+* **Organizasyon:** [github.com/Ankora-Linux](https://github.com/Ankora-Linux)
+* **Taban Dağıtım:** [Devuan GNU+Linux (Daedalus)](https://www.devuan.org)
 
-* 💬 **Topluluk Forumu:** [Ankalab Flarum Cloud](https://ankalab.flarum.cloud)
-* 🌍 **Resmi Web Sitesi:** [Sitemiz](https://ankora-linux.github.io/#home) 
-* 🐞 **Hata Bildirimi:** GitHub üzerindeki [Issues](../../issues) sekmesini veya forumdan konu açarak kullanabilirsiniz.
+---
 
-### License & Source Code
-Ankora OS is built on top of **Debian 12 (Bookworm)**. The base system, Linux Kernel, and upstream packages are distributed under the **GPL (GNU General Public License)** or their respective original licenses. You can find the source code for the base Debian packages in the official Debian repositories.
+## 📄 Lisans
 
-All custom configurations, boot parameters (GRUB/ISOLinux), UI artwork, and build scripts specific to Ankora OS provided in this repository are licensed under the **MIT License**.
+Ankora Linux, **MIT** lisansı altında açık kaynak olarak dağıtılmaktadır.
