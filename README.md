@@ -2,7 +2,7 @@
   <img src="assets/ankora-logo.jpg" alt="Ankora Linux Logo" width="220" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
   <br><br>
   <h1>Ankora Linux (Ankora OS)</h1>
-  <p><b>Devuan Daedalus Tabanlı, Systemd-Free, Ultra Hafif ve Kiosk Odaklı Bağımsız Linux Dağıtımı</b></p>
+  <p><b>Devuan Daedalus tabanlı, systemd kullanmayan, kiosk odaklı bağımsız Linux dağıtımı</b></p>
 
   <p>
     <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-2.0_(DAEDALUS)-ffffff?style=for-the-badge&labelColor=111111" alt="Sürüm">
@@ -13,17 +13,11 @@
   </p>
 </div>
 
----
+## Ankora Linux nedir?
 
-## 📌 Ankora Linux Nedir?
+**Ankora Linux**, düşük donanımlı bilgisayarlar ve kiosk terminalleri için geliştirilmiş bağımsız bir **Devuan GNU/Linux** dağıtımıdır. Açılış ve süreç yönetimini geleneksel UNIX sadeliğinde **SysVinit (PID 1)** yürütür. Varsayılan masaüstü ortamı **[Ayaz Desktop Environment (Ayaz DE)](https://github.com/Ankora-Linux/Ayaz)**'dir.
 
-**Ankora Linux**, düşük donanım kaynaklarına sahip bilgisayarlardan modern kiosk terminallerine kadar yüksek tepkisellik ve sarsılmaz kararlılık sunmak üzere tasarlanmış, systemd kirliliğinden arındırılmış bağımsız bir **Devuan GNU/Linux** dağıtımıdır.
-
-Sistem, geleneksel UNIX sadeliğini koruyan **SysVinit (PID 1)** çekirdeği ile çalışır. Varsayılan grafik arayüzü olarak resmi masaüstü ortamı olan **[Ayaz Desktop Environment (Ayaz DE)](https://github.com/Ankora-Linux/Ayaz)** ile birlikte gelir.
-
----
-
-## 🏛️ Temel Sistem Mimarisi
+## Temel sistem mimarisi
 
 ```mermaid
 graph TD
@@ -36,31 +30,36 @@ graph TD
     C --> H[ZRAM LZO-RLE Bellek Sıkıştırması]
 ```
 
-### 1. Systemd-Free ve SysVinit Tabanı
-Gereksiz arka plan daemon'ları, telemetri servisleri ve karmaşık ikili kayıt sistemleri (`journald`) yerine hafif, şeffaf ve kararlı SysVinit süreç kontrolü kullanılır. Sistem birkaç saniye içinde açılır ve boşta yalnızca ~80 MB RAM tüketir.
+### 1. SysVinit tabanı
 
-### 2. Resmi Masaüstü Ortamı: Ayaz DE
-Ankora Linux'un resmi masaüstü arayüzü, bağımsız olarak geliştirilen **[Ayaz DE](https://github.com/Ankora-Linux/Ayaz)** projesidir.
-* **Rust + WebKitGTK (Tauri 1.5):** Ağır GNOME/KDE kütüphaneleri olmadan doğrudan web teknolojileriyle donanım hızlandırmalı modern bir masaüstü.
-* **Ayaz Güncelleyici:** Masaüstünden tek tıkla yeni `.deb` sürümlerini kurabilme.
-* **Monokrom Cam Tasarım:** Windows 11 ve Chrome OS Flex esintili başlat menüsü ve minimalist estetik.
+journald, telemetri servisleri ve gereksiz arka plan daemon'ları yerine SysVinit süreç kontrolü kullanılır. Sistem birkaç saniyede açılır, boşta ~80 MB RAM harcar.
 
-### 3. Calamares Grafiksel Yükleyici (`calamares/`)
-Canlı (Live) ISO üzerinden sistemi kalıcı olarak hedef diske kurmak için özelleştirilmiş Calamares kurulum motoru entegre edilmiştir:
-* Otomatik EFI (GPT) ve MBR (BIOS) disk bölümlendirme.
-* Kiosk kullanıcıları için şifresiz otomatik oturum açma (`nodm`) yapılandırması.
-* Donanım sürücülerinin kalıcı sisteme hatasız aktarımı (`unpackfs` ve `chroot`).
+### 2. Resmi masaüstü ortamı: Ayaz DE
 
-### 4. Kademeli Bellek Sıkıştırması (ZRAM Hiyerarşisi)
-* **ZRAM (zram0):** RAM üzerinde LZO-RLE sıkıştırma alanı açarak disk I/O beklemesini ortadan kaldırır.
-* **vm.swappiness & vm.vfs_cache_pressure:** Çekirdek parametreleri disk gecikmesini minimize edecek şekilde optimize edilmiştir.
+Ankora Linux'un resmi masaüstü arayüzü bağımsız olarak geliştirilen **[Ayaz DE](https://github.com/Ankora-Linux/Ayaz)** projesidir:
 
-### 5. Çevrimdışı Terminal AI Asistanı (`tools/yardimci`)
-Uzak sunuculara veya API anahtarına ihtiyaç duymayan, doğrudan terminal içerisinden teknik komut referansı ve hata ayıklama desteği sunan yerel yardımcı araç.
+* Rust ve WebKitGTK (Tauri 1.5) ile çalışır; GNOME/KDE kütüphanelerine gerek duymaz.
+* Ayaz Güncelleyici yeni `.deb` sürümlerini masaüstünden kurar.
+* Monokrom cam görünüm, Windows 11 ve Chrome OS Flex düzeninden esinlenir.
 
----
+### 3. Calamares yükleyicisi (`calamares/`)
 
-## 📁 Depo Dizin Yapısı
+Canlı ISO'dan sistemi kalıcı diske kurmak için özelleştirilmiş Calamares kurulum motoru gelir:
+
+* EFI (GPT) ve MBR (BIOS) için otomatik disk bölümlendirme.
+* Kiosk kullanıcıları için şifresiz oto-oturum (`nodm`) yapılandırması.
+* Donanım sürücülerini kalıcı sisteme aktarır (`unpackfs` ve `chroot`).
+
+### 4. ZRAM bellek sıkıştırması
+
+* **ZRAM (zram0):** RAM üzerinde LZO-RLE sıkıştırma alanı açar; sıkıştırılmış belleğe erişim disk I/O beklemesinden hızlıdır.
+* **vm.swappiness ve vm.vfs_cache_pressure:** Çekirdek parametreleri disk gecikmesini azaltacak biçimde ayarlıdır.
+
+### 5. Çevrimdışı terminal AI asistanı (`tools/yardimci`)
+
+API anahtarı veya uzak sunucu gerektirmez; terminal içinden teknik komut referansı ve hata ayıklama desteği verir.
+
+## Depo dizin yapısı
 
 ```
 Ankora-Linux/
@@ -69,53 +68,45 @@ Ankora-Linux/
 │   ├── ankoraboot.png          # Canlı sistem önyükleme görseli
 │   ├── desktop-preview.jpg     # Masaüstü çalışma alanı önizlemesi
 │   └── logo.svg / logo.png     # Vektörel sistem rozetleri
-├── calamares/                  # Calamares 3.x Grafiksel Kurulum Motoru
+├── calamares/                  # Calamares 3.x grafiksel kurulum motoru
 │   ├── settings.conf           # Kurulum adımları ve modül sıralaması
 │   ├── branding/debian/        # Ankora Linux marka teması, karşılayıcı ve slaytlar
 │   └── modules/                # Mount, users, fstab, bootloader vb. modül yapılandırmaları
-├── config/                     # Canlı Sistem ve ISO İnşa Yapılandırmaları
+├── config/                     # Canlı sistem ve ISO inşa yapılandırmaları
 │   └── refractasnapshot.conf   # Canlı ortamdan anlık ISO kalıbı çıkarma kuralları
-├── tools/                      # Ankora Sistem Yardımcı Araçları
+├── tools/                      # Ankora sistem yardımcı araçları
 │   └── yardimci                # Çevrimdışı terminal AI asistanı betiği
-├── LICENSE                     # MIT Lisansı
+├── LICENSE                     # MIT lisansı
 └── README.md                   # Dağıtım ana dokümantasyonu
 ```
 
----
+## Sistem gereksinimleri
 
-## 💿 Sistem Gereksinimleri
-
-| Donanım | Minimum Gereksinim | Önerilen Donanım |
+| Donanım | Minimum gereksinim | Önerilen donanım |
 | :--- | :--- | :--- |
-| **İşlemci (CPU)** | 64-bit x86_64 Çift Çekirdek | 2.0 GHz+ Dört Çekirdek |
+| **İşlemci (CPU)** | 64-bit x86_64 çift çekirdek | 2.0 GHz+ dört çekirdek |
 | **Bellek (RAM)** | 1.0 GB RAM | 2.0 GB veya üzeri |
-| **Depolama** | 10 GB Boş Disk Alanı | 20 GB+ Hızlı SSD |
-| **Grafik / Ekran** | 1024x768 çözünürlük | 1920x1080 Full HD (Kiosk Ekranı) |
+| **Depolama** | 10 GB boş disk alanı | 20 GB+ hızlı SSD |
+| **Grafik / Ekran** | 1024x768 çözünürlük | 1920x1080 Full HD (kiosk ekranı) |
 | **Önyükleme** | Legacy BIOS veya UEFI | 64-bit UEFI |
 
----
+## Canlı sistemden ISO kalıbı üretme
 
-## 🔧 Canlı Sistemden ISO Kalıbı Üretme
+Ankora Linux canlı imajı, özelleştirilmiş **Refracta Snapshot** ile üretilir:
 
-Ankora Linux canlı sistem imajı, özelleştirilmiş **Refracta Snapshot** altyapısı ile üretilir:
-
-1. `config/refractasnapshot.conf` yapılandırmasını `/etc/refractasnapshot.conf` dizinine kopyalayın.
-2. Root yetkisiyle kalıp çıkarma sürecini başlatın:
+1. `config/refractasnapshot.conf` dosyasını `/etc/refractasnapshot.conf` dizinine kopyalayın.
+2. Root yetkisiyle kalıp çıkarmayı başlatın:
    ```bash
    sudo refractasnapshot
    ```
-3. Üretilen `ankora-linux-2.0-amd64.iso` dosyası `/home/snapshot/` dizininde kullanıma hazır olacaktır.
+3. Üretilen `ankora-linux-2.0-amd64.iso` dosyası `/home/snapshot/` dizininde hazır olur.
 
----
+## İlgili projeler ve bağlantılar
 
-## 🔗 İlgili Projeler ve Bağlantılar
+* Masaüstü ortamı: [Ayaz Desktop Environment (Ayaz DE)](https://github.com/Ankora-Linux/Ayaz)
+* Organizasyon: [github.com/Ankora-Linux](https://github.com/Ankora-Linux)
+* Taban dağıtım: [Devuan GNU+Linux (Daedalus)](https://www.devuan.org)
 
-* **Masaüstü Ortamı Deposu:** [Ayaz Desktop Environment (Ayaz DE)](https://github.com/Ankora-Linux/Ayaz)
-* **Organizasyon:** [github.com/Ankora-Linux](https://github.com/Ankora-Linux)
-* **Taban Dağıtım:** [Devuan GNU+Linux (Daedalus)](https://www.devuan.org)
+## Lisans
 
----
-
-## 📄 Lisans
-
-Ankora Linux, **MIT** lisansı altında açık kaynak olarak dağıtılmaktadır.
+Ankora Linux, **MIT** lisansı altında dağıtılır.
