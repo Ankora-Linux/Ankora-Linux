@@ -1,5 +1,4 @@
-<div align="center">
-  <img src="assets/ankora-logo.jpg" alt="Ankora Linux Logo" width="220" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+
   <br><br>
   <h1>Ankora Linux (Ankora OS)</h1>
   <p><b>Devuan Daedalus tabanlı, systemd kullanmayan, kiosk odaklı bağımsız Linux dağıtımı</b></p>
@@ -109,4 +108,4 @@ Ankora Linux canlı imajı, özelleştirilmiş **Refracta Snapshot** ile üretil
 
 ## Lisans
 
-Ankora Linux, **MIT** lisansı altında dağıtılır.
+Ankora Linux, **GPLV3** lisansı altında dağıtılır.
